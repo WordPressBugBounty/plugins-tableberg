@@ -1,0 +1,213 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "0.4.1",
+  "name": "tableberg/table",
+  "title": "Tableberg",
+  "category": "design",
+  "description": "Table Block By Tableberg - Advanced Table Block for Block Editor",
+  "keywords": [
+    "table",
+    "tableberg",
+    "cell",
+    "row",
+    "column"
+  ],
+  "allowedBlocks": [
+    "tableberg/cell"
+  ],
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "version": {
+      "type": "string",
+      "default": ""
+    },
+    "rows": {
+      "type": "number",
+      "default": 2
+    },
+    "cols": {
+      "type": "number",
+      "default": 2
+    },
+    "cells": {
+      "type": "number",
+      "default": 0
+    },
+    "fixedColWidth": {
+      "type": "boolean",
+      "default": true
+    },
+    "colWidths": {
+      "type": "array",
+      "default": [],
+      "_comment": "REMOVE THIS IN FUTURE"
+    },
+    "rowHeights": {
+      "type": "array",
+      "default": [],
+      "_comment": "REMOVE THIS IN FUTURE"
+    },
+    "colStyles": {
+      "type": "object",
+      "default": {}
+    },
+    "rowStyles": {
+      "type": "object",
+      "default": {}
+    },
+    "cellPadding": {
+      "type": "object",
+      "default": {}
+    },
+    "cellSpacing": {
+      "type": "object",
+      "default": {}
+    },
+    "enableTableHeader": {
+      "type": "string",
+      "default": ""
+    },
+    "enableTableFooter": {
+      "type": "string",
+      "default": ""
+    },
+    "tableWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "tableAlignment": {
+      "type": "string",
+      "default": "center"
+    },
+    "blockSpacing": {
+      "type": "string",
+      "default": null
+    },
+    "headerBackgroundColor": {
+      "type": "string",
+      "default": null
+    },
+    "headerBackgroundGradient": {
+      "type": "string",
+      "default": null
+    },
+    "evenRowBackgroundColor": {
+      "type": "string",
+      "default": null
+    },
+    "evenRowBackgroundGradient": {
+      "type": "string",
+      "default": null
+    },
+    "oddRowBackgroundColor": {
+      "type": "string",
+      "default": null
+    },
+    "oddRowBackgroundGradient": {
+      "type": "string",
+      "default": null
+    },
+    "footerBackgroundColor": {
+      "type": "string",
+      "default": null
+    },
+    "footerBackgroundGradient": {
+      "type": "string",
+      "default": null
+    },
+    "tableBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "tableBorderRadius": {
+      "type": "object",
+      "default": {}
+    },
+    "innerBorder": {
+      "type": "object",
+      "default": {
+        "color": "#000000",
+        "width": "1px"
+      }
+    },
+    "hideCellOutsideBorders": {
+      "type": "boolean",
+      "default": false
+    },
+    "enableInnerBorder": {
+      "type": "boolean",
+      "default": true
+    },
+    "cellBorderRadius": {
+      "type": "object",
+      "default": {}
+    },
+    "isExample": {
+      "type": "boolean",
+      "default": false
+    },
+    "fontSize": {
+      "type": "string",
+      "default": ""
+    },
+    "fontColor": {
+      "type": "string",
+      "default": ""
+    },
+    "linkColor": {
+      "type": "string",
+      "default": ""
+    },
+    "responsive": {
+      "type": "object",
+      "default": {
+        "last": "primary",
+        "breakpoints": {}
+      }
+    },
+    "stickyTopRow": {
+      "type": "boolean",
+      "default": false
+    },
+    "stickyFirstCol": {
+      "type": "boolean",
+      "default": false
+    },
+    "innerBorderType": {
+      "type": "string",
+      "default": ""
+    },
+    "disableThemeStyle": {
+      "type": "boolean",
+      "default": false
+    },
+    "search": {
+      "type": "boolean",
+      "default": false
+    },
+    "searchPosition": {
+      "type": "string",
+      "default": "wide"
+    },
+    "searchPlaceholder": {
+      "type": "string",
+      "default": "Search..."
+    },
+    "sort": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "example": {
+    "attributes": {
+      "isExample": true
+    }
+  },
+  "textdomain": "tableberg",
+  "editorScript": "tableberg-script",
+  "editorStyle": "tableberg-editor-style",
+  "style": "tableberg-style"
+}

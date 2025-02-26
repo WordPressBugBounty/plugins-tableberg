@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "version": "0.2.2",
+  "title": "Cell",
+  "name": "tableberg/cell",
+  "parent": [
+    "tableberg/table"
+  ],
+  "allowedBlocks": [
+    "core/list",
+    "core/paragraph",
+    "tableberg/image",
+    "tableberg/button",
+    "tableberg/icon",
+    "tableberg/html",
+    "tableberg/styled-list",
+    "tableberg/star-rating",
+    "tableberg/ribbon"
+  ],
+  "category": "design",
+  "icon": "table-row-after",
+  "description": "Tableberg Cell: Individual cell of a tableberg table",
+  "attributes": {
+    "vAlign": {
+      "type": "string",
+      "default": "center"
+    },
+    "tagName": {
+      "type": "string",
+      "default": "td"
+    },
+    "rowspan": {
+      "type": "number",
+      "default": 1
+    },
+    "colspan": {
+      "type": "number",
+      "default": 1
+    },
+    "row": {
+      "type": "number",
+      "default": 0
+    },
+    "col": {
+      "type": "number",
+      "default": 0
+    },
+    "responsiveTarget": {
+      "type": "string",
+      "default": ""
+    },
+    "background": {
+      "type": "string",
+      "default": null
+    },
+    "bgGradient": {
+      "type": "string",
+      "default": null
+    },
+    "blockSpacing": {
+      "type": "string",
+      "default": null
+    },
+    "isHorizontal": {
+      "type": "boolean",
+      "default": false
+    },
+    "justifyContent": {
+      "type": "string",
+      "default": "center"
+    },
+    "wrapItems": {
+      "type": "boolean",
+      "default": true
+    },
+    "isEmpty": {
+      "type": "boolean",
+      "default": false
+    },
+    "isTmp": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "supports": {
+    "html": false,
+    "__experimentalExposeControlsToChildren": true
+  },
+  "textdomain": "tableberg",
+  "editorScript": "tableberg-script",
+  "editorStyle": "tableberg-editor-style",
+  "style": "tableberg-style"
+}
