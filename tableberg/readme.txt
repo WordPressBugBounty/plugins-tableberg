@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 0.5.9
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,12 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 0.6.0 =
+* FIX: Column stacking in responsive mode.
+* FIX: An issue where tables made with some older versions won't work.
+* FIX: Performance issues in the patterns/prebuilt tables viewer.
+* FIX: Table sometimes disappears in editor; especially during changing preview device.
 
 = 0.5.9 =
 * PRO: NEW: Toggle block
