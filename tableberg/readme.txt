@@ -3,9 +3,9 @@ Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks,
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,11 +68,16 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+= 0.6.1 =
+* FIX: An XSS issue in button block
+* FIX: Version control fatal error (sometimes occurred if plugin repository mirrors are used)
+
 = 0.6.0 =
 * FIX: Column stacking in responsive mode.
 * FIX: An issue where tables made with some older versions won't work.
 * FIX: Performance issues in the patterns/prebuilt tables viewer.
 * FIX: Table sometimes disappears in editor; especially during changing preview device.
+* FIX: Fixed size column widths won't persist after reload in editor.
 
 = 0.5.9 =
 * PRO: NEW: Toggle block
