@@ -1,11 +1,11 @@
-=== Table Block by Tableberg – WordPress Table Plugin For Block Editor ===
+=== Table Block by Tableberg – Best WordPress Table Plugin ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 0.6.2
+Stable tag: 0.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,13 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 0.6.3 =
+* PRO: NEW: Woocommerce products table
+* PRO: NEW: Search highlights matching text
+* PRO: FIX: Search is now case insensitive
+* NEW: Add table caption support
+* FIX: Cell vertical alignment now also aligns inner blocks
 
 = 0.6.2 =
 * PRO: NEW: Add individual cell border control
