@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           0.6.3
+ * Version:           0.6.5
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg
@@ -54,6 +54,7 @@ if (!function_exists('tab_fs')) {
                     'is_premium' => false,
                     'has_addons' => true,
                     'has_paid_plans' => false,
+                    'is_org_compliant' => true,
                     'menu' => array(
                         'slug' => 'tableberg-settings',
                         'first-path' => 'admin.php?page=tableberg-settings&route=welcome',
@@ -131,7 +132,7 @@ if (!class_exists('Tableberg')) {
 
     new Tableberg();
 
-    function load_tableberg_textdomain() {
+    function tableberg_load_textdomain() {
         load_plugin_textdomain('tableberg', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
@@ -143,7 +144,7 @@ if (!class_exists('Tableberg')) {
             Tableberg\Patterns\RegisterPatterns::upsells();
         }
 
-        load_tableberg_textdomain();
+        tableberg_load_textdomain();
 
         // wp_set_script_translations("tableberg-script","tableberg", dirname(plugin_basename(__FILE__)) . '/languages');
     }, 1);

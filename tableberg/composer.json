@@ -1,0 +1,20 @@
+{
+    "name": "dotcamp/tableberg",
+    "description": "Tableberg plugin by Dotcamp.",
+    "require-dev": {
+        "php-stubs/wordpress-stubs": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tableberg\\": [
+                "./",
+                "includes/"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
