@@ -1,11 +1,11 @@
-=== Table Block by Tableberg – WordPress Table Plugin For Gutenberg ===
+=== Table Block by Tableberg – Best WordPress Table Plugin ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 0.6.5
+Stable tag: 0.6.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,13 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 0.6.6 =
+* NEW: PRO: Create table with AI
+* NEW: Control to change alignment of all children of all cells
+* NEW: More controls to customize table caption
+* FIX: Table center align not working properly
+* FIX: XSS vulnerabilities
 
 = 0.6.5 =
 * FIX: Include required files in the zip

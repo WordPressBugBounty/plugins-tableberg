@@ -81,8 +81,7 @@
       "default": ""
     },
     "tableAlignment": {
-      "type": "string",
-      "default": "center"
+      "type": "string"
     },
     "blockSpacing": {
       "type": "string",
