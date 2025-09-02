@@ -170,9 +170,8 @@ class Table {
         }
 
         $wrapper_classes = ['wp-block-tableberg-wrapper'];
-        $table_alignment = $attributes['tableAlignment'];
-        if ($table_alignment) {
-            $wrapper_classes[] = 'justify-table-' . $table_alignment;
+        if (isset($attributes['tableAlignment'])) {
+            $wrapper_classes[] = 'justify-table-' . $attributes['tableAlignment'];
         }
 
         if ($attributes['stickyTopRow']) {

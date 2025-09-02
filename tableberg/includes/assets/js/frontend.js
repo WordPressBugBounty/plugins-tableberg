@@ -367,7 +367,7 @@
 
         const colGroup = table.querySelector("colgroup");
         if (colGroup) {
-            colGroup.remove();
+            colGroup.style.display = "none";
         }
 
         tbody.innerHTML = tableMarkup;
@@ -385,7 +385,7 @@
             return;
         }
         table.removeAttribute("data-tableberg-last");
-        table.parentElement.classList.remove("tableberg-scroll-x");
+        table.closest(".wp-block-tableberg-table").classList.remove("tableberg-scroll-x");
 
         table
             .querySelectorAll("[data-tableberg-tmp]")
@@ -464,7 +464,7 @@
             reviveTable(table);
         }
         table.setAttribute("data-tableberg-last", "scroll");
-        table.parentElement.classList.add("tableberg-scroll-x");
+        table.closest(".wp-block-tableberg-table").classList.add("tableberg-scroll-x");
     }
 
     /**
