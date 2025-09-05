@@ -1,4 +1,4 @@
-=== Table Block by Tableberg – Best Table Plugin for Block Editor ===
+=== Tableberg – Simple Gutenberg Table Block ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
@@ -13,7 +13,7 @@ Table Block For the Block Editor. Craft Beautiful Tables With Ease.
 
 == Description ==
 
-[Demo](https://tableberg.com/demo-tables/) | [Documentation](https://tableberg.com/docs/) |  [Get Pro] (https://tableberg.com/pricing/)
+[Demo](https://tableberg.com/demo-tables/) | [Documentation](https://tableberg.com/docs/) |  [Get Pro](https://tableberg.com/pricing/)
 
 The “Table Block by Tableberg” plugin for WordPress simplifies creating and managing tables within the block editor. It features intuitive sub-blocks, allowing users to add and customize tables easily.
 From pricing tables to product tables, you can build any type of tables using Tableberg. The plugin is designed for both novices and experienced users. It offers advanced functionalities like responsive controls, alignment adjustments, and cell merging, ensuring that tables look great on all devices without the need for coding skills.
