@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           0.6.7
+ * Version:           0.6.8
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg

@@ -1,11 +1,11 @@
-=== Tableberg – Simple Gutenberg Table Block ===
+=== Tableberg - Advanced Table Block For Block Editor ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 0.6.7
+Stable tag: 0.6.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Table Block For the Block Editor. Craft Beautiful Tables With Ease.
 
 == Description ==
 
-[Demo](https://tableberg.com/demo-tables/) | [Documentation](https://tableberg.com/docs/) |  [Get Pro](https://tableberg.com/pricing/)
+[Demo](https://tableberg.com/demo-tables/) | [Patterns Library](https://tableberg.com/table-patterns/) | [Documentation](https://tableberg.com/docs/) |  [Get Pro](https://tableberg.com/pricing/)
 
 The “Table Block by Tableberg” plugin for WordPress simplifies creating and managing tables within the block editor. It features intuitive sub-blocks, allowing users to add and customize tables easily.
 From pricing tables to product tables, you can build any type of tables using Tableberg. The plugin is designed for both novices and experienced users. It offers advanced functionalities like responsive controls, alignment adjustments, and cell merging, ensuring that tables look great on all devices without the need for coding skills.
@@ -69,6 +69,9 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 0.6.8 =
+* FIX: Border separation not working for some themes
 
 = 0.6.7 =
 * FIX: Scroll option in responsive mode not working
