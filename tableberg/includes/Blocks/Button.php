@@ -136,7 +136,7 @@ class Button {
     public function render_tableberg_button_block($attributes, $content, $block) {
         $text = isset($attributes['text']) ? $attributes['text'] : '';
         $align = isset($attributes['align']) ? $attributes['align'] : '';
-        $width = isset($attributes['width']) ? $attributes['width'] : '';
+        $width = isset($attributes['width']) ? esc_attr($attributes['width']) : '';
         $text_align = isset($attributes['textAlign']) ? $attributes['textAlign'] : '';
         $id = isset($attributes['id']) ? $attributes['id'] : '';
         $url = isset($attributes['url']) ? $attributes['url'] : '';

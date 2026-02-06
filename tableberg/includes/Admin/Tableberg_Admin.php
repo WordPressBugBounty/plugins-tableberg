@@ -83,9 +83,12 @@ class Tableberg_Admin {
      * Block properties control
      */
     private function update_block_properties() {
-        check_ajax_referer('block_properties');
-
-        if (isset($_POST['value']) && isset($_POST['property_name'])) {
+        if (
+            check_ajax_referer('block_properties') &&
+            isset($_POST['value']) &&
+            isset($_POST['property_name']) &&
+            current_user_can('manage_options')
+        ) {
             $value            = sanitize_text_field(wp_unslash($_POST['value']));
             $property_name    = sanitize_text_field(wp_unslash($_POST['property_name']));
             $saved_properties = get_option('tableberg_block_properties', false);
@@ -107,9 +110,13 @@ class Tableberg_Admin {
      * Toggle control
      */
     private function update_toggle_control() {
-        check_ajax_referer('toggle_control');
 
-        if (isset($_POST['enable']) && isset($_POST['toggle_name'])) {
+        if (
+            check_ajax_referer('toggle_control') &&
+            isset($_POST['enable']) &&
+            isset($_POST['toggle_name']) &&
+            current_user_can('manage_options')
+        ) {
             $enable      = sanitize_text_field(wp_unslash($_POST['enable']));
             $toggle_name = sanitize_text_field(wp_unslash($_POST['toggle_name']));
             update_option($toggle_name, $enable);
