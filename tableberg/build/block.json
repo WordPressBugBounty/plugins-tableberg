@@ -11,207 +11,121 @@
     "tableberg",
     "cell",
     "row",
-    "column"
-  ],
-  "allowedBlocks": [
-    "tableberg/cell"
+    "column",
+    "layout",
+    "responsive"
   ],
   "supports": {
     "html": false
   },
   "attributes": {
     "version": {
-      "type": "string",
-      "default": ""
-    },
-    "rows": {
-      "type": "number",
-      "default": 2
-    },
-    "cols": {
-      "type": "number",
-      "default": 2
-    },
-    "cells": {
       "type": "number",
       "default": 0
-    },
-    "fixedColWidth": {
-      "type": "boolean",
-      "default": true
-    },
-    "colWidths": {
-      "type": "array",
-      "default": [],
-      "_comment": "REMOVE THIS IN FUTURE"
-    },
-    "rowHeights": {
-      "type": "array",
-      "default": [],
-      "_comment": "REMOVE THIS IN FUTURE"
-    },
-    "colStyles": {
-      "type": "object",
-      "default": {
-        ".": {}
-      }
-    },
-    "rowStyles": {
-      "type": "object",
-      "default": {}
-    },
-    "cellPadding": {
-      "type": "object",
-      "default": {}
-    },
-    "cellSpacing": {
-      "type": "object",
-      "default": {}
-    },
-    "enableTableHeader": {
-      "type": "string",
-      "default": ""
-    },
-    "enableTableFooter": {
-      "type": "string",
-      "default": ""
-    },
-    "tableWidth": {
-      "type": "string",
-      "default": ""
-    },
-    "tableAlignment": {
-      "type": "string"
-    },
-    "blockSpacing": {
-      "type": "string",
-      "default": null
-    },
-    "headerBackgroundColor": {
-      "type": "string",
-      "default": null
-    },
-    "headerBackgroundGradient": {
-      "type": "string",
-      "default": null
-    },
-    "evenRowBackgroundColor": {
-      "type": "string",
-      "default": null
-    },
-    "evenRowBackgroundGradient": {
-      "type": "string",
-      "default": null
-    },
-    "oddRowBackgroundColor": {
-      "type": "string",
-      "default": null
-    },
-    "oddRowBackgroundGradient": {
-      "type": "string",
-      "default": null
-    },
-    "footerBackgroundColor": {
-      "type": "string",
-      "default": null
-    },
-    "footerBackgroundGradient": {
-      "type": "string",
-      "default": null
-    },
-    "tableBorder": {
-      "type": "object",
-      "default": {}
-    },
-    "tableBorderRadius": {
-      "type": "object",
-      "default": {}
-    },
-    "innerBorder": {
-      "type": "object",
-      "default": {
-        "color": "#000000",
-        "width": "1px"
-      }
-    },
-    "hideCellOutsideBorders": {
-      "type": "boolean",
-      "default": false
-    },
-    "enableInnerBorder": {
-      "type": "boolean",
-      "default": true
-    },
-    "cellBorderRadius": {
-      "type": "object",
-      "default": {}
     },
     "isExample": {
       "type": "boolean",
       "default": false
     },
-    "fontSize": {
-      "type": "string",
-      "default": ""
-    },
-    "fontColor": {
-      "type": "string",
-      "default": ""
-    },
-    "linkColor": {
-      "type": "string",
-      "default": ""
-    },
-    "responsive": {
+    "table": {
       "type": "object",
       "default": {
-        "last": "primary",
-        "breakpoints": {}
+        "rows": 0,
+        "cols": 0,
+        "headerEnabled": false,
+        "footerEnabled": false,
+        "stickyHeader": false,
+        "caption": "",
+        "tableWidth": "auto",
+        "tableAlignment": "left",
+        "cellSpacing": {
+          "horizontal": "0",
+          "vertical": "0"
+        },
+        "tableBorder": {
+          "top": "",
+          "right": "",
+          "bottom": "",
+          "left": ""
+        },
+        "fixedColumnWidths": true,
+        "pagination": {
+          "enabled": false,
+          "pageSize": 10,
+          "showPageNumbers": true,
+          "showPrevNext": true
+        },
+        "search": {
+          "enabled": false,
+          "placeholder": "Search...",
+          "highlightColor": "",
+          "position": "left"
+        },
+        "responsive": {
+          "tablet": {
+            "enabled": false,
+            "maxWidth": 1024,
+            "mode": "scroll",
+            "transpose": false,
+            "stackCount": 3,
+            "repeatFirstCol": false
+          },
+          "mobile": {
+            "enabled": false,
+            "maxWidth": 700,
+            "mode": "scroll",
+            "transpose": false,
+            "stackCount": 1,
+            "repeatFirstCol": false
+          }
+        }
       }
     },
-    "stickyTopRow": {
-      "type": "boolean",
-      "default": false
-    },
-    "stickyFirstCol": {
-      "type": "boolean",
-      "default": false
-    },
-    "innerBorderType": {
-      "type": "string",
-      "default": ""
-    },
-    "disableThemeStyle": {
-      "type": "boolean",
-      "default": false
-    },
-    "search": {
-      "type": "boolean",
-      "default": false
-    },
-    "searchPosition": {
-      "type": "string",
-      "default": "wide"
-    },
-    "searchPlaceholder": {
-      "type": "string",
-      "default": "Search..."
-    },
-    "sort": {
+    "rows": {
       "type": "object",
       "default": {}
     },
-    "dynamic": {
-      "type": "boolean",
-      "default": false
+    "columns": {
+      "type": "object",
+      "default": {}
     },
-    "caption": {
-      "type": "string",
-      "default": ""
+    "cells": {
+      "type": "object",
+      "default": {}
     },
-    "showCaption": {
-      "type": "boolean",
-      "default": false
+    "bindings": {
+      "type": "object",
+      "default": {}
+    },
+    "cellDefaults": {
+      "type": "object",
+      "default": {
+        "styles": {
+          "padding": {
+            "top": "var(--wp--preset--spacing--20)",
+            "right": "var(--wp--preset--spacing--20)",
+            "bottom": "var(--wp--preset--spacing--20)",
+            "left": "var(--wp--preset--spacing--20)"
+          },
+          "border": {
+            "top": "1px solid black",
+            "right": "1px solid black",
+            "bottom": "1px solid black",
+            "left": "1px solid black"
+          },
+          "borderRadius": {
+            "topLeft": "0px",
+            "topRight": "0px",
+            "bottomRight": "0px",
+            "bottomLeft": "0px"
+          },
+          "orientation": "vertical",
+          "elementGap": "var(--wp--preset--spacing--20)",
+          "wrap": "nowrap",
+          "verticalAlign": "middle",
+          "backgroundColor": ""
+        }
+      }
     }
   },
   "example": {
@@ -220,7 +134,8 @@
     }
   },
   "textdomain": "tableberg",
-  "editorScript": "tableberg-script",
-  "editorStyle": "tableberg-editor-style",
-  "style": "tableberg-style"
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js"
 }

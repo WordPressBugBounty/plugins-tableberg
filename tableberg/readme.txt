@@ -1,11 +1,11 @@
-=== Tableberg - Simple Gutenberg Table Block ===
+=== Tableberg - Table Block For Block Editor ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 0.6.14
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,8 +68,13 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
-= 0.6.14 =
-* PRO: FIX: pro assests not being enqueued by manually enqueuing them
+= 1.0.0 =
+* NEW: Introduced a new architecture for better performance and expanded feature support.
+* PRO: NEW: Added new datatable feature: pagination.
+* PRO: IMPROVE: Updated existing datatable features: search and sorting.
+* PRO: NEW: Added dynamic data source.
+* PRO: IMPROVE: Updated multi-cell selection and styling for multi-selected cells.
+* IMPROVE: Moved cell controls for adding/removing rows and columns, and duplicating rows/columns, into a separate toolbar.
 
 = 0.6.13 =
 * Update freemius sdk
@@ -297,4 +302,3 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 * FIX: (Table Block) Fixed an issue with undoing adding a row.
 * FIX: (Table Block) Fixed an issue with undoing adding a column.
 * FIX: (Button Block) Fixed an issue with color.
-

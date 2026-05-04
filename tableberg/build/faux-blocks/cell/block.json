@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/cell",
+  "title": "Cell",
+  "category": "design",
+  "description": "A cell within a Tableberg table",
+  "parent": [
+    "tableberg/table"
+  ],
+  "allowedBlocks": [
+    "tableberg/text",
+    "tableberg/button",
+    "tableberg/image",
+    "tableberg/list",
+    "tableberg/icon",
+    "tableberg/star-rating",
+    "tableberg/custom-html"
+  ],
+  "attributes": {
+    "cellCoords": {
+      "type": "object",
+      "default": {
+        "row": 0,
+        "col": 0
+      }
+    }
+  },
+  "supports": {
+    "html": false,
+    "lock": false,
+    "renaming": false,
+    "reusable": false,
+    "visibility": false
+  },
+  "textdomain": "tableberg"
+}

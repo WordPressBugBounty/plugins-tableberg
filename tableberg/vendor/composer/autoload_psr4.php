@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Tableberg\\Renderer\\' => array($baseDir . '/renderer'),
     'Tableberg\\' => array($baseDir . '/', $baseDir . '/includes'),
 );

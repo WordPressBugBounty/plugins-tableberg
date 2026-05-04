@@ -1,6 +1,6 @@
 {
     "name": "tableberg",
-    "version": "0.6.14",
+    "version": "1.0.0",
     "description": "Table Block By Tableberg - Advanced Table Block for Block Editor",
     "author": "Dotcamp",
     "license": "GPL-2.0-or-later",
@@ -8,8 +8,10 @@
     "files": [
         "build",
         "includes",
+        "renderer",
         "vendor/composer",
         "vendor/autoload.php",
+        "vendor/freemius",
         "readme.txt",
         "tableberg.php",
         "composer.json"
@@ -17,13 +19,15 @@
     "scripts": {
         "build": "wp-scripts build",
         "export": "wp-scripts build && wp-scripts plugin-zip",
-        "start": "wp-scripts start"
+        "start": "wp-scripts start",
+        "check:types": "tsc --noEmit"
     },
     "devDependencies": {
         "dotenv": "^16.4.1"
     },
     "dependencies": {
         "@tableberg/components": "workspace:*",
-        "@tableberg/shared": "workspace:*"
+        "@tableberg/shared": "workspace:*",
+        "@tanstack/react-query": "^5.60.0"
     }
 }

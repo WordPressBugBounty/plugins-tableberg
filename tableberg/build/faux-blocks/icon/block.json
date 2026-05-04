@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/icon",
+  "title": "Icon",
+  "category": "design",
+  "description": "An icon element within a Tableberg cell",
+  "parent": [
+    "tableberg/cell"
+  ],
+  "attributes": {
+    "cellCoords": {
+      "type": "object",
+      "default": {
+        "row": 0,
+        "col": 0
+      }
+    },
+    "elementIndex": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "supports": {
+    "html": false,
+    "lock": false,
+    "renaming": false,
+    "reusable": false,
+    "visibility": false
+  },
+  "textdomain": "tableberg"
+}

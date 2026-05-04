@@ -1,87 +1,27 @@
 <?php
 
-/**
- * The admin-specific functionality of the plugin.
- *
- * @package tableberg
- */
-
 namespace Tableberg\Admin;
 
 use Tableberg;
-use Tableberg\Version_Control;
 
-/**
- * Manage Tableberg Admin
- */
 class Tableberg_Admin {
-    /**
-     * The ID of this plugin.
-     *
-     * @access   private
-     * @var      string $plugin_name The ID of this plugin.
-     */
-    private $plugin_name;
-
-    /**
-     * The version of this plugin.
-     *
-     * @access   private
-     * @var      string $version The current version of this plugin.
-     */
-    private $version;
-
-    /**
-     * The PATH of this plugin.
-     *
-     * @access   private
-     * @var      string $plugin_path The PATH of this plugin.
-     */
-    private $plugin_path;
-
-    /**
-     * The URL of this plugin.
-     *
-     * @access   private
-     * @var      string $plugin_url The URL of this plugin.
-     */
     private $plugin_url;
 
-    /**
-     * Initialize the class and set its properties.
-     */
     public function __construct() {
 
         $this->plugin_name = 'tableberg';
-        $this->version     = TABLEBERG_VERSION;
-        $this->plugin_path = TABLEBERG_DIR_PATH;
         $this->plugin_url  = TABLEBERG_URL;
-        $this->add_tableberg_admin_hook();
 
-        // initialize version sync manager.
-        Tableberg\Version_Sync_Manager::init();
+        add_action('wp_ajax_tableberg_toggle_control', [$this, 'update_toggle_control']);
+        add_action('wp_ajax_tableberg_block_properties', [$this, 'update_block_properties']);
 
-        // initialize version control manager.
-        Version_Control::init();
-
-        add_action('admin_menu', array($this, 'register_admin_menus'));
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_script'));
-        add_action('admin_notices', array($this, 'tableberg_review_notice'));
-        add_action('wp_ajax_TablebergReviewNoticeHide', array($this, 'tableberg_hide_review_notify'));
-        add_filter('tableberg/filter/admin_settings_menu_data', array($this, 'add_settings_menu_data'), 1, 1);
+        add_action('admin_menu', [$this, 'register_admin_menus']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_script']);
+        add_action('admin_notices', [$this, 'tableberg_review_notice']);
+        add_action('wp_ajax_TablebergReviewNoticeHide', [$this, 'tableberg_hide_review_notify']);
+        add_filter('tableberg/filter/admin_settings_menu_data', [$this, 'add_settings_menu_data'], 1, 1);
     }
 
-    /**
-     * Add hook
-     */
-    public function add_tableberg_admin_hook() {
-        add_action('wp_ajax_tableberg_toggle_control', array($this, 'update_toggle_control'));
-        add_action('wp_ajax_tableberg_block_properties', array($this, 'update_block_properties'));
-    }
-
-    /**
-     * Block properties control
-     */
     private function update_block_properties() {
         if (
             check_ajax_referer('block_properties') &&
@@ -106,9 +46,6 @@ class Tableberg_Admin {
         die();
     }
 
-    /**
-     * Toggle control
-     */
     private function update_toggle_control() {
 
         if (
@@ -124,91 +61,96 @@ class Tableberg_Admin {
         die();
     }
 
-    /**
-     * Add data for admin settings menu frontend.
-     *
-     * @param array $data frontend data.
-     *
-     * @return array filtered frontend data
-     */
     public function add_settings_menu_data($data) {
-        $data['assets'] = array(
+        $data['assets'] = [
             'logo' => trailingslashit($this->plugin_url) . 'includes/Admin/images/logos/menu-icon-colored.svg',
             'logoTransparent' => trailingslashit($this->plugin_url) . 'includes/Admin/images/logos/menu-icon-colored-transparent.svg',
-        );
+        ];
 
-        $data['individual_control'] = array(
+        $data['individual_control'] = [
             'data' => get_option('tableberg_individual_control', false),
-            'ajax' => array(
-                'toggleControl' => array(
+            'ajax' => [
+                'toggleControl' => [
                     'url'    => admin_url('admin-ajax.php'),
                     'action' => 'tableberg_toggle_control',
                     'nonce'  => wp_create_nonce('toggle_control'),
-                ),
-            ),
-        );
-        $data['global_control']     = array(
+                ],
+            ],
+        ];
+        $data['global_control']     = [
             'data' => get_option('tableberg_global_control', false),
-            'ajax' => array(
-                'toggleControl' => array(
+            'ajax' => [
+                'toggleControl' => [
                     'url'    => admin_url('admin-ajax.php'),
                     'action' => 'tableberg_toggle_control',
                     'nonce'  => wp_create_nonce('toggle_control'),
-                ),
-            ),
-        );
-        $data['block_properties']   = array(
+                ],
+            ],
+        ];
+        $data['block_properties']   = [
             'data' => get_option('tableberg_block_properties', false),
-            'ajax' => array(
-                'blockProperties' => array(
+            'ajax' => [
+                'blockProperties' => [
                     'url'    => admin_url('admin-ajax.php'),
                     'action' => 'tableberg_block_properties',
                     'nonce'  => wp_create_nonce('block_properties'),
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         global $tp_fs;
         if (isset($tp_fs)) {
             $data['misc'] = [
                 'pro_status' => $tp_fs->is__premium_only()
-                    && $tp_fs->can_use_premium_code()
+                    && $tp_fs->can_use_premium_code(),
             ];
         } else {
             $data['misc'] = [
-                'pro_status' => false
+                'pro_status' => false,
             ];
         }
 
-        $data = array_merge($data, Tableberg\Utils\Utils::welcome_page());
+        $data = array_merge($data, $this->welcome_page());
         return $data;
     }
 
-    /**
-     * Enqueue admin scripts.
-     */
     public function enqueue_admin_script() {
         $tableberg_assets = new Tableberg\Assets();
         $tableberg_assets->register_admin_assets();
     }
 
-    /**
-     * Set template for main setting page
-     *
-     * @return void
-     */
+    public static function welcome_page() {
+        return [
+            'welcome' => [
+                'title' => 'Welcome to Tableberg!',
+                'content' => 'Elevate Your Content with Seamless Tables - The Ultimate WordPress Block Editor Plugin for Effortless Table Creation!',
+            ],
+            'documentation' => [
+                'title' => 'Documentation',
+                'content' => 'Elevate your space with Tableberg: a sleek, modern table block for style and functionality. Crafted for timeless elegance and versatility.',
+            ],
+            'support' => [
+                'title' => 'Support',
+                'content' => "Visit our Tableberg Support Page for quick solutions and assistance. We're here to ensure your Tableberg experience is seamless and satisfying.",
+            ],
+            'community' => [
+                'title' => 'Join Community',
+                'content' => 'Join the vibrant Tableberg community. Connect, share, and discover endless possibilities together. Elevate your experience with like-minded enthusiasts now!',
+            ],
+            'upgrade' => [
+                'title' => 'Upgrade to Tableberg PRO!',
+                'content' => 'Elevate Your Content with Seamless Tables - The Ultimate WordPress Block Editor Plugin for Effortless Table Creation!',
+            ],
+        ];
+    }
+
     public function main_menu_template_cb() {
         ?>
 <div id="tableberg-admin-menu"></div>
 <?php
     }
 
-    /**
-     * Register Setting Pages for the admin area.
-     */
     public function register_admin_menus() {
-
-        // assign global variables.
         global $menu_page;
         global $menu_page_slug;
 
@@ -218,16 +160,11 @@ class Tableberg_Admin {
             __('Tableberg', 'tableberg'),
             'manage_options',
             $menu_page_slug,
-            array($this, 'main_menu_template_cb'),
+            [$this, 'main_menu_template_cb'],
             plugin_dir_url(__FILE__) . 'images/logos/menu-icon.svg'
         );
     }
 
-    /**
-     * Generating the review notice.
-     *
-     * @since 2.1.6
-     */
     public static function tableberg_review_notice() {
         $install_date = get_option('tableberg_installDate');
         $display_date = date('Y-m-d h:i:s');
@@ -282,14 +219,9 @@ class Tableberg_Admin {
     }
 
 
-    /**
-     * Hides the review notice.
-     *
-     * @since 2.1.6
-     */
     public function tableberg_hide_review_notify() {
         update_option('tableberg_review_notify', 'yes');
-        echo wp_json_encode(array('success'));
+        echo wp_json_encode(['success']);
         exit;
     }
 }

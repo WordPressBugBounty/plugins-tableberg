@@ -4,17 +4,26 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit5c4d43dcdd3f5361bd26ecb40ba79213
+class ComposerStaticInit11c354966efbdc6c5c2617057e345932
 {
+    public static $files = array (
+        '8d50dc88e56bace65e1e72f6017983ed' => __DIR__ . '/..' . '/freemius/wordpress-sdk/start.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
+            'Tableberg\\Renderer\\' => 19,
             'Tableberg\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Tableberg\\' => 
+        'Tableberg\\Renderer\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/renderer',
+        ),
+        'Tableberg\\' =>
         array (
             0 => __DIR__ . '/../..' . '/',
             1 => __DIR__ . '/../..' . '/includes',
@@ -28,9 +37,9 @@ class ComposerStaticInit5c4d43dcdd3f5361bd26ecb40ba79213
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit5c4d43dcdd3f5361bd26ecb40ba79213::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit5c4d43dcdd3f5361bd26ecb40ba79213::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit5c4d43dcdd3f5361bd26ecb40ba79213::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit11c354966efbdc6c5c2617057e345932::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit11c354966efbdc6c5c2617057e345932::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit11c354966efbdc6c5c2617057e345932::$classMap;
 
         }, null, ClassLoader::class);
     }
