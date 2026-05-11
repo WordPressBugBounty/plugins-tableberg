@@ -3,11 +3,6 @@
 namespace Tableberg\Renderer\Migrations;
 
 class BlockContentMigrator {
-    public function __construct() {
-        add_action('rest_api_init', [$this, 'register_rest_hooks']);
-        add_filter('render_block_data', [$this, 'migrate_parsed_block']);
-    }
-
     public function migrate_parsed_block($parsed_block) {
         if (!is_array($parsed_block)) {
             return $parsed_block;

@@ -1,11 +1,11 @@
-=== Tableberg - Table Block For Block Editor ===
+=== Tableberg - Simple Gutenberg Table Block ===
 Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,12 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 1.0.1 =
+* NEW: Add custom class names for table and cells
+* FIX: Fix PHP warnings
+* FIX: Toggle block was registered too early
+* FIX: Migrated tables' font sizes were too large
 
 = 1.0.0 =
 * NEW: Introduced a new architecture for better performance and expanded feature support.

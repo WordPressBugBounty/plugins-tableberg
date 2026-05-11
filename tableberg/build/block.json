@@ -16,7 +16,8 @@
     "responsive"
   ],
   "supports": {
-    "html": false
+    "html": false,
+    "customClassName": false
   },
   "attributes": {
     "version": {
@@ -32,6 +33,7 @@
       "default": {
         "rows": 0,
         "cols": 0,
+        "className": "",
         "headerEnabled": false,
         "footerEnabled": false,
         "stickyHeader": false,

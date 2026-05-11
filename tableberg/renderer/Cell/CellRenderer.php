@@ -271,10 +271,15 @@ class CellRenderer {
                 tabindex='0'
                 aria-sort='none'" : '';
 
+        $classAttr = $context->className !== ''
+            ? " class='" . \esc_attr($context->className) . "'"
+            : '';
+
         $html =
             "<$tag
                 rowspan='{$context->rowSpan}'
                 colspan='{$context->colSpan}'
+                {$classAttr}
                 style='$stylesStr'
                 data-cell-row='{$context->row}'
                 data-cell-col='{$context->col}'

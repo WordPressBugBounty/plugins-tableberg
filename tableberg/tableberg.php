@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 if (!defined('TABLEBERG_VERSION')) {
-    define('TABLEBERG_VERSION', '1.0.0');
+    define('TABLEBERG_VERSION', '0.6.11');
 }
 if (!defined('TABLEBERG_DIR_PATH')) {
     define('TABLEBERG_DIR_PATH', plugin_dir_path(__FILE__));
@@ -77,7 +77,20 @@ if (!class_exists('Tableberg')) {
     class Tableberg {
         public function __construct() {
             new Tableberg\Admin\Tableberg_Admin();
+            add_action('init', [$this, 'register_blocks']);
 
+            $restController = new Tableberg\DynamicData\RestController();
+            add_action('rest_api_init', [$restController, 'register_routes']);
+
+            $migrator = new BlockContentMigrator();
+            add_action('rest_api_init', [$migrator, 'register_rest_hooks']);
+            add_filter('render_block_data', [$migrator, 'migrate_parsed_block']);
+
+            register_activation_hook(__FILE__, [$this, 'activate_plugin']);
+            register_deactivation_hook(__FILE__, [$this, 'deactivate_plugin']);
+        }
+
+        public function register_blocks() {
             $renderer = new TableRenderer();
 
             register_block_type_from_metadata(
@@ -97,12 +110,6 @@ if (!class_exists('Tableberg')) {
                     ],
                 ]
             );
-
-            new Tableberg\DynamicData\RestController();
-            new BlockContentMigrator();
-
-            register_activation_hook(__FILE__, [$this, 'activate_plugin']);
-            register_deactivation_hook(__FILE__, [$this, 'deactivate_plugin']);
         }
 
         public function activate_plugin() {

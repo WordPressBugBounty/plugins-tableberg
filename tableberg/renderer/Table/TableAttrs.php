@@ -59,6 +59,60 @@ class TableAttrs {
         return $instance;
     }
 
+    /** @return array<string, mixed> */
+    public static function get_table_defaults() {
+        $defaults = Defaults::get_defaults();
+
+        if (isset($defaults['table']) && is_array($defaults['table'])) {
+            return $defaults['table'];
+        }
+
+        if (isset($defaults['tableConfig']) && is_array($defaults['tableConfig'])) {
+            return $defaults['tableConfig'];
+        }
+
+        return [];
+    }
+
+    /** @return array<string, mixed> */
+    public static function get_cell_style_defaults() {
+        $defaults = Defaults::get_defaults();
+
+        if (
+            isset($defaults['cellDefaults']) &&
+            is_array($defaults['cellDefaults']) &&
+            isset($defaults['cellDefaults']['styles']) &&
+            is_array($defaults['cellDefaults']['styles'])
+        ) {
+            return array_merge(
+                ['cells' => []],
+                $defaults['cellDefaults']['styles']
+            );
+        }
+
+        if (isset($defaults['cellStyles']) && is_array($defaults['cellStyles'])) {
+            return array_merge(['cells' => []], $defaults['cellStyles']);
+        }
+
+        return ['cells' => []];
+    }
+
+    /** @return array<int, array{array{int, int}, array<int, mixed>}> */
+    public static function get_data_defaults() {
+        $defaults = Defaults::get_defaults();
+
+        if (
+            isset($defaults['data']) &&
+            is_array($defaults['data']) &&
+            isset($defaults['data']['cells']) &&
+            is_array($defaults['data']['cells'])
+        ) {
+            return $defaults['data']['cells'];
+        }
+
+        return [];
+    }
+
     /** @return array<int, RowConfig> */
     private static function parse_row_configs($data) {
         if (!is_array($data)) {
@@ -139,11 +193,10 @@ class Data {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults();
-        $d = $defaults['data'];
+        $default_cells = TableAttrs::get_data_defaults();
 
         $instance = new self();
-        $instance->cells = self::parse_cells(getOrNull($data['cells']), $d['cells']);
+        $instance->cells = self::parse_cells(getOrNull($data['cells']), $default_cells);
 
         return $instance;
     }
@@ -193,8 +246,10 @@ class PaginationConfig {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults();
-        $d = $defaults['tableConfig']['pagination'];
+        $table_defaults = TableAttrs::get_table_defaults();
+        $d = isset($table_defaults['pagination']) && is_array($table_defaults['pagination'])
+            ? $table_defaults['pagination']
+            : [];
 
         $instance = new self();
         $instance->enabled = new BoolAttr(getOrNull($data['enabled']), $d['enabled']);
@@ -222,8 +277,10 @@ class SearchConfig {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults();
-        $d = $defaults['tableConfig']['search'];
+        $table_defaults = TableAttrs::get_table_defaults();
+        $d = isset($table_defaults['search']) && is_array($table_defaults['search'])
+            ? $table_defaults['search']
+            : [];
 
         $instance = new self();
         $instance->enabled = new BoolAttr(getOrNull($data['enabled']), $d['enabled']);
@@ -309,7 +366,10 @@ class ResponsiveConfig {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults()['tableConfig']['responsive'];
+        $table_defaults = TableAttrs::get_table_defaults();
+        $defaults = isset($table_defaults['responsive']) && is_array($table_defaults['responsive'])
+            ? $table_defaults['responsive']
+            : [];
 
         $instance = new self();
         $instance->tablet = ResponsiveBreakpointConfig::from_array(
@@ -335,7 +395,10 @@ class CellSpacingConfig {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults()['tableConfig']['cellSpacing'];
+        $table_defaults = TableAttrs::get_table_defaults();
+        $defaults = isset($table_defaults['cellSpacing']) && is_array($table_defaults['cellSpacing'])
+            ? $table_defaults['cellSpacing']
+            : [];
 
         $instance = new self();
         $instance->horizontal = new StringAttr(
@@ -370,6 +433,9 @@ class CellData {
     /** @var Span */
     public $span;
 
+    /** @var StringAttr */
+    public $className;
+
     /** @var array<int, CellElement> */
     public $elements;
 
@@ -385,6 +451,7 @@ class CellData {
 
         $instance = new self();
         $instance->span = Span::from_array(getOrNull($data['span']));
+        $instance->className = new StringAttr(getOrNull($data['className']), '');
         $instance->elements = [];
 
         $elements = getOrNull($data['elements']);
@@ -410,6 +477,9 @@ class TableConfig {
 
     /** @var NumberAttr */
     public $cols;
+
+    /** @var StringAttr */
+    public $className;
 
     /** @var BoolAttr */
     public $headerEnabled;
@@ -450,12 +520,12 @@ class TableConfig {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults();
-        $d = $defaults['tableConfig'];
+        $d = TableAttrs::get_table_defaults();
 
         $instance = new self();
         $instance->rows = new NumberAttr(getOrNull($data['rows']), $d['rows']);
         $instance->cols = new NumberAttr(getOrNull($data['cols']), $d['cols']);
+        $instance->className = new StringAttr(getOrNull($data['className']), '');
         $instance->headerEnabled = new BoolAttr(getOrNull($data['headerEnabled']), $d['headerEnabled']);
         $instance->footerEnabled = new BoolAttr(getOrNull($data['footerEnabled']), $d['footerEnabled']);
         $instance->stickyHeader = new BoolAttr(getOrNull($data['stickyHeader']), $d['stickyHeader']);
@@ -517,8 +587,7 @@ class CellStyles {
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $defaults = Defaults::get_defaults();
-        $d = $defaults['cellStyles'];
+        $d = TableAttrs::get_cell_style_defaults();
 
         $instance = new self();
         $instance->padding = Sides::from_array(getOrNull($data['padding']), $d['padding']);

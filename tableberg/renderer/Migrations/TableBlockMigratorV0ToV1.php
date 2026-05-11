@@ -2072,20 +2072,20 @@ class TableBlockMigratorV0ToV1 {
 
     private function map_legacy_font_size_slug($slug) {
         $built_in_font_sizes = array(
-            's' => '0.875rem',
-            'small' => '0.875rem',
-            'm' => '1rem',
-            'normal' => '1rem',
-            'medium' => '1rem',
-            'l' => '1.38rem',
-            'large' => '1.38rem',
-            'xl' => '1.75rem',
-            'x-large' => '1.75rem',
-            'xlarge' => '1.75rem',
-            'xxl' => '2.15rem',
-            'xx-large' => '2.15rem',
-            'xxlarge' => '2.15rem',
-            'huge' => '2.15rem',
+            's' => '0.75rem',
+            'small' => '0.75rem',
+            'm' => '0.875rem',
+            'normal' => '0.875rem',
+            'medium' => '0.875rem',
+            'l' => '1rem',
+            'large' => '1rem',
+            'xl' => '1.38rem',
+            'x-large' => '1.38rem',
+            'xlarge' => '1.38rem',
+            'xxl' => '1.75rem',
+            'xx-large' => '1.75rem',
+            'xxlarge' => '1.75rem',
+            'huge' => '1.75rem',
         );
 
         $slug = strtolower((string) $slug);

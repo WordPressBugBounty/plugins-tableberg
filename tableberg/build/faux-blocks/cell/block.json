@@ -28,6 +28,7 @@
   },
   "supports": {
     "html": false,
+    "customClassName": false,
     "lock": false,
     "renaming": false,
     "reusable": false,

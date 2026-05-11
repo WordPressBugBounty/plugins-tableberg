@@ -6,6 +6,9 @@ use function Tableberg\Renderer\getArrayOrNull;
 use function Tableberg\Renderer\getStringOrNull;
 
 class CellRenderContext {
+    /** @var string */
+    public $className;
+
     /** @var bool */
     public $hasCellCoords;
 
@@ -110,6 +113,7 @@ class CellRenderContext {
      * @param string|null $width
      * @param string|null $height
      * @param bool $stickyHeader
+     * @param string|null $className
      * @return self
      */
     public static function create(
@@ -125,7 +129,8 @@ class CellRenderContext {
         $sortableType = null,
         $width = null,
         $height = null,
-        $stickyHeader = false
+        $stickyHeader = false,
+        $className = null
     ) {
         $instance = new self();
 
@@ -203,6 +208,7 @@ class CellRenderContext {
         $instance->width = getStringOrNull($width);
         $instance->height = getStringOrNull($height);
         $instance->stickyHeader = (bool) $stickyHeader;
+        $instance->className = trim((string) (getStringOrNull($className) ?? ''));
 
         return $instance;
     }

@@ -290,7 +290,8 @@ class TableRenderer {
                         $sortableType,
                         $columnWidth,
                         $rowHeight,
-                        $stickyHeader
+                        $stickyHeader,
+                        $this->getCellClassName($cell)
                     )
                 );
             }
@@ -328,7 +329,13 @@ class TableRenderer {
             $figureAlignmentClass = 'alignfull';
         }
 
-        $figureClass = trim("wp-block-tableberg {$figureAlignmentClass}");
+        $figureClass = trim(
+            implode(' ', array_filter([
+                'wp-block-tableberg',
+                $attrs->table->className->asAttr(),
+                $figureAlignmentClass,
+            ]))
+        );
 
         $captionHtml = '';
         if ($caption->isNotEmpty()) {
@@ -472,6 +479,20 @@ class TableRenderer {
         }
 
         return $cell->ribbon;
+    }
+
+    /**
+     * @param CellData|null $cell
+     * @return string|null
+     */
+    private function getCellClassName($cell) {
+        if (!$cell instanceof CellData || !$cell->className instanceof StringAttr) {
+            return null;
+        }
+
+        $className = $cell->className->asAttr();
+
+        return $className === '' ? null : $className;
     }
 
     private function getCellSpan($cell) {

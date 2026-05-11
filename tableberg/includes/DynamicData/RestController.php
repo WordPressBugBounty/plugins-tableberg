@@ -23,11 +23,6 @@ class RestController
         'featured_image',
     );
 
-    public function __construct()
-    {
-        add_action('rest_api_init', array($this, 'register_routes'));
-    }
-
     public function register_routes()
     {
         register_rest_route(

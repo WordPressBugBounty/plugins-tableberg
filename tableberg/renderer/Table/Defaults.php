@@ -27,6 +27,7 @@ class Defaults {
             'table' => [
                 'rows' => 0,
                 'cols' => 0,
+                'className' => '',
                 'headerEnabled' => false,
                 'footerEnabled' => false,
                 'stickyHeader' => false,

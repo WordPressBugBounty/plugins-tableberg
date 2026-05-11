@@ -15,7 +15,9 @@
     "Table",
     "Layout"
   ],
-  "supports": {},
+  "supports": {
+    "customClassName": false
+  },
   "attributes": {
     "tabs": {
       "type": "array",
