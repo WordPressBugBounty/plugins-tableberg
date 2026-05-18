@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,15 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 1.0.2 =
+* FIX: Custom toolbar getting hidden behind other elements.
+* FIX: Custom toolbar getting hidden on click.
+* FIX: Newly created tables become empty after reload.
+* FIX: Custom column width not working.
+* FIX: Custom font size picker not working for multi element font size picker
+* FIX: Decrease font sizes on older tables
+* PRO: FIX: Inserting styled list element crashes block
 
 = 1.0.1 =
 * NEW: Add custom class names for table and cells

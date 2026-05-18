@@ -84,12 +84,12 @@
       }
     },
     "rows": {
-      "type": "object",
-      "default": {}
+      "type": "array",
+      "default": []
     },
     "columns": {
-      "type": "object",
-      "default": {}
+      "type": "array",
+      "default": []
     },
     "cells": {
       "type": "object",

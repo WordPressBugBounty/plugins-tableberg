@@ -3,7 +3,7 @@
 namespace Tableberg\Renderer\Migrations;
 
 class TableBlockMigrator {
-    const CURRENT_VERSION = 2;
+    const CURRENT_VERSION = 3;
 
     public function migrate($attrs, $block = null) {
         if (!is_array($attrs)) {
@@ -49,6 +49,7 @@ class TableBlockMigrator {
         return [
             0 => new TableBlockMigratorV0ToV1(),
             1 => new TableBlockMigratorV1ToV2(),
+            2 => new TableBlockMigratorV2ToV3(),
         ];
     }
 }
