@@ -3,9 +3,9 @@ Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks,
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,9 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 1.0.3 =
+* FIX: Spacing control appearance
 
 = 1.0.2 =
 * FIX: Custom toolbar getting hidden behind other elements.
