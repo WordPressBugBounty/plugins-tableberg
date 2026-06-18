@@ -337,13 +337,33 @@ class TableRenderer {
             ]))
         );
 
+        $figureStyles = [];
+        $spacingSides = [
+            'margin-top' => $attrs->table->margin->top,
+            'margin-right' => $attrs->table->margin->right,
+            'margin-bottom' => $attrs->table->margin->bottom,
+            'margin-left' => $attrs->table->margin->left,
+            'padding-top' => $attrs->table->padding->top,
+            'padding-right' => $attrs->table->padding->right,
+            'padding-bottom' => $attrs->table->padding->bottom,
+            'padding-left' => $attrs->table->padding->left,
+        ];
+        foreach ($spacingSides as $prop => $sideAttr) {
+            if ($sideAttr->isNotEmpty()) {
+                $figureStyles[] = $prop . ': ' . $sideAttr->asAttr();
+            }
+        }
+        $figureStyleAttr = !empty($figureStyles)
+            ? "style='" . implode('; ', $figureStyles) . ";'"
+            : '';
+
         $captionHtml = '';
         if ($caption->isNotEmpty()) {
             $captionHtml = "<figcaption class='tableberg-table-caption wp-element-caption'>{$caption->asHtml()}</figcaption>";
         }
 
         $html =
-            "<figure class='{$figureClass}'>
+            "<figure class='{$figureClass}' {$figureStyleAttr}>
                 <div class='{$wrapperClass}'>
                     <table
                         class='{$tableClassAttr}'

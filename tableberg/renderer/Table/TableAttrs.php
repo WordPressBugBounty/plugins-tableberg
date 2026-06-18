@@ -505,6 +505,12 @@ class TableConfig {
     /** @var Sides */
     public $tableBorder;
 
+    /** @var Sides */
+    public $margin;
+
+    /** @var Sides */
+    public $padding;
+
     /** @var BoolAttr */
     public $fixedColumnWidths;
 
@@ -543,6 +549,15 @@ class TableConfig {
         $instance->tableBorder = Sides::from_array(
             getOrNull($data['tableBorder']),
             $d['tableBorder']
+        );
+        $emptySides = ['top' => '', 'right' => '', 'bottom' => '', 'left' => ''];
+        $instance->margin = Sides::from_array(
+            getOrNull($data['margin']),
+            isset($d['margin']) && is_array($d['margin']) ? $d['margin'] : $emptySides
+        );
+        $instance->padding = Sides::from_array(
+            getOrNull($data['padding']),
+            isset($d['padding']) && is_array($d['padding']) ? $d['padding'] : $emptySides
         );
         $instance->fixedColumnWidths = new BoolAttr(
             getOrNull($data['fixedColumnWidths']),
@@ -737,6 +752,7 @@ class CellElement {
                 'icon',
                 'star-rating',
                 'custom-html',
+                'styled-list',
             ];
         }
 

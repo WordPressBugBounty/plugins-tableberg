@@ -3,7 +3,7 @@
         'name' => 'dotcamp/tableberg',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'dcef22481f90d4c5c1f7669c5cb33b2bcf283aa2',
+        'reference' => '67b00e6bd2fdc96f6629e7825a52cfbaddcc3a1b',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'dotcamp/tableberg' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'dcef22481f90d4c5c1f7669c5cb33b2bcf283aa2',
+            'reference' => '67b00e6bd2fdc96f6629e7825a52cfbaddcc3a1b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,16 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+= 1.0.4 =
+* NEW: Margin and padding controls for the whole table block
+* IMPROVE: Build a multi-cell selection for merging by holding Ctrl/Cmd/Shift while clicking cells
+* IMPROVE: Hardened content rendering by removing direct innerHTML usage
+* FIX: Table not showing on the frontend after converting from the core Table block
+* FIX: Pasting text into table cells
+* FIX: Edit toolbar detaching from the table when block padding is set
+* FIX: Missing hover labels on the row and column edit toolbar buttons
+* PRO: FIX: Styled list element not rendering on the frontend
 
 = 1.0.3 =
 * FIX: Spacing control appearance

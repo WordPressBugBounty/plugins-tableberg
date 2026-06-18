@@ -44,6 +44,18 @@ class Defaults {
                     'bottom' => '',
                     'left' => '',
                 ],
+                'margin' => [
+                    'top' => '',
+                    'right' => '',
+                    'bottom' => '',
+                    'left' => '',
+                ],
+                'padding' => [
+                    'top' => '',
+                    'right' => '',
+                    'bottom' => '',
+                    'left' => '',
+                ],
                 'fixedColumnWidths' => true,
                 'pagination' => [
                     'enabled' => false,

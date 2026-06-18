@@ -11,7 +11,7 @@ class ComposerStaticInit11c354966efbdc6c5c2617057e345932
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' =>
+        'T' => 
         array (
             'Tableberg\\Renderer\\' => 19,
             'Tableberg\\' => 10,
@@ -19,11 +19,11 @@ class ComposerStaticInit11c354966efbdc6c5c2617057e345932
     );
 
     public static $prefixDirsPsr4 = array (
-        'Tableberg\\Renderer\\' =>
+        'Tableberg\\Renderer\\' => 
         array (
             0 => __DIR__ . '/../..' . '/renderer',
         ),
-        'Tableberg\\' =>
+        'Tableberg\\' => 
         array (
             0 => __DIR__ . '/../..' . '/',
             1 => __DIR__ . '/../..' . '/includes',
