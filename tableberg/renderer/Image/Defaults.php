@@ -28,6 +28,9 @@ class Defaults {
             'caption' => '',
             'href' => '',
             'linkTarget' => '_self',
+            'lightbox' => [
+                'enabled' => false,
+            ],
             'border' => [
                 'top' => '',
                 'right' => '',

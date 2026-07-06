@@ -197,6 +197,9 @@ class ListStyles {
     public $iconSpacing;
 
     /** @var StringAttr */
+    public $iconTopSpacing;
+
+    /** @var StringAttr */
     public $fontSize;
 
     /** @var StringAttr */
@@ -221,6 +224,7 @@ class ListStyles {
         $defaultIconColor = getOrNull($d['iconColor']);
         $defaultIconSize = getOrNull($d['iconSize']);
         $defaultIconSpacing = getOrNull($d['iconSpacing']);
+        $defaultIconTopSpacing = getOrNull($d['iconTopSpacing']);
         $defaultFontSize = getOrNull($d['fontSize']);
         $defaultTextColor = getOrNull($d['textColor']);
         $defaultLinkColor = getOrNull($d['linkColor']);
@@ -242,6 +246,10 @@ class ListStyles {
         $instance->iconSpacing = new StringAttr(
             getOrNull($data['iconSpacing']),
             $defaultIconSpacing
+        );
+        $instance->iconTopSpacing = new StringAttr(
+            getOrNull($data['iconTopSpacing']),
+            $defaultIconTopSpacing
         );
         $instance->fontSize = new StringAttr(
             getOrNull($data['fontSize']),

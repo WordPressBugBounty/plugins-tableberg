@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,22 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 2. Core Table Block vs Tableberg Block
 
 == Changelog ==
+
+
+= 1.0.5 =
+* NEW: Added margin and padding controls for Text block
+* NEW: Added copy and paste style actions for table block
+* NEW: Added an "Enlarge on click" (lightbox) option for the Image block
+* NEW: Added an Icon Top Spacing control for Styled List items to fine-tune icon alignment
+* IMPROVE: Made the Table's block inserter available when table cells or blocks are selected
+* IMPROVE: Reduced spacing between list items
+* IMPROVE: Added a default black background and white text color for Button block
+* FIX: Fixed text alignment when text wraps to a second line
+* FIX: Fixed table border radius not applying
+* FIX: Fixed styled list icon and text not aligning properly on the frontend, especially with smaller icons
+* FIX: Fixed faux block toolbar selection for table cells and elements
+* FIX: Fixed clicking on the table icon from toolbar will now select the whole table block
+* PRO: FIX: Fixed styled list element controls and editor integration
 
 = 1.0.4 =
 * NEW: Margin and padding controls for the whole table block

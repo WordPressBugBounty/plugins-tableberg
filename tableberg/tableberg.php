@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           1.0.4
+ * Version:           1.0.5
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 if (!defined('TABLEBERG_VERSION')) {
-    define('TABLEBERG_VERSION', '1.0.4');
+    define('TABLEBERG_VERSION', '1.0.5');
 }
 if (!defined('TABLEBERG_DIR_PATH')) {
     define('TABLEBERG_DIR_PATH', plugin_dir_path(__FILE__));
@@ -78,6 +78,10 @@ if (!class_exists('Tableberg')) {
         public function __construct() {
             new Tableberg\Admin\Tableberg_Admin();
             add_action('init', [$this, 'register_blocks']);
+            add_action(
+                'enqueue_block_editor_assets',
+                [$this, 'localize_block_editor_assets']
+            );
 
             $restController = new Tableberg\DynamicData\RestController();
             add_action('rest_api_init', [$restController, 'register_routes']);
@@ -88,6 +92,11 @@ if (!class_exists('Tableberg')) {
 
             register_activation_hook(__FILE__, [$this, 'activate_plugin']);
             register_deactivation_hook(__FILE__, [$this, 'deactivate_plugin']);
+        }
+
+        public function localize_block_editor_assets() {
+            $assets = new \Tableberg\Assets();
+            $assets->register_blocks_assets();
         }
 
         public function register_blocks() {

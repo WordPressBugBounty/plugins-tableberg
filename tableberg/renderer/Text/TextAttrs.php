@@ -3,6 +3,7 @@
 namespace Tableberg\Renderer\Text;
 
 use Tableberg\Renderer\Attrs\StringAttr;
+use Tableberg\Renderer\Attrs\Sides;
 
 use function Tableberg\Renderer\getOrNull;
 
@@ -53,6 +54,12 @@ class TextStyles {
     /** @var StringAttr */
     public $fontSize;
 
+    /** @var Sides */
+    public $padding;
+
+    /** @var Sides */
+    public $margin;
+
     /**
      * @param array<string, mixed>|null $data
      * @return self
@@ -83,6 +90,17 @@ class TextStyles {
         $instance->fontSize = new StringAttr(
             getOrNull($data['fontSize']),
             $defaultFontSize
+        );
+
+        $defaultPadding = getOrNull($d['padding']);
+        $defaultMargin = getOrNull($d['margin']);
+        $instance->padding = Sides::from_array(
+            getOrNull($data['padding']),
+            is_array($defaultPadding) ? $defaultPadding : []
+        );
+        $instance->margin = Sides::from_array(
+            getOrNull($data['margin']),
+            is_array($defaultMargin) ? $defaultMargin : []
         );
 
         return $instance;

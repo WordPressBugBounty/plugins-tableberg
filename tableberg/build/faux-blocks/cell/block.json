@@ -13,6 +13,7 @@
     "tableberg/button",
     "tableberg/image",
     "tableberg/list",
+    "tableberg/styled-list",
     "tableberg/icon",
     "tableberg/star-rating",
     "tableberg/custom-html"

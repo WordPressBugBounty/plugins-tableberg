@@ -3,6 +3,7 @@
 namespace Tableberg\Renderer\Image;
 
 use Tableberg\Renderer\Attrs\Corners;
+use Tableberg\Renderer\Attrs\BoolAttr;
 use Tableberg\Renderer\Attrs\NumberAttr;
 use Tableberg\Renderer\Attrs\Sides;
 use Tableberg\Renderer\Attrs\StringAttr;
@@ -43,6 +44,9 @@ class ImageAttrs {
     /** @var StringAttr */
     public $linkTarget;
 
+    /** @var ImageLightboxAttrs */
+    public $lightbox;
+
     /** @var Sides */
     public $border;
 
@@ -80,10 +84,36 @@ class ImageAttrs {
             $defaults['linkTarget'],
             ['_blank', '_self']
         );
+        $instance->lightbox = ImageLightboxAttrs::from_array(
+            getOrNull($data['lightbox']),
+            $defaults['lightbox']
+        );
         $instance->border = Sides::from_array(getOrNull($data['border']), $defaults['border']);
         $instance->borderRadius = Corners::from_array(
             getOrNull($data['borderRadius']),
             $defaults['borderRadius']
+        );
+
+        return $instance;
+    }
+}
+
+class ImageLightboxAttrs {
+    /** @var BoolAttr */
+    public $enabled;
+
+    /**
+     * @param array<string, mixed>|null $data
+     * @param array<string, mixed> $defaults
+     * @return self
+     */
+    public static function from_array($data, $defaults) {
+        $data = is_array($data) ? $data : [];
+
+        $instance = new self();
+        $instance->enabled = new BoolAttr(
+            getOrNull($data['enabled']),
+            (bool) ($defaults['enabled'] ?? false)
         );
 
         return $instance;

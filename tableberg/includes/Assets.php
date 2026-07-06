@@ -6,13 +6,13 @@ use Tableberg\Patterns\RegisterPatterns;
 
 class Assets {
     public function register_blocks_assets() {
-        self::pass_data_to_js('tableberg-script');
+        self::pass_data_to_js('tableberg-table-editor-script');
 
         $tableberg_patterns = RegisterPatterns::get_all_registered_tableberg_patterns();
         $tableberg_pattern_categories = RegisterPatterns::get_all_registered_tableberg_pattern_categories();
 
-        wp_localize_script('tableberg-script', 'tablebergPatterns', $tableberg_patterns);
-        wp_localize_script('tableberg-script', 'tablebergPatternCategories', $tableberg_pattern_categories);
+        wp_localize_script('tableberg-table-editor-script', 'tablebergPatterns', $tableberg_patterns);
+        wp_localize_script('tableberg-table-editor-script', 'tablebergPatternCategories', $tableberg_pattern_categories);
 
     }
 
@@ -53,12 +53,14 @@ class Assets {
         $data = [
             'plugin_url' => TABLEBERG_URL,
         ];
+        $has_pro_addon = defined('TABLEBERG_PRO_VERSION');
         global $tp_fs;
         if (isset($tp_fs)) {
-            $data['IS_PRO'] = $tp_fs->is__premium_only()
-                && $tp_fs->can_use_premium_code();
+            $data['IS_PRO'] = $has_pro_addon
+                || ($tp_fs->is__premium_only()
+                    && $tp_fs->can_use_premium_code());
         } else {
-            $data['IS_PRO'] = false;
+            $data['IS_PRO'] = $has_pro_addon;
         }
         wp_localize_script($handle, 'TABLEBERG_CFG', $data);
     }

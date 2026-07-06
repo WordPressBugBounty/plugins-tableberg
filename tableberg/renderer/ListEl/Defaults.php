@@ -38,6 +38,7 @@ class Defaults {
                 'iconColor' => '#000000',
                 'iconSize' => '15px',
                 'iconSpacing' => 'var(--wp--preset--spacing--20)',
+                'iconTopSpacing' => '0px',
                 'fontSize' => '1.38rem',
                 'textColor' => '#000000',
                 'linkColor' => '',

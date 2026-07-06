@@ -105,13 +105,63 @@ class ImageRenderer {
                 </figcaption>";
         }
 
-        return
+        $figureClass = 'tableberg-image-element';
+        if ($this->should_render_lightbox($attrs)) {
+            $figureClass .= ' wp-block-image';
+        }
+
+        $figureHtml =
             "<figure
-                class='tableberg-image-element'
+                class='{$figureClass}'
                 style='margin:0;line-height:1'
             >
                 {$imgHtml}
                 {$captionHtml}
             </figure>";
+
+        if ($this->should_render_lightbox($attrs)) {
+            return $this->render_core_lightbox($figureHtml, $attrs);
+        }
+
+        return $figureHtml;
+    }
+
+    private function should_render_lightbox($attrs) {
+        return $attrs->lightbox->enabled->value() && $attrs->href->isEmpty();
+    }
+
+    private function render_core_lightbox($figureHtml, $attrs) {
+        if (
+            !function_exists('block_core_image_render_lightbox') ||
+            !function_exists('wp_enqueue_script_module')
+        ) {
+            return $figureHtml;
+        }
+
+        \wp_enqueue_script_module('@wordpress/block-library/image/view');
+
+        if (function_exists('wp_style_is') && \wp_style_is('wp-block-image', 'registered')) {
+            \wp_enqueue_style('wp-block-image');
+        }
+
+        $blockAttrs = [
+            'lightbox' => [
+                'enabled' => true,
+            ],
+        ];
+
+        if ($attrs->media->id->value() > 0) {
+            $blockAttrs['id'] = $attrs->media->id->value();
+        }
+
+        if ($attrs->scale->isNotEmpty()) {
+            $blockAttrs['scale'] = $attrs->scale->dangerouslyUseRawValue();
+        }
+
+        return \block_core_image_render_lightbox(
+            $figureHtml,
+            ['attrs' => $blockAttrs],
+            (object) ['context' => []]
+        );
     }
 }

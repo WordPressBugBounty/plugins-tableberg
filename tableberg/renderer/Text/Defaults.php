@@ -24,6 +24,18 @@ class Defaults {
                 'linkColor' => '',
                 'backgroundColor' => '',
                 'fontSize' => '1.38rem',
+                'padding' => [
+                    'top' => '',
+                    'right' => '',
+                    'bottom' => '',
+                    'left' => '',
+                ],
+                'margin' => [
+                    'top' => '',
+                    'right' => '',
+                    'bottom' => '',
+                    'left' => '',
+                ],
             ],
         ];
     }

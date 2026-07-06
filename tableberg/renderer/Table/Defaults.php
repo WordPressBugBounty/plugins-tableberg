@@ -72,7 +72,7 @@ class Defaults {
                 'responsive' => [
                     'tablet' => [
                         'enabled' => false,
-                        'maxWidth' => 1024,
+                        'maxWidth' => 700,
                         'mode' => 'scroll',
                         'transpose' => false,
                         'stackCount' => 3,
@@ -80,7 +80,7 @@ class Defaults {
                     ],
                     'mobile' => [
                         'enabled' => false,
-                        'maxWidth' => 700,
+                        'maxWidth' => 375,
                         'mode' => 'scroll',
                         'transpose' => false,
                         'stackCount' => 1,

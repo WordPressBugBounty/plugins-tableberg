@@ -98,15 +98,17 @@ class Tableberg_Admin {
             ],
         ];
 
+        $has_pro_addon = defined('TABLEBERG_PRO_VERSION');
         global $tp_fs;
         if (isset($tp_fs)) {
             $data['misc'] = [
-                'pro_status' => $tp_fs->is__premium_only()
-                    && $tp_fs->can_use_premium_code(),
+                'pro_status' => $has_pro_addon
+                    || ($tp_fs->is__premium_only()
+                        && $tp_fs->can_use_premium_code()),
             ];
         } else {
             $data['misc'] = [
-                'pro_status' => false,
+                'pro_status' => $has_pro_addon,
             ];
         }
 

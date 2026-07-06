@@ -153,7 +153,10 @@ class ListRenderer {
             }
 
             $innerStyle = $this->style_attr($this->styled_item_styles($attrs->styles));
-            $iconStyle = $this->style_attr($this->icon_styles($attrs->styles));
+            $iconStyle = $this->style_attr(array_merge(
+                $this->icon_styles($attrs->styles),
+                [$this->icon_offset_style($attrs->styles)]
+            ));
             $decimalNumberStyle = $this->style_attr(array_merge(
                 ['min-width:20px'],
                 $this->icon_styles($attrs->styles)
@@ -245,8 +248,14 @@ class ListRenderer {
     private function styled_item_styles($styles) {
         $styleValues = [
             'display:flex',
-            'padding:4px 0',
+            'align-items:flex-start',
+            'line-height:1.5',
+            'padding:2px 0',
         ];
+
+        if ($styles->fontSize->isNotEmpty()) {
+            $styleValues[] = 'font-size:' . $styles->fontSize->asAttr();
+        }
 
         if ($styles->iconSpacing->isNotEmpty()) {
             $styleValues[] = 'gap:' . $styles->iconSpacing->asAttr();
@@ -255,7 +264,7 @@ class ListRenderer {
         if ($styles->itemSpacing->isNotEmpty()) {
             $styleValues[] = 'margin:0 0 ' . $styles->itemSpacing->asAttr() . ' 0';
         } else {
-            $styleValues[] = 'margin:0 0 4px 0';
+            $styleValues[] = 'margin:0 0 2px 0';
         }
 
         return $styleValues;
@@ -277,11 +286,32 @@ class ListRenderer {
         }
 
         if ($styles->iconSize->isNotEmpty()) {
-            $styleValues[] = 'font-size:' . $styles->iconSize->asAttr();
             $styleValues[] = 'min-width:' . $styles->iconSize->asAttr();
         }
 
         return $styleValues;
+    }
+
+    /**
+     * Nudges the icon down so it lines up with the first line of
+     * (possibly wrapped) item text, matching the editor's rendering.
+     *
+     * The auto-computed part is spelled out against the item's own
+     * font-size (not "em"/inherited font-size) so it can't drift out of
+     * sync depending on which ancestor happens to set the font-size.
+     * `iconTopSpacing` is a manual, user-adjustable nudge added on top,
+     * for cases (custom fonts, custom line-heights, etc.) where the
+     * auto value isn't quite right.
+     *
+     * @param ListStyles $styles
+     * @return string
+     */
+    private function icon_offset_style($styles) {
+        $iconSize = $styles->iconSize->isNotEmpty() ? $styles->iconSize->asAttr() : '15px';
+        $itemFontSize = $styles->fontSize->isNotEmpty() ? $styles->fontSize->asAttr() : '1.38rem';
+        $manualOffset = $styles->iconTopSpacing->isNotEmpty() ? $styles->iconTopSpacing->asAttr() : '0px';
+
+        return 'margin-top:calc(max(0px, (1.5 * ' . $itemFontSize . ' - ' . $iconSize . ') / 2) + ' . $manualOffset . ')';
     }
 
     /**

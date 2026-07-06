@@ -220,6 +220,18 @@ class TableRenderer {
             ],
         ];
 
+        // The table border radius rounds the whole table's outer corners.
+        // border-radius on collapsed-border tables/cells is ignored by
+        // browsers, so it is rendered on the wrapper (with overflow:hidden)
+        // and removed from the individual cells here.
+        $tableRadius = $globalCellStyles['borderRadius'];
+        $globalCellStyles['borderRadius'] = [
+            'topLeft' => '',
+            'topRight' => '',
+            'bottomRight' => '',
+            'bottomLeft' => '',
+        ];
+
         $cellRenderer = new CellRenderer();
         $hiddenBySpan = [];
 
@@ -322,6 +334,26 @@ class TableRenderer {
 
         $wrapperClass = trim("tableberg-table-wrapper {$wrapperAlignmentClass}");
 
+        // Round the whole table's outer corners by clipping the wrapper.
+        $wrapperRadiusStyles = [];
+        if ($tableRadius['topLeft'] !== '') {
+            $wrapperRadiusStyles[] = 'border-top-left-radius:' . $tableRadius['topLeft'];
+        }
+        if ($tableRadius['topRight'] !== '') {
+            $wrapperRadiusStyles[] = 'border-top-right-radius:' . $tableRadius['topRight'];
+        }
+        if ($tableRadius['bottomRight'] !== '') {
+            $wrapperRadiusStyles[] = 'border-bottom-right-radius:' . $tableRadius['bottomRight'];
+        }
+        if ($tableRadius['bottomLeft'] !== '') {
+            $wrapperRadiusStyles[] = 'border-bottom-left-radius:' . $tableRadius['bottomLeft'];
+        }
+        $wrapperStyleAttr = '';
+        if (!empty($wrapperRadiusStyles)) {
+            $wrapperRadiusStyles[] = 'overflow:hidden';
+            $wrapperStyleAttr = "style='" . implode(';', $wrapperRadiusStyles) . "'";
+        }
+
         $figureAlignmentClass = '';
         if ($isWideWidth) {
             $figureAlignmentClass = 'alignwide';
@@ -364,7 +396,7 @@ class TableRenderer {
 
         $html =
             "<figure class='{$figureClass}' {$figureStyleAttr}>
-                <div class='{$wrapperClass}'>
+                <div class='{$wrapperClass}' {$wrapperStyleAttr}>
                     <table
                         class='{$tableClassAttr}'
                         {$tableStyleAttr}

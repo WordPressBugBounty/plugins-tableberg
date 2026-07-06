@@ -25,8 +25,8 @@ class Defaults {
                 'target' => '_self',
             ],
             'styles' => [
-                'backgroundColor' => 'var(--wp--preset--color--contrast)',
-                'textColor' => 'var(--wp--preset--color--base)',
+                'backgroundColor' => '#000000',
+                'textColor' => '#ffffff',
                 'backgroundHoverColor' => '',
                 'textHoverColor' => '',
                 'textAlign' => 'center',
