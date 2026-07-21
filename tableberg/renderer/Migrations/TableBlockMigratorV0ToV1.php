@@ -123,6 +123,7 @@ class TableBlockMigratorV0ToV1 {
                 $this->get_scalar($attrs, 'enableTableFooter', '')
             ),
             'stickyHeader' => !empty($attrs['stickyTopRow']),
+            'stickyFirstCol' => !empty($attrs['stickyFirstCol']),
             'caption' => (string) $this->get_scalar($attrs, 'caption', ''),
             'tableWidth' => $table_dimensions['tableWidth'],
             'tableAlignment' => $table_dimensions['tableAlignment'],

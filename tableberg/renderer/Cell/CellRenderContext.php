@@ -99,6 +99,9 @@ class CellRenderContext {
     /** @var bool */
     public $stickyHeader;
 
+    /** @var bool */
+    public $stickyFirstCol;
+
     /**
      * @param mixed $row
      * @param mixed $col
@@ -130,6 +133,7 @@ class CellRenderContext {
         $width = null,
         $height = null,
         $stickyHeader = false,
+        $stickyFirstCol = false,
         $className = null
     ) {
         $instance = new self();
@@ -208,6 +212,7 @@ class CellRenderContext {
         $instance->width = getStringOrNull($width);
         $instance->height = getStringOrNull($height);
         $instance->stickyHeader = (bool) $stickyHeader;
+        $instance->stickyFirstCol = (bool) $stickyFirstCol;
         $instance->className = trim((string) (getStringOrNull($className) ?? ''));
 
         return $instance;

@@ -112,12 +112,13 @@ class BlockContentMigrator {
                 continue;
             }
 
-            if (
+            $is_table_block =
                 isset($block['blockName']) &&
                 $block['blockName'] === 'tableberg/table' &&
                 isset($block['attrs']) &&
-                is_array($block['attrs'])
-            ) {
+                is_array($block['attrs']);
+
+            if ($is_table_block) {
                 $migrated_attrs = $this->migrate_table_block_attrs(
                     $block['attrs'],
                     $block
@@ -126,6 +127,20 @@ class BlockContentMigrator {
                 if ($migrated_attrs !== $block['attrs']) {
                     $blocks[$index]['attrs'] = $migrated_attrs;
                     $did_migrate = true;
+                }
+
+                // Editor path only: materialize the v4 native-blocks tree
+                // from v3 attrs so the editor opens real blocks. Replaces
+                // the whole block, so skip the generic inner-blocks
+                // recursion below. (The frontend render_block_data path
+                // stays attrs-only — non-resaved posts keep rendering.)
+                $v4_block = $this->migrate_table_block_to_native(
+                    $blocks[$index]
+                );
+                if ($v4_block !== $blocks[$index]) {
+                    $blocks[$index] = $v4_block;
+                    $did_migrate = true;
+                    continue;
                 }
             }
 
@@ -139,6 +154,24 @@ class BlockContentMigrator {
         }
 
         return [$blocks, $did_migrate];
+    }
+
+    /**
+     * @param array $block Parsed tableberg/table block (attrs already at v3).
+     * @return array
+     */
+    private function migrate_table_block_to_native($block) {
+        $version = isset($block['attrs']['version']) && is_numeric($block['attrs']['version'])
+            ? (int) $block['attrs']['version']
+            : 0;
+
+        if ($version !== 3) {
+            return $block;
+        }
+
+        $migrator = new TableBlockMigratorV3ToV4();
+
+        return $migrator->migrate_block($block);
     }
 
     private function migrate_table_block_attrs($attrs, $block) {

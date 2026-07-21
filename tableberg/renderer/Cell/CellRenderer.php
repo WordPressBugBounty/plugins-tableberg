@@ -52,6 +52,9 @@ class CellRenderer {
             $context->row === 0 &&
             $context->tag === 'th';
 
+        $isStickyFirstColCell =
+            $context->stickyFirstCol && $context->col === 0;
+
         $styleParts = ['position:relative'];
         if ($styleValues['paddingTop'] !== '') {
             $styleParts[] = 'padding-top:' . $styleValues['paddingTop'];
@@ -107,9 +110,24 @@ class CellRenderer {
         if ($isStickyHeaderCell) {
             $styleParts[] = 'position:sticky';
             $styleParts[] = 'top:0';
-            $styleParts[] = 'z-index:2';
+            $styleParts[] = $isStickyFirstColCell ? 'z-index:3' : 'z-index:2';
 
             if ($styleValues['backgroundColor'] === '') {
+                $styleParts[] = 'background-color:#fff';
+            }
+        }
+
+        if ($isStickyFirstColCell) {
+            if (!$isStickyHeaderCell) {
+                $styleParts[] = 'position:sticky';
+                $styleParts[] = 'z-index:1';
+            }
+            $styleParts[] = 'left:0';
+
+            if (
+                !$isStickyHeaderCell &&
+                $styleValues['backgroundColor'] === ''
+            ) {
                 $styleParts[] = 'background-color:#fff';
             }
         }

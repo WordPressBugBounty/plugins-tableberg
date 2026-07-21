@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           1.0.5
+ * Version:           1.1.0
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 if (!defined('TABLEBERG_VERSION')) {
-    define('TABLEBERG_VERSION', '1.0.5');
+    define('TABLEBERG_VERSION', '1.1.0');
 }
 if (!defined('TABLEBERG_DIR_PATH')) {
     define('TABLEBERG_DIR_PATH', plugin_dir_path(__FILE__));
@@ -82,6 +82,7 @@ if (!class_exists('Tableberg')) {
                 'enqueue_block_editor_assets',
                 [$this, 'localize_block_editor_assets']
             );
+            add_action('wp_enqueue_scripts', [$this, 'localize_frontend_assets']);
 
             $restController = new Tableberg\DynamicData\RestController();
             add_action('rest_api_init', [$restController, 'register_routes']);
@@ -99,11 +100,16 @@ if (!class_exists('Tableberg')) {
             $assets->register_blocks_assets();
         }
 
+        public function localize_frontend_assets() {
+            $assets = new \Tableberg\Assets();
+            $assets->register_frontend_assets();
+        }
+
         public function register_blocks() {
             $renderer = new TableRenderer();
 
             register_block_type_from_metadata(
-                TABLEBERG_DIR_PATH . 'build/block.json',
+                TABLEBERG_DIR_PATH . 'build/blocks/table/block.json',
                 [
                     'render_callback' => [$renderer, 'render'],
                 ]

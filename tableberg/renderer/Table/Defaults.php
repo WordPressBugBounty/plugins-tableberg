@@ -31,6 +31,7 @@ class Defaults {
                 'headerEnabled' => false,
                 'footerEnabled' => false,
                 'stickyHeader' => false,
+                'stickyFirstCol' => false,
                 'caption' => '',
                 'tableWidth' => 'auto',
                 'tableAlignment' => 'left',

@@ -46,7 +46,25 @@ class TableRenderer {
         return true;
     }
 
-    public function render($attributes) {
+    public function render($attributes, $content = '', $block = null) {
+        // v4 native-blocks format: table data lives in the innerBlocks tree
+        // (rows -> cells -> elements). Adapt it to the v3 attrs shape so the
+        // renderer below stays format-agnostic.
+        $version = is_array($attributes) && isset($attributes['version']) && is_numeric($attributes['version'])
+            ? (int) $attributes['version']
+            : 0;
+        if (
+            $version >= 4 &&
+            is_object($block) &&
+            isset($block->parsed_block['innerBlocks']) &&
+            is_array($block->parsed_block['innerBlocks'])
+        ) {
+            $attributes = InnerBlocksAttrsAdapter::to_attrs(
+                $attributes,
+                $block->parsed_block['innerBlocks']
+            );
+        }
+
         $attrs = TableAttrs::from_array($attributes);
         $isProActive = $this->is_pro_active();
 
@@ -56,6 +74,7 @@ class TableRenderer {
         $headerEnabled = $attrs->table->headerEnabled->value();
         $footerEnabled = $attrs->table->footerEnabled->value();
         $stickyHeader = $attrs->table->stickyHeader->value();
+        $stickyFirstCol = $attrs->table->stickyFirstCol->value();
         $caption = $attrs->table->caption;
         $tableWidth = trim($attrs->table->tableWidth->asAttr());
         $tableAlignment = $attrs->table->tableAlignment->asAttr();
@@ -303,6 +322,7 @@ class TableRenderer {
                         $columnWidth,
                         $rowHeight,
                         $stickyHeader,
+                        $stickyFirstCol,
                         $this->getCellClassName($cell)
                     )
                 );
@@ -335,24 +355,51 @@ class TableRenderer {
         $wrapperClass = trim("tableberg-table-wrapper {$wrapperAlignmentClass}");
 
         // Round the whole table's outer corners by clipping the wrapper.
-        $wrapperRadiusStyles = [];
-        if ($tableRadius['topLeft'] !== '') {
-            $wrapperRadiusStyles[] = 'border-top-left-radius:' . $tableRadius['topLeft'];
+        // Zero radii are skipped so a table without any actual rounding does
+        // not carry pointless border-radius declarations.
+        $isZeroRadius = function ($value) {
+            $trimmed = trim((string) $value);
+            return $trimmed === '' || preg_match('/^0(?:\.0+)?[a-z%]*$/i', $trimmed) === 1;
+        };
+        $wrapperStyles = [];
+        if (!$isZeroRadius($tableRadius['topLeft'])) {
+            $wrapperStyles[] = 'border-top-left-radius:' . $tableRadius['topLeft'];
         }
-        if ($tableRadius['topRight'] !== '') {
-            $wrapperRadiusStyles[] = 'border-top-right-radius:' . $tableRadius['topRight'];
+        if (!$isZeroRadius($tableRadius['topRight'])) {
+            $wrapperStyles[] = 'border-top-right-radius:' . $tableRadius['topRight'];
         }
-        if ($tableRadius['bottomRight'] !== '') {
-            $wrapperRadiusStyles[] = 'border-bottom-right-radius:' . $tableRadius['bottomRight'];
+        if (!$isZeroRadius($tableRadius['bottomRight'])) {
+            $wrapperStyles[] = 'border-bottom-right-radius:' . $tableRadius['bottomRight'];
         }
-        if ($tableRadius['bottomLeft'] !== '') {
-            $wrapperRadiusStyles[] = 'border-bottom-left-radius:' . $tableRadius['bottomLeft'];
+        if (!$isZeroRadius($tableRadius['bottomLeft'])) {
+            $wrapperStyles[] = 'border-bottom-left-radius:' . $tableRadius['bottomLeft'];
         }
-        $wrapperStyleAttr = '';
-        if (!empty($wrapperRadiusStyles)) {
-            $wrapperRadiusStyles[] = 'overflow:hidden';
-            $wrapperStyleAttr = "style='" . implode(';', $wrapperRadiusStyles) . "'";
+
+        // A table wider than its wrapper must scroll inside the wrapper
+        // instead of pushing the whole page sideways, so the wrapper is a
+        // scroll container by default.
+        //
+        // The one exception is a header that sticks to the page: a scroll
+        // container of its own would capture it and it would never stick.
+        // (CSS cannot do both — with overflow-x set, overflow-y can no longer
+        // be visible.) A sticky first column, on the other hand, only works
+        // *because* of the scroll container, so when both are enabled the
+        // scrolling wins and the header sticks within the wrapper.
+        //
+        // A rounded wrapper always needs the clip, so it opts in regardless.
+        $pageStickyHeader = $stickyHeader && !$stickyFirstCol;
+        $hasRoundedCorners = !empty($wrapperStyles);
+
+        if ($hasRoundedCorners || !$pageStickyHeader) {
+            // `auto`, not `hidden`: both clip to the rounded corners, but
+            // `hidden` would also swallow a table wider than the wrapper.
+            // Inline, so it also wins over the `.tableberg-scroll-x` rule.
+            $wrapperStyles[] = 'overflow:auto';
         }
+
+        $wrapperStyleAttr = !empty($wrapperStyles)
+            ? "style='" . implode(';', $wrapperStyles) . "'"
+            : '';
 
         $figureAlignmentClass = '';
         if ($isWideWidth) {

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/image",
+  "title": "Image",
+  "category": "design",
+  "description": "An image element within a Tableberg cell.",
+  "parent": [
+    "tableberg/cell"
+  ],
+  "supports": {
+    "html": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "media": {
+      "type": "object"
+    },
+    "alt": {
+      "type": "string"
+    },
+    "align": {
+      "type": "string"
+    },
+    "width": {
+      "type": "string"
+    },
+    "height": {
+      "type": "string"
+    },
+    "aspectRatio": {
+      "type": "string"
+    },
+    "scale": {
+      "type": "string"
+    },
+    "sizeSlug": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "href": {
+      "type": "string"
+    },
+    "linkTarget": {
+      "type": "string"
+    },
+    "lightbox": {
+      "type": "object"
+    },
+    "border": {
+      "type": "object"
+    },
+    "borderRadius": {
+      "type": "object"
+    },
+    "bindings": {
+      "type": "object"
+    },
+    "mergeOrigin": {
+      "type": "object"
+    }
+  },
+  "textdomain": "tableberg"
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/text",
+  "title": "Text",
+  "category": "design",
+  "description": "A text element within a Tableberg cell.",
+  "parent": [
+    "tableberg/cell"
+  ],
+  "supports": {
+    "html": false,
+    "customClassName": false,
+    "reusable": false,
+    "__experimentalSlashInserter": true
+  },
+  "attributes": {
+    "content": {
+      "type": "string"
+    },
+    "align": {
+      "type": "string"
+    },
+    "styles": {
+      "type": "object"
+    },
+    "bindings": {
+      "type": "object"
+    },
+    "mergeOrigin": {
+      "type": "object"
+    }
+  },
+  "textdomain": "tableberg"
+}

@@ -176,7 +176,7 @@ class Tableberg_Admin {
 
         if ($diff_interval >= 21 && get_option('tableberg_review_notify') == 'no') {
             ?>
-             <div class="tableberg-review-notice notice notice-info" style="display: inline-block; position: relative; padding:0.5rem 1.5rem">
+             <div class="tableberg-review-notice notice notice-info" style="position: relative; padding:0.5rem 1.5rem">
                  <button type="button" class="notice-dismiss Tableberg_HideReview_Notice" style="position: absolute; top: 2px; right: 2px;">
                      <span class="screen-reader-text"><?php esc_html_e('Dismiss this notice.', 'tableberg'); ?></span>
                  </button>

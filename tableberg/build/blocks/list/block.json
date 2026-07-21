@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/list",
+  "title": "List",
+  "category": "design",
+  "description": "A list element within a Tableberg cell.",
+  "parent": [
+    "tableberg/cell"
+  ],
+  "supports": {
+    "html": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "items": {
+      "type": "array"
+    },
+    "listType": {
+      "type": "string"
+    },
+    "listStyle": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "object"
+    },
+    "align": {
+      "type": "string"
+    },
+    "styles": {
+      "type": "object"
+    },
+    "bindings": {
+      "type": "object"
+    },
+    "mergeOrigin": {
+      "type": "object"
+    }
+  },
+  "textdomain": "tableberg"
+}

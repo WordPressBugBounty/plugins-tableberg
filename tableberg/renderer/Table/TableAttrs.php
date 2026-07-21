@@ -490,6 +490,9 @@ class TableConfig {
     /** @var BoolAttr */
     public $stickyHeader;
 
+    /** @var BoolAttr */
+    public $stickyFirstCol;
+
     /** @var StringAttr */
     public $caption;
 
@@ -535,6 +538,10 @@ class TableConfig {
         $instance->headerEnabled = new BoolAttr(getOrNull($data['headerEnabled']), $d['headerEnabled']);
         $instance->footerEnabled = new BoolAttr(getOrNull($data['footerEnabled']), $d['footerEnabled']);
         $instance->stickyHeader = new BoolAttr(getOrNull($data['stickyHeader']), $d['stickyHeader']);
+        $instance->stickyFirstCol = new BoolAttr(
+            getOrNull($data['stickyFirstCol']),
+            getOrNull($d['stickyFirstCol']) ?? false
+        );
         $instance->caption = new StringAttr(getOrNull($data['caption']), $d['caption']);
         $instance->tableWidth = new StringAttr(
             getOrNull($data['tableWidth']),

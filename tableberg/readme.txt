@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.0.5
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,25 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+
+= 1.1.0 =
+* PRO: NEW: Sticky First Column — keep the first column visible while scrolling horizontally
+* IMPROVE: Rebuilt the table on real Gutenberg blocks — rows, cells and elements now use native selection, List View, drag to reorder, undo/redo and copy/paste
+* IMPROVE: Existing tables are converted automatically the first time they are opened; older tables keep rendering unchanged on the frontend
+* IMPROVE: Press Enter for a new text element and type "/" to insert any element inside a cell, just like paragraphs
+* IMPROVE: Splitting a merged cell now returns each element to its original cell
+* IMPROVE: Locked Pro controls are now fully non-interactive with a clearer unlock overlay
+* PRO: IMPROVE: Ribbon settings are now in a single panel on the cell block
+* PRO: IMPROVE: Duplicate Row and Duplicate Column moved into the cell toolbar
+* PRO: IMPROVE: Per-cell Background Color and Vertical Alignment moved to the cell sidebar
+* PRO: FIX: Enabling sorting no longer breaks the block
+* PRO: FIX: Search, sorting and pagination now initialize correctly on the frontend
+* PRO: FIX: Pagination is visible and usable again while editing
+* FIX: Cross-row cell selection for merging with Ctrl/Cmd+click works again
+* FIX: Header, footer, even and odd row background colors apply again
+* FIX: Element font options, common elements alignment and cell spacing apply again
+* FIX: Image border and radius apply in the editor
+* FIX: Copying an element pastes as a real block anywhere in the editor
 
 = 1.0.5 =
 * NEW: Added margin and padding controls for Text block

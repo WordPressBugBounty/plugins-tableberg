@@ -5,6 +5,14 @@ namespace Tableberg;
 use Tableberg\Patterns\RegisterPatterns;
 
 class Assets {
+    /**
+     * The frontend view script gates pro features (sorting/search/pagination)
+     * on TABLEBERG_CFG.IS_PRO, so the config must exist on the frontend too.
+     */
+    public function register_frontend_assets() {
+        self::pass_data_to_js('tableberg-table-view-script');
+    }
+
     public function register_blocks_assets() {
         self::pass_data_to_js('tableberg-table-editor-script');
 

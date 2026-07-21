@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tableberg/button",
+  "title": "Button",
+  "category": "design",
+  "description": "A button element within a Tableberg cell.",
+  "parent": [
+    "tableberg/cell"
+  ],
+  "supports": {
+    "html": false,
+    "customClassName": false,
+    "reusable": false
+  },
+  "attributes": {
+    "content": {
+      "type": "string"
+    },
+    "align": {
+      "type": "string"
+    },
+    "styles": {
+      "type": "object"
+    },
+    "bindings": {
+      "type": "object"
+    },
+    "mergeOrigin": {
+      "type": "object"
+    },
+    "link": {
+      "type": "object"
+    },
+    "id": {
+      "type": "string"
+    }
+  },
+  "textdomain": "tableberg"
+}
