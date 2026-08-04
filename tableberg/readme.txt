@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,10 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+
+= 1.1.1 =
+* FIX: In the List element, Enter adds a new item and Tab / Shift+Tab indent and outdent it; nested items now show as a real nested list
+* FIX: Column Width and Row Height are available again, on the sidebar of the selected cell
 
 = 1.1.0 =
 * PRO: NEW: Sticky First Column — keep the first column visible while scrolling horizontally
