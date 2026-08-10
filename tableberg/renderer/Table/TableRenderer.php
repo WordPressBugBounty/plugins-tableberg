@@ -7,19 +7,6 @@ use Tableberg\Renderer\Cell\CellRenderContext;
 use Tableberg\Renderer\Attrs\StringAttr;
 
 class TableRenderer {
-    /**
-     * @return bool
-     */
-    private function is_pro_active() {
-        if (!function_exists('tp_fs')) {
-            return false;
-        }
-
-        $fs = call_user_func('tp_fs');
-
-        return is_object($fs) && $fs->can_use_premium_code();
-    }
-
     private function has_visible_border($border) {
         $trimmed_border = trim($border);
 
@@ -66,15 +53,23 @@ class TableRenderer {
         }
 
         $attrs = TableAttrs::from_array($attributes);
-        $isProActive = $this->is_pro_active();
 
         $rows = $attrs->table->rows->value();
         $cols = $attrs->table->cols->value();
 
         $headerEnabled = $attrs->table->headerEnabled->value();
         $footerEnabled = $attrs->table->footerEnabled->value();
-        $stickyHeader = $attrs->table->stickyHeader->value();
-        $stickyFirstCol = $attrs->table->stickyFirstCol->value();
+
+        // Sticky header/first column are pro features: free never enables
+        // them on its own, and pro reads the raw table attrs to decide.
+        $stickySettings = apply_filters(
+            'tableberg/table_sticky_settings',
+            ['stickyHeader' => false, 'stickyFirstCol' => false],
+            $attrs->attrs
+        );
+        $stickyHeader = !empty($stickySettings['stickyHeader']);
+        $stickyFirstCol = !empty($stickySettings['stickyFirstCol']);
+
         $caption = $attrs->table->caption;
         $tableWidth = trim($attrs->table->tableWidth->asAttr());
         $tableAlignment = $attrs->table->tableAlignment->asAttr();
@@ -175,16 +170,16 @@ class TableRenderer {
 
         $tableClassAttr = implode(' ', $tableClasses);
 
-        $sortableColumns = [];
-
-        if ($isProActive) {
-            foreach ($attrs->columns as $column => $columnConfig) {
-                if ($columnConfig->sortable === null) {
-                    continue;
-                }
-
-                $sortableColumns[$column] = $columnConfig->sortable->asAttr();
-            }
+        // Column sorting is a pro feature: free never marks a column
+        // sortable on its own, and pro reads the table's raw columns to
+        // decide which ones are.
+        $sortableColumns = apply_filters(
+            'tableberg/sortable_columns',
+            [],
+            $attrs->attrs
+        );
+        if (!is_array($sortableColumns)) {
+            $sortableColumns = [];
         }
 
         $paginationPageSize = (int) $attrs->table->pagination->pageSize->value();
@@ -193,25 +188,36 @@ class TableRenderer {
         }
 
         $paginationConfig = [
-            'enabled' => $isProActive && $attrs->table->pagination->enabled->value(),
+            'enabled' => apply_filters('tableberg/pagination_enabled', false, $attrs->attrs),
             'pageSize' => $paginationPageSize,
             'showPageNumbers' => $attrs->table->pagination->showPageNumbers->value(),
             'showPrevNext' => $attrs->table->pagination->showPrevNext->value(),
         ];
 
-        $searchEnabledAsStr = (
-            $isProActive && $attrs->table->search->enabled->value()
-        ) ? 'true' : 'false';
-        $searchPlaceholder = $isProActive
-            ? $attrs->table->search->placeholder->asAttr()
-            : '';
-        $searchPosition = $isProActive
-            ? $attrs->table->search->position->asAttr()
-            : 'left';
-        $searchHighlightColor = $isProActive
-            ? $attrs->table->search->highlightColor->asAttr()
-            : '';
+        $searchSettings = apply_filters(
+            'tableberg/table_search_settings',
+            [
+                'enabled' => false,
+                'placeholder' => '',
+                'position' => 'left',
+                'highlightColor' => '',
+            ],
+            $attrs->attrs
+        );
+        $searchEnabledAsStr = !empty($searchSettings['enabled']) ? 'true' : 'false';
+        $searchPlaceholder = (string) ($searchSettings['placeholder'] ?? '');
+        $searchPosition = (string) ($searchSettings['position'] ?? 'left');
+        $searchHighlightColor = (string) ($searchSettings['highlightColor'] ?? '');
         $responsiveDataAttrs = $this->buildResponsiveDataAttrs($attrs, $rows, $cols);
+
+        // Horizontal cell-element layout (and the wrap toggle that only
+        // matters with it) is a pro feature; free's default is always the
+        // vertical stack. Grouped in one filter since they're one decision.
+        $cellLayout = apply_filters(
+            'tableberg/cell_default_layout',
+            ['orientation' => 'vertical', 'wrap' => 'nowrap'],
+            $attrs->attrs
+        );
 
         $globalCellStyles = [
             'padding' => [
@@ -220,9 +226,9 @@ class TableRenderer {
                 'bottom' => $attrs->cellDefaults->styles->padding->bottom->asAttr(),
                 'left' => $attrs->cellDefaults->styles->padding->left->asAttr(),
             ],
-            'orientation' => $attrs->cellDefaults->styles->orientation->asAttr(),
+            'orientation' => $cellLayout['orientation'] === 'horizontal' ? 'horizontal' : 'vertical',
             'elementGap' => $attrs->cellDefaults->styles->elementGap->asAttr(),
-            'wrap' => $attrs->cellDefaults->styles->wrap->asAttr(),
+            'wrap' => $cellLayout['wrap'] === 'wrap' ? 'wrap' : 'nowrap',
             'verticalAlign' => $attrs->cellDefaults->styles->verticalAlign->asAttr(),
             'backgroundColor' => $attrs->cellDefaults->styles->backgroundColor->asAttr(),
             'border' => [
@@ -259,6 +265,21 @@ class TableRenderer {
         for ($row = 0; $row < $rows; $row++) {
             $cellsHtml = '';
             $rowHeight = $this->getRowHeight($row, $attrs->rows);
+            $rowStyles = $this->getRowStyles($row, $attrs->rows);
+            $rowBackgroundColor = isset($rowStyles['backgroundColor']) && is_string($rowStyles['backgroundColor'])
+                ? $rowStyles['backgroundColor']
+                : '';
+
+            // A row with its own background would otherwise never show
+            // through: every cell paints its own background over the
+            // `<tr>`'s, and cells fall back to the table-wide default
+            // whenever they carry no colour of their own. So for this row's
+            // cells, that fallback is cleared — a cell/column colour on top
+            // of it (applied below by the pro filter) still wins either way.
+            $cellStylesForRow = $globalCellStyles;
+            if ($rowBackgroundColor !== '') {
+                $cellStylesForRow['backgroundColor'] = '';
+            }
 
             for ($col = 0; $col < $cols; $col++) {
                 if (isset($hiddenBySpan[$row][$col])) {
@@ -314,7 +335,7 @@ class TableRenderer {
                         $rowSpan,
                         $colSpan,
                         $tag,
-                        $globalCellStyles,
+                        $cellStylesForRow,
                         $this->getCellElements($cell),
                         $this->getCellStyleOverride($cell),
                         $this->getCellRibbon($cell),
@@ -323,12 +344,35 @@ class TableRenderer {
                         $rowHeight,
                         $stickyHeader,
                         $stickyFirstCol,
-                        $this->getCellClassName($cell)
+                        $this->getCellClassName($cell),
+                        $cell instanceof CellData ? $cell->attrs : [],
+                        $this->isCellEmpty($cell)
                     )
                 );
             }
 
-            $rowsHtml .= "<tr data-tableberg-row='{$row}'>$cellsHtml</tr>";
+            $rowStyleParts = [];
+            if ($rowBackgroundColor !== '') {
+                $rowStyleParts[] = 'background-color:' . esc_attr($rowBackgroundColor);
+            }
+
+            $rowBorder = isset($rowStyles['border']) && is_array($rowStyles['border'])
+                ? $rowStyles['border']
+                : [];
+            foreach (['top', 'right', 'bottom', 'left'] as $side) {
+                $value = isset($rowBorder[$side]) && is_string($rowBorder[$side])
+                    ? $rowBorder[$side]
+                    : '';
+                if ($value !== '') {
+                    $rowStyleParts[] = "border-{$side}:" . esc_attr($value);
+                }
+            }
+
+            $rowStyleAttr = !empty($rowStyleParts)
+                ? ' style="' . implode(';', $rowStyleParts) . '"'
+                : '';
+
+            $rowsHtml .= "<tr data-tableberg-row='{$row}'$rowStyleAttr>$cellsHtml</tr>";
         }
 
         $sortingBoolAsStr = !empty($sortableColumns) ? 'true' : 'false';
@@ -557,11 +601,29 @@ class TableRenderer {
     }
 
     private function getCellElements($cell) {
-        if (!$cell instanceof CellData) {
+        if ($this->isCellEmpty($cell)) {
             return [];
         }
 
-        return is_array($cell->elements) ? $cell->elements : [];
+        return $cell instanceof CellData && is_array($cell->elements)
+            ? $cell->elements
+            : [];
+    }
+
+    /**
+     * "Empty cell" is a pro feature: the cell renders as if it were a bare,
+     * unstyled table cell — no content, no background, no border. Free's
+     * default is to always show the cell as configured.
+     *
+     * @param mixed $cell
+     * @return bool
+     */
+    private function isCellEmpty($cell) {
+        if (!$cell instanceof CellData) {
+            return false;
+        }
+
+        return (bool) apply_filters('tableberg/cell_is_empty', false, $cell->attrs);
     }
 
     private function getCellStyleOverride($cell) {
@@ -641,5 +703,26 @@ class TableRenderer {
 
         $height = $rowConfig->height->asAttr();
         return $height === '' ? null : $height;
+    }
+
+    /**
+     * Pro styling of a row (e.g. background colour). One filter carries
+     * every pro row style, mirroring `tableberg/cell_styles`, so a new pro
+     * style needs no change here.
+     *
+     * @param int $row
+     * @param array<int|string, RowConfig> $rowConfigs
+     * @return array<string, string>
+     */
+    private function getRowStyles($row, $rowConfigs) {
+        $rowAttrs = (
+            is_array($rowConfigs) &&
+            array_key_exists($row, $rowConfigs) &&
+            $rowConfigs[$row] instanceof RowConfig
+        ) ? $rowConfigs[$row]->attrs : [];
+
+        $styles = apply_filters('tableberg/row_styles', [], $rowAttrs);
+
+        return is_array($styles) ? $styles : [];
     }
 }

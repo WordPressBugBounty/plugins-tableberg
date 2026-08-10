@@ -10,7 +10,8 @@
   ],
   "usesContext": [
     "tableberg/tableConfig",
-    "tableberg/cellDefaults"
+    "tableberg/cellDefaults",
+    "tableberg/rowBackgroundColor"
   ],
   "supports": {
     "html": false,
@@ -22,9 +23,6 @@
       "type": "object"
     },
     "styles": {
-      "type": "object"
-    },
-    "ribbon": {
       "type": "object"
     },
     "className": {

@@ -94,13 +94,12 @@ class TableBlockMigratorV3ToV4 {
      * @return array Parsed tableberg/cell block.
      */
     private function build_cell_block($cell) {
-        $cellAttrs = [];
-
-        foreach (['span', 'styles', 'ribbon', 'className'] as $key) {
-            if (isset($cell[$key])) {
-                $cellAttrs[$key] = $cell[$key];
-            }
-        }
+        // Everything the cell carries becomes a block attribute, not just
+        // the keys this file knows about — pro registers cell attributes of
+        // its own and they must survive the migration. `elements` is the one
+        // exception: it becomes the cell's inner blocks below.
+        $cellAttrs = is_array($cell) ? $cell : [];
+        unset($cellAttrs['elements']);
 
         $elementBlocks = [];
         $elements = isset($cell['elements']) && is_array($cell['elements'])

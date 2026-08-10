@@ -4,7 +4,7 @@
  * Plugin Name:       Tableberg
  * Plugin URI:        https://tableberg.com/
  * Description:       Table Block by Tableberg - Create Better Tables With Block Editor
- * Version:           1.1.1
+ * Version:           1.1.2
  * Requires at least: 6.1
  * Requires PHP:      7.0
  * Author:            Tableberg
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 if (!defined('TABLEBERG_VERSION')) {
-    define('TABLEBERG_VERSION', '1.1.1');
+    define('TABLEBERG_VERSION', '1.1.2');
 }
 if (!defined('TABLEBERG_DIR_PATH')) {
     define('TABLEBERG_DIR_PATH', plugin_dir_path(__FILE__));

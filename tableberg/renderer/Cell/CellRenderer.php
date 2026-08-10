@@ -47,6 +47,40 @@ class CellRenderer {
             $styleValues
         );
 
+        // Pro styling of a single cell goes through one filter rather than
+        // one per property, so a new pro style needs no change here. Pro
+        // gets the styles free resolved plus every attribute of the cell,
+        // and returns the ones it wants rendered.
+        //
+        // Applied after the `styles` overrides rather than inside them: a
+        // cell can carry a pro attribute without any `styles` at all.
+        $proStyleValues = apply_filters(
+            'tableberg/cell_styles',
+            $styleValues,
+            $context->cellAttrs,
+            $context
+        );
+        if (is_array($proStyleValues)) {
+            // Merged, not replaced, so a filter that returns a partial set
+            // cannot leave the renderer with missing keys.
+            $styleValues = array_merge($styleValues, $proStyleValues);
+        }
+
+        if ($context->isEmpty) {
+            // An "empty cell" renders as a bare, unstyled cell on the
+            // frontend: no content, and no background/border either, so it
+            // is indistinguishable from a cell that was never styled.
+            $styleValues['backgroundColor'] = '';
+            $styleValues['borderTop'] = '';
+            $styleValues['borderRight'] = '';
+            $styleValues['borderBottom'] = '';
+            $styleValues['borderLeft'] = '';
+            $styleValues['borderTopLeftRadius'] = '';
+            $styleValues['borderTopRightRadius'] = '';
+            $styleValues['borderBottomRightRadius'] = '';
+            $styleValues['borderBottomLeftRadius'] = '';
+        }
+
         $isStickyHeaderCell =
             $context->stickyHeader &&
             $context->row === 0 &&
@@ -150,7 +184,8 @@ class CellRenderer {
                 continue;
             }
 
-            $name = getStringOrNull($element->name->asText()) ?? 'unknown';
+            $elementName = $element->name->asText();
+            $name = getStringOrNull($elementName) ?? 'unknown';
             $attributes = is_array($element->attributes)
                 ? $element->attributes
                 : [];
@@ -364,7 +399,8 @@ class CellRenderer {
                 continue;
             }
 
-            $name = getStringOrNull($element->name->asText()) ?? 'unknown';
+            $elementName = $element->name->asText();
+            $name = getStringOrNull($elementName) ?? 'unknown';
             $attributes = is_array($element->attributes)
                 ? $element->attributes
                 : [];
@@ -411,11 +447,6 @@ class CellRenderer {
             }
         }
 
-        if (isset($cellStyleOverride['backgroundColor'])
-            && $cellStyleOverride['backgroundColor'] instanceof StringAttr) {
-            $styleValues['backgroundColor'] = $cellStyleOverride['backgroundColor']->asAttr();
-        }
-
         if (isset($cellStyleOverride['orientation'])
             && $cellStyleOverride['orientation'] instanceof StringAttr) {
             $orientation = $cellStyleOverride['orientation']->asAttr();
@@ -439,21 +470,11 @@ class CellRenderer {
             $styleValues['verticalAlign'] = $verticalAlign;
         }
 
-        $overrideBorder = getArrayOrNull($cellStyleOverride['border']);
-        if (is_array($overrideBorder)) {
-            if (isset($overrideBorder['top']) && $overrideBorder['top'] instanceof StringAttr) {
-                $styleValues['borderTop'] = $overrideBorder['top']->asAttr();
-            }
-            if (isset($overrideBorder['right']) && $overrideBorder['right'] instanceof StringAttr) {
-                $styleValues['borderRight'] = $overrideBorder['right']->asAttr();
-            }
-            if (isset($overrideBorder['bottom']) && $overrideBorder['bottom'] instanceof StringAttr) {
-                $styleValues['borderBottom'] = $overrideBorder['bottom']->asAttr();
-            }
-            if (isset($overrideBorder['left']) && $overrideBorder['left'] instanceof StringAttr) {
-                $styleValues['borderLeft'] = $overrideBorder['left']->asAttr();
-            }
-        }
+        // Border is a pro attribute now (moved off this shared `styles`
+        // object, same as backgroundColor before it), resolved instead
+        // through the `tableberg/cell_styles` filter below — not here, or
+        // it would keep rendering a lapsed/legacy border regardless of
+        // licence status.
 
         $overrideBorderRadius = getArrayOrNull($cellStyleOverride['borderRadius']);
         if (is_array($overrideBorderRadius)) {

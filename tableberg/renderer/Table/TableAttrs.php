@@ -36,6 +36,16 @@ class TableAttrs {
     public $cellDefaults;
 
     /**
+     * Every attribute the table block carried, untouched. Pro registers
+     * table-level attributes of its own, so its renderer reads them from
+     * here rather than free having to know their names — mirrors
+     * CellData->attrs.
+     *
+     * @var array<string, mixed>
+     */
+    public $attrs;
+
+    /**
      * @param array $data
      * @return self
      */
@@ -44,6 +54,7 @@ class TableAttrs {
         $defaults = Defaults::get_defaults();
 
         $instance = new self();
+        $instance->attrs = $data;
         $instance->version = new NumberAttr(
             getOrNull($data['version']),
             $defaults['version']
@@ -137,11 +148,7 @@ class TableAttrs {
         $columns = [];
 
         foreach ($data as $column => $column_config) {
-            $columns[(int) $column] = ColumnConfig::from_array(
-                $column_config,
-                'text',
-                true
-            );
+            $columns[(int) $column] = ColumnConfig::from_array($column_config);
         }
 
         return $columns;
@@ -256,37 +263,6 @@ class PaginationConfig {
         $instance->pageSize = new NumberAttr(getOrNull($data['pageSize']), $d['pageSize']);
         $instance->showPageNumbers = new BoolAttr(getOrNull($data['showPageNumbers']), $d['showPageNumbers']);
         $instance->showPrevNext = new BoolAttr(getOrNull($data['showPrevNext']), $d['showPrevNext']);
-
-        return $instance;
-    }
-}
-
-class SearchConfig {
-    /** @var BoolAttr */
-    public $enabled;
-
-    /** @var StringAttr */
-    public $placeholder;
-
-    /** @var StringAttr */
-    public $highlightColor;
-
-    /** @var StringAttr */
-    public $position;
-
-    /** @return self */
-    public static function from_array($data) {
-        $data = is_array($data) ? $data : [];
-        $table_defaults = TableAttrs::get_table_defaults();
-        $d = isset($table_defaults['search']) && is_array($table_defaults['search'])
-            ? $table_defaults['search']
-            : [];
-
-        $instance = new self();
-        $instance->enabled = new BoolAttr(getOrNull($data['enabled']), $d['enabled']);
-        $instance->placeholder = new StringAttr(getOrNull($data['placeholder']), $d['placeholder']);
-        $instance->highlightColor = new StringAttr(getOrNull($data['highlightColor']), $d['highlightColor']);
-        $instance->position = new StringAttr(getOrNull($data['position']), $d['position'], ['left', 'right']);
 
         return $instance;
     }
@@ -445,11 +421,21 @@ class CellData {
     /** @var array<string, mixed>|null */
     public $ribbon;
 
+    /**
+     * Every attribute the cell block carried, untouched. Pro registers cell
+     * attributes of its own, so its renderer reads them from here rather
+     * than free having to know their names.
+     *
+     * @var array<string, mixed>
+     */
+    public $attrs;
+
     /** @return self */
     public static function from_array($data) {
         $data = is_array($data) ? $data : [];
 
         $instance = new self();
+        $instance->attrs = $data;
         $instance->span = Span::from_array(getOrNull($data['span']));
         $instance->className = new StringAttr(getOrNull($data['className']), '');
         $instance->elements = [];
@@ -487,12 +473,6 @@ class TableConfig {
     /** @var BoolAttr */
     public $footerEnabled;
 
-    /** @var BoolAttr */
-    public $stickyHeader;
-
-    /** @var BoolAttr */
-    public $stickyFirstCol;
-
     /** @var StringAttr */
     public $caption;
 
@@ -520,9 +500,6 @@ class TableConfig {
     /** @var PaginationConfig */
     public $pagination;
 
-    /** @var SearchConfig */
-    public $search;
-
     /** @var ResponsiveConfig */
     public $responsive;
 
@@ -537,11 +514,6 @@ class TableConfig {
         $instance->className = new StringAttr(getOrNull($data['className']), '');
         $instance->headerEnabled = new BoolAttr(getOrNull($data['headerEnabled']), $d['headerEnabled']);
         $instance->footerEnabled = new BoolAttr(getOrNull($data['footerEnabled']), $d['footerEnabled']);
-        $instance->stickyHeader = new BoolAttr(getOrNull($data['stickyHeader']), $d['stickyHeader']);
-        $instance->stickyFirstCol = new BoolAttr(
-            getOrNull($data['stickyFirstCol']),
-            getOrNull($d['stickyFirstCol']) ?? false
-        );
         $instance->caption = new StringAttr(getOrNull($data['caption']), $d['caption']);
         $instance->tableWidth = new StringAttr(
             getOrNull($data['tableWidth']),
@@ -571,7 +543,6 @@ class TableConfig {
             $d['fixedColumnWidths']
         );
         $instance->pagination = PaginationConfig::from_array(getOrNull($data['pagination']));
-        $instance->search = SearchConfig::from_array(getOrNull($data['search']));
         $instance->responsive = ResponsiveConfig::from_array(getOrNull($data['responsive']));
 
         return $instance;
@@ -583,13 +554,7 @@ class CellStyles {
     public $padding;
 
     /** @var StringAttr */
-    public $orientation;
-
-    /** @var StringAttr */
     public $elementGap;
-
-    /** @var StringAttr */
-    public $wrap;
 
     /** @var StringAttr */
     public $verticalAlign;
@@ -613,19 +578,9 @@ class CellStyles {
 
         $instance = new self();
         $instance->padding = Sides::from_array(getOrNull($data['padding']), $d['padding']);
-        $instance->orientation = new StringAttr(
-            getOrNull($data['orientation']),
-            $d['orientation'],
-            ['vertical', 'horizontal']
-        );
         $instance->elementGap = new StringAttr(
             getOrNull($data['elementGap']),
             $d['elementGap']
-        );
-        $instance->wrap = new StringAttr(
-            getOrNull($data['wrap']),
-            $d['wrap'],
-            ['wrap', 'nowrap']
         );
         $instance->verticalAlign = new StringAttr(
             getOrNull($data['verticalAlign']),
@@ -669,33 +624,14 @@ class Span {
 
 class ColumnConfig {
     /** @var StringAttr|null */
-    public $sortable;
-
-    /** @var StringAttr|null */
     public $width;
 
-    /**
-     * @param array|null $data
-     * @param string $defaultSortable
-     * @param bool $allowNull
-     * @return self
-     */
-    public static function from_array($data, $defaultSortable = 'text', $allowNull = false) {
+    /** @return self */
+    public static function from_array($data) {
         $data = is_array($data) ? $data : [];
-        $sortable = getOrNull($data['sortable']);
         $width = getOrNull($data['width']);
 
         $instance = new self();
-
-        if ($allowNull && ($sortable === null || $sortable === '')) {
-            $instance->sortable = null;
-        } else {
-            $instance->sortable = new StringAttr(
-                $sortable,
-                $defaultSortable,
-                ['text', 'number', 'date']
-            );
-        }
 
         if ($width === null || $width === '') {
             $instance->width = null;
@@ -712,6 +648,15 @@ class RowConfig {
     public $height;
 
     /**
+     * Every attribute the row block carried, untouched. Pro registers row
+     * attributes of its own (e.g. backgroundColor), so its renderer reads
+     * them from here rather than free having to know their names.
+     *
+     * @var array<string, mixed>
+     */
+    public $attrs;
+
+    /**
      * @param array|null $data
      * @return self
      */
@@ -720,6 +665,7 @@ class RowConfig {
         $height = getOrNull($data['height']);
 
         $instance = new self();
+        $instance->attrs = $data;
 
         if ($height === null || $height === '') {
             $instance->height = null;

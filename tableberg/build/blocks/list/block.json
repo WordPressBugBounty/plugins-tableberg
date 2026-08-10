@@ -23,9 +23,6 @@
     "listStyle": {
       "type": "string"
     },
-    "icon": {
-      "type": "object"
-    },
     "align": {
       "type": "string"
     },

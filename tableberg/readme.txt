@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,15 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+
+= 1.1.2 =
+* PRO: NEW: Empty Cell — hide a cell's content on the live site while keeping it visible in the editor for you to edit
+* PRO: NEW: Border controls for rows, columns and individual cells, in the Styles tab
+* PRO: NEW: Background color controls for rows and columns
+* PRO: FIX: A row's own background color no longer gets overridden by the table's default color
+* PRO: FIX: Column border now outlines the column as a whole, instead of also adding a border between cells inside it
+* FIX: Removed PHP notices and deprecation warnings shown on newer PHP versions (8.2+)
+* IMPROVE: Internal code improvements between the free and Pro plugins for better performance and maintainability
 
 = 1.1.1 =
 * FIX: In the List element, Enter adds a new item and Tab / Shift+Tab indent and outdent it; nested items now show as a real nested list

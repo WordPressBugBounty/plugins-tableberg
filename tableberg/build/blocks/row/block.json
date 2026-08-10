@@ -18,5 +18,8 @@
       "type": "string"
     }
   },
+  "providesContext": {
+    "tableberg/rowBackgroundColor": "backgroundColor"
+  },
   "textdomain": "tableberg"
 }

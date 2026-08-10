@@ -38,11 +38,10 @@ class InnerBlocksAttrsAdapter {
             $rowAttrs = isset($rowBlock['attrs']) && is_array($rowBlock['attrs'])
                 ? $rowBlock['attrs']
                 : [];
-            if (isset($rowAttrs['height']) && is_string($rowAttrs['height']) && $rowAttrs['height'] !== '') {
-                $rowConfigs[$row] = ['height' => $rowAttrs['height']];
-            } else {
-                $rowConfigs[$row] = null;
-            }
+            // Pass every row attribute through untouched (not just `height`)
+            // so pro-registered keys survive without this adapter needing to
+            // know their names.
+            $rowConfigs[$row] = empty($rowAttrs) ? null : $rowAttrs;
 
             $col = 0;
             $rowInner = isset($rowBlock['innerBlocks']) && is_array($rowBlock['innerBlocks'])
@@ -67,12 +66,11 @@ class InnerBlocksAttrsAdapter {
                     ? $cellBlock['attrs']
                     : [];
 
-                $cellEntry = [];
-                foreach (['span', 'styles', 'ribbon', 'className'] as $key) {
-                    if (isset($cellAttrs[$key])) {
-                        $cellEntry[$key] = $cellAttrs[$key];
-                    }
-                }
+                // Everything the cell block carries is passed straight
+                // through, not just the keys this file knows about. Pro
+                // registers its own cell attributes, and they have to reach
+                // its renderer without free having to name them here.
+                $cellEntry = $cellAttrs;
 
                 $cellEntry['elements'] = self::to_elements(
                     isset($cellBlock['innerBlocks']) && is_array($cellBlock['innerBlocks'])

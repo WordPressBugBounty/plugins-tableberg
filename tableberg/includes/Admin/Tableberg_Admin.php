@@ -5,6 +5,7 @@ namespace Tableberg\Admin;
 use Tableberg;
 
 class Tableberg_Admin {
+    private $plugin_name;
     private $plugin_url;
 
     public function __construct() {

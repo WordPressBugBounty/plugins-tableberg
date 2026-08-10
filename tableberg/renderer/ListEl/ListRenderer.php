@@ -2,7 +2,6 @@
 
 namespace Tableberg\Renderer\ListEl;
 
-use Tableberg\Renderer\Attrs\SvgIconAttrs;
 
 class ListRenderer {
     /**
@@ -171,13 +170,19 @@ class ListRenderer {
                     "<span style='{$decimalNumberStyle}'>
                         {$number}.
                     </span>";
-            } elseif (
-                $attrs->icon instanceof ListIconAttrs
-                && !$attrs->icon->iconName->equals('none')
-            ) {
-                $svg = $this->render_icon($attrs);
+            } else {
+                // The icon marker is a pro feature: pro draws the <svg> for
+                // the configured icon and free draws nothing, which is why a
+                // styled list without pro has no marker. The positioning
+                // wrapper stays here because the decimal marker above shares
+                // its styles.
+                $svg = apply_filters(
+                    'tableberg/render_list_item_icon',
+                    '',
+                    $attrs
+                );
 
-                if ($svg !== '') {
+                if (is_string($svg) && $svg !== '') {
                     $iconHtml =
                         "<span style='{$iconStyle}'>
                             {$svg}
@@ -340,66 +345,6 @@ class ListRenderer {
         }
 
         return $styleValues;
-    }
-
-    /**
-     * @param ListAttrs $attrs
-     * @return string
-     */
-    private function render_icon($attrs) {
-        if (!$attrs->icon instanceof ListIconAttrs) {
-            return '';
-        }
-
-        if ($attrs->icon->iconName->equals('none')) {
-            return '';
-        }
-
-        $svg = $attrs->icon->svg;
-        if (!$svg instanceof SvgIconAttrs && $attrs->icon->iconName->equals('check')) {
-            $checkSvgViewbox = '0 0 24 24';
-            $checkSvgPath = 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z';
-
-            $svg = SvgIconAttrs::from_array(
-                [],
-                [],
-                $checkSvgViewbox,
-                $checkSvgPath
-            );
-        }
-
-        if (!$svg instanceof SvgIconAttrs) {
-            return '';
-        }
-
-        $iconSize = $this->parse_icon_size(
-            $attrs->styles->iconSize->asText()
-        );
-        $viewBox = $svg->viewBox->asAttr();
-        $path = $svg->path->asAttr();
-
-        return
-            "<svg
-                width='{$iconSize}'
-                height='{$iconSize}'
-                viewBox='{$viewBox}'
-                fill='currentColor'
-            >
-                <path d='{$path}' />
-            </svg>";
-    }
-
-    /**
-     * @param string $rawValue
-     * @return int
-     */
-    private function parse_icon_size($rawValue) {
-        $size = (int) $rawValue;
-        if ($size > 0) {
-            return $size;
-        }
-
-        return 15;
     }
 
     /**

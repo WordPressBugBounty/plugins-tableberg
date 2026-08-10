@@ -87,6 +87,14 @@ class CellRenderContext {
     /** @var array<string, mixed>|null */
     public $ribbon;
 
+    /**
+     * Every attribute of the cell block, untouched, for renderers that read
+     * attributes free does not know about (pro registers its own).
+     *
+     * @var array<string, mixed>
+     */
+    public $cellAttrs = [];
+
     /** @var string|null */
     public $sortableType;
 
@@ -103,6 +111,14 @@ class CellRenderContext {
     public $stickyFirstCol;
 
     /**
+     * Whether the cell is a pro "empty cell": renders as a bare, unstyled
+     * cell on the frontend — no content, no background, no border.
+     *
+     * @var bool
+     */
+    public $isEmpty;
+
+    /**
      * @param mixed $row
      * @param mixed $col
      * @param mixed $rowSpan
@@ -117,6 +133,7 @@ class CellRenderContext {
      * @param string|null $height
      * @param bool $stickyHeader
      * @param string|null $className
+     * @param bool $isEmpty
      * @return self
      */
     public static function create(
@@ -134,7 +151,9 @@ class CellRenderContext {
         $height = null,
         $stickyHeader = false,
         $stickyFirstCol = false,
-        $className = null
+        $className = null,
+        $cellAttrs = [],
+        $isEmpty = false
     ) {
         $instance = new self();
 
@@ -199,6 +218,7 @@ class CellRenderContext {
 
         $instance->elements = is_array($elements) ? $elements : [];
         $instance->cellStyleOverride = getArrayOrNull($cellStyleOverride);
+        $instance->cellAttrs = is_array($cellAttrs) ? $cellAttrs : [];
 
         $instance->ribbon = getArrayOrNull($ribbon);
 
@@ -213,6 +233,7 @@ class CellRenderContext {
         $instance->height = getStringOrNull($height);
         $instance->stickyHeader = (bool) $stickyHeader;
         $instance->stickyFirstCol = (bool) $stickyFirstCol;
+        $instance->isEmpty = (bool) $isEmpty;
         $instance->className = trim((string) (getStringOrNull($className) ?? ''));
 
         return $instance;
