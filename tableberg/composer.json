@@ -20,5 +20,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "post-install-cmd": "@php ../../scripts/flatten-freemius-sdk.php vendor",
+        "post-update-cmd": "@php ../../scripts/flatten-freemius-sdk.php vendor"
     }
 }

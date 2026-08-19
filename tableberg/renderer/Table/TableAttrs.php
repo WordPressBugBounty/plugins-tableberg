@@ -562,6 +562,18 @@ class CellStyles {
     /** @var StringAttr */
     public $backgroundColor;
 
+    /** @var StringAttr */
+    public $headerBackgroundColor;
+
+    /** @var StringAttr */
+    public $footerBackgroundColor;
+
+    /** @var StringAttr */
+    public $evenRowBackgroundColor;
+
+    /** @var StringAttr */
+    public $oddRowBackgroundColor;
+
     /** @var Sides */
     public $border;
 
@@ -588,6 +600,10 @@ class CellStyles {
             ['top', 'middle', 'bottom']
         );
         $instance->backgroundColor = new StringAttr(getOrNull($data['backgroundColor']), $d['backgroundColor']);
+        $instance->headerBackgroundColor = new StringAttr(getOrNull($data['headerBackgroundColor']), $d['headerBackgroundColor']);
+        $instance->footerBackgroundColor = new StringAttr(getOrNull($data['footerBackgroundColor']), $d['footerBackgroundColor']);
+        $instance->evenRowBackgroundColor = new StringAttr(getOrNull($data['evenRowBackgroundColor']), $d['evenRowBackgroundColor']);
+        $instance->oddRowBackgroundColor = new StringAttr(getOrNull($data['oddRowBackgroundColor']), $d['oddRowBackgroundColor']);
         $instance->border = Sides::from_array(getOrNull($data['border']), $d['border']);
         $instance->borderRadius = Corners::from_array(getOrNull($data['borderRadius']), $d['borderRadius']);
         $instance->cells = is_array(getOrNull($data['cells'])) ? $data['cells'] : $d['cells'];

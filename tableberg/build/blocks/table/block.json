@@ -138,7 +138,11 @@
           "elementGap": "var(--wp--preset--spacing--20)",
           "wrap": "nowrap",
           "verticalAlign": "middle",
-          "backgroundColor": ""
+          "backgroundColor": "",
+          "headerBackgroundColor": "",
+          "footerBackgroundColor": "",
+          "evenRowBackgroundColor": "",
+          "oddRowBackgroundColor": ""
         }
       }
     }

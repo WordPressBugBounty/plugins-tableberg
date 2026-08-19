@@ -158,10 +158,24 @@ class ImageRenderer {
             $blockAttrs['scale'] = $attrs->scale->dangerouslyUseRawValue();
         }
 
+        // block_core_image_render_lightbox() type-hints a real WP_Block, not
+        // just any object with a `context` property — a plain stdClass
+        // fatals with a TypeError. Reusing the registered `core/image` name
+        // gives it a real block type without side effects: the function
+        // only reads `$block_instance->context`, which stays empty here
+        // same as it would for a standalone (non-gallery) image.
+        $blockInstance = class_exists('WP_Block')
+            ? new \WP_Block(['blockName' => 'core/image', 'attrs' => $blockAttrs])
+            : null;
+
+        if (!$blockInstance) {
+            return $figureHtml;
+        }
+
         return \block_core_image_render_lightbox(
             $figureHtml,
             ['attrs' => $blockAttrs],
-            (object) ['context' => []]
+            $blockInstance
         );
     }
 }

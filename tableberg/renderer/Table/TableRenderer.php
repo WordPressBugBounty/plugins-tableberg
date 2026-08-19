@@ -270,13 +270,36 @@ class TableRenderer {
                 ? $rowStyles['backgroundColor']
                 : '';
 
+            $cellStylesForRow = $globalCellStyles;
+
+            // Header/footer/even/odd are table-wide defaults, resolved per
+            // row here the same way `cell/index.tsx`'s
+            // `useRowBackgroundStyleKey` does in the editor — header/footer
+            // don't consume a slot in the even/odd count.
+            $isHeaderRow = $headerEnabled && $row === 0;
+            $isFooterRow = $footerEnabled && $rows > 0 && $row === $rows - 1;
+
+            if ($isHeaderRow) {
+                $rowPositionBackground = $attrs->cellDefaults->styles->headerBackgroundColor->asAttr();
+            } elseif ($isFooterRow) {
+                $rowPositionBackground = $attrs->cellDefaults->styles->footerBackgroundColor->asAttr();
+            } else {
+                $dataRowPosition = $headerEnabled ? $row - 1 : $row;
+                $rowPositionBackground = ($dataRowPosition % 2 === 0)
+                    ? $attrs->cellDefaults->styles->oddRowBackgroundColor->asAttr()
+                    : $attrs->cellDefaults->styles->evenRowBackgroundColor->asAttr();
+            }
+
+            if ($rowPositionBackground !== '') {
+                $cellStylesForRow['backgroundColor'] = $rowPositionBackground;
+            }
+
             // A row with its own background would otherwise never show
             // through: every cell paints its own background over the
             // `<tr>`'s, and cells fall back to the table-wide default
             // whenever they carry no colour of their own. So for this row's
             // cells, that fallback is cleared — a cell/column colour on top
             // of it (applied below by the pro filter) still wins either way.
-            $cellStylesForRow = $globalCellStyles;
             if ($rowBackgroundColor !== '') {
                 $cellStylesForRow['backgroundColor'] = '';
             }

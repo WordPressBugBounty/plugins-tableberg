@@ -118,6 +118,10 @@ class Defaults {
                     'wrap' => 'nowrap',
                     'verticalAlign' => 'middle',
                     'backgroundColor' => '',
+                    'headerBackgroundColor' => '',
+                    'footerBackgroundColor' => '',
+                    'evenRowBackgroundColor' => '',
+                    'oddRowBackgroundColor' => '',
                 ],
             ],
         ];
