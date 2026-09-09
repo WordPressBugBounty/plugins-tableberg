@@ -27,6 +27,18 @@
     },
     "className": {
       "type": "string"
+    },
+    "backgroundColor": {
+      "type": "string"
+    },
+    "border": {
+      "type": "object"
+    },
+    "ribbon": {
+      "type": "object"
+    },
+    "emptyCell": {
+      "type": "boolean"
     }
   },
   "textdomain": "tableberg"

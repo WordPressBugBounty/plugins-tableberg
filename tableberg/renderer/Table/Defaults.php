@@ -32,6 +32,7 @@ class Defaults {
                 'footerEnabled' => false,
                 'stickyHeader' => false,
                 'stickyFirstCol' => false,
+                'innerBorderType' => '',
                 'caption' => '',
                 'tableWidth' => 'auto',
                 'tableAlignment' => 'left',

@@ -60,16 +60,14 @@ class Assets {
     private static function pass_data_to_js(string $handle) {
         $data = [
             'plugin_url' => TABLEBERG_URL,
+            // Pro marks this true only after its licence check succeeds and
+            // its runtime extensions actually boot. The version constant only
+            // proves that the add-on PHP file was loaded.
+            'IS_PRO' => (bool) apply_filters(
+                'tableberg/is_pro_runtime_active',
+                false
+            ),
         ];
-        $has_pro_addon = defined('TABLEBERG_PRO_VERSION');
-        global $tp_fs;
-        if (isset($tp_fs)) {
-            $data['IS_PRO'] = $has_pro_addon
-                || ($tp_fs->is__premium_only()
-                    && $tp_fs->can_use_premium_code());
-        } else {
-            $data['IS_PRO'] = $has_pro_addon;
-        }
         wp_localize_script($handle, 'TABLEBERG_CFG', $data);
     }
 }

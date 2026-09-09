@@ -1,11 +1,11 @@
 === Tableberg - Simple Gutenberg Table Block ===
-Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok
+Contributors: dotcamp, imtiazrayhan, istiakrayhan, permafrost06, ultimateblocks, wptb, erdembircan, protibimbok, farhanshafi
 Tags: table, comparison-tables, data-visualization, responsive-table, amazon-affiliate
 Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,20 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+
+= 1.1.4 =
+* NEW: Added a Block Spacing control for individual cells
+* NEW: Added Copy and Paste Styles actions to the Text block
+* PRO: NEW: Added Row Only and Column Only table border modes
+* FIX: Table border radius now preserves clean rounded outer corners
+* FIX: Header, footer, even and odd row background colors remain visible in responsive previews
+* FIX: Pro-only attributes remain preserved without enabling Pro features when Pro is inactive
+* FIX: Cell plus inserter now opens the Gutenberg block inserter instead of directly adding a Text block
+* PRO: FIX: Row-only and column-only modes no longer add an unintended outside border
+* FIX: Prevented rounded tables from duplicating cell borders on the outer wrapper
+* PRO: FIX: Sticky First Column now remains anchored while scrolling horizontally
+* IMPROVE: Pro elements now use standard Gutenberg block registration for more reliable editor integration
+* IMPROVE: Strengthened CSS generation and renderer attribute handling
 
 = 1.1.3 =
 * FIX: Even/Odd/Header/Footer row background colors apply again without Pro active

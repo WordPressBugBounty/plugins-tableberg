@@ -16,6 +16,12 @@
   "attributes": {
     "height": {
       "type": "string"
+    },
+    "backgroundColor": {
+      "type": "string"
+    },
+    "border": {
+      "type": "object"
     }
   },
   "providesContext": {

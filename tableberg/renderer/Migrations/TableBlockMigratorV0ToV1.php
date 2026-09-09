@@ -111,6 +111,10 @@ class TableBlockMigratorV0ToV1 {
             $this->get_scalar($attrs, 'tableWidth', ''),
             $this->get_scalar($attrs, 'tableAlignment', '')
         );
+        $inner_border_type = $this->get_scalar($attrs, 'innerBorderType', '');
+        if (!in_array($inner_border_type, array('row', 'col'), true)) {
+            $inner_border_type = '';
+        }
         $legacy_search_position = $this->get_scalar($attrs, 'searchPosition', 'left');
         $legacy_responsive = $this->get_array($attrs, 'responsive', array());
         $legacy_breakpoints = $this->get_array($legacy_responsive, 'breakpoints', array());
@@ -124,6 +128,7 @@ class TableBlockMigratorV0ToV1 {
             ),
             'stickyHeader' => !empty($attrs['stickyTopRow']),
             'stickyFirstCol' => !empty($attrs['stickyFirstCol']),
+            'innerBorderType' => $inner_border_type,
             'caption' => (string) $this->get_scalar($attrs, 'caption', ''),
             'tableWidth' => $table_dimensions['tableWidth'],
             'tableAlignment' => $table_dimensions['tableAlignment'],

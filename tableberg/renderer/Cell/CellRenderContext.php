@@ -118,6 +118,15 @@ class CellRenderContext {
      */
     public $isEmpty;
 
+    /** @var string */
+    public $innerBorderType;
+
+    /** @var int */
+    public $totalRows;
+
+    /** @var int */
+    public $totalCols;
+
     /**
      * @param mixed $row
      * @param mixed $col
@@ -134,6 +143,9 @@ class CellRenderContext {
      * @param bool $stickyHeader
      * @param string|null $className
      * @param bool $isEmpty
+     * @param string $innerBorderType
+     * @param int $totalRows
+     * @param int $totalCols
      * @return self
      */
     public static function create(
@@ -153,7 +165,10 @@ class CellRenderContext {
         $stickyFirstCol = false,
         $className = null,
         $cellAttrs = [],
-        $isEmpty = false
+        $isEmpty = false,
+        $innerBorderType = '',
+        $totalRows = 0,
+        $totalCols = 0
     ) {
         $instance = new self();
 
@@ -234,6 +249,11 @@ class CellRenderContext {
         $instance->stickyHeader = (bool) $stickyHeader;
         $instance->stickyFirstCol = (bool) $stickyFirstCol;
         $instance->isEmpty = (bool) $isEmpty;
+        $instance->innerBorderType = in_array($innerBorderType, ['row', 'col'], true)
+            ? $innerBorderType
+            : '';
+        $instance->totalRows = max(0, (int) $totalRows);
+        $instance->totalCols = max(0, (int) $totalCols);
         $instance->className = trim((string) (getStringOrNull($className) ?? ''));
 
         return $instance;

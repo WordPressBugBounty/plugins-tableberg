@@ -9,6 +9,7 @@ use Tableberg\Renderer\ListEl\ListRenderer;
 use Tableberg\Renderer\Text\TextRenderer;
 
 use function apply_filters;
+use function Tableberg\Renderer\generate_css_string;
 use function Tableberg\Renderer\getArrayOrNull;
 use function Tableberg\Renderer\getStringOrNull;
 
@@ -66,6 +67,29 @@ class CellRenderer {
             $styleValues = array_merge($styleValues, $proStyleValues);
         }
 
+        // Table-wide Pro grid modes win over common and individual cell
+        // borders. They render inner separators only; the separate table
+        // border control owns the outside rectangle.
+        if ($context->innerBorderType === 'row') {
+            $styleValues['borderLeft'] = '';
+            $styleValues['borderRight'] = '';
+            if ($context->row === 0) {
+                $styleValues['borderTop'] = '';
+            }
+            if ($context->row + $context->rowSpan >= $context->totalRows) {
+                $styleValues['borderBottom'] = '';
+            }
+        } elseif ($context->innerBorderType === 'col') {
+            $styleValues['borderTop'] = '';
+            $styleValues['borderBottom'] = '';
+            if ($context->col === 0) {
+                $styleValues['borderLeft'] = '';
+            }
+            if ($context->col + $context->colSpan >= $context->totalCols) {
+                $styleValues['borderRight'] = '';
+            }
+        }
+
         if ($context->isEmpty) {
             // An "empty cell" renders as a bare, unstyled cell on the
             // frontend: no content, and no background/border either, so it
@@ -89,80 +113,80 @@ class CellRenderer {
         $isStickyFirstColCell =
             $context->stickyFirstCol && $context->col === 0;
 
-        $styleParts = ['position:relative'];
+        $styleParts = ['position' => 'relative'];
         if ($styleValues['paddingTop'] !== '') {
-            $styleParts[] = 'padding-top:' . $styleValues['paddingTop'];
+            $styleParts['padding-top'] = $styleValues['paddingTop'];
         }
         if ($styleValues['paddingRight'] !== '') {
-            $styleParts[] = 'padding-right:' . $styleValues['paddingRight'];
+            $styleParts['padding-right'] = $styleValues['paddingRight'];
         }
         if ($styleValues['paddingBottom'] !== '') {
-            $styleParts[] = 'padding-bottom:' . $styleValues['paddingBottom'];
+            $styleParts['padding-bottom'] = $styleValues['paddingBottom'];
         }
         if ($styleValues['paddingLeft'] !== '') {
-            $styleParts[] = 'padding-left:' . $styleValues['paddingLeft'];
+            $styleParts['padding-left'] = $styleValues['paddingLeft'];
         }
         if ($styleValues['verticalAlign'] !== '') {
-            $styleParts[] = 'vertical-align:' . $styleValues['verticalAlign'];
+            $styleParts['vertical-align'] = $styleValues['verticalAlign'];
         }
         if ($styleValues['backgroundColor'] !== '') {
-            $styleParts[] = 'background-color:' . $styleValues['backgroundColor'];
+            $styleParts['background-color'] = $styleValues['backgroundColor'];
         }
         if ($styleValues['borderTop'] !== '') {
-            $styleParts[] = 'border-top:' . $styleValues['borderTop'];
+            $styleParts['border-top'] = $styleValues['borderTop'];
         }
         if ($styleValues['borderRight'] !== '') {
-            $styleParts[] = 'border-right:' . $styleValues['borderRight'];
+            $styleParts['border-right'] = $styleValues['borderRight'];
         }
         if ($styleValues['borderBottom'] !== '') {
-            $styleParts[] = 'border-bottom:' . $styleValues['borderBottom'];
+            $styleParts['border-bottom'] = $styleValues['borderBottom'];
         }
         if ($styleValues['borderLeft'] !== '') {
-            $styleParts[] = 'border-left:' . $styleValues['borderLeft'];
+            $styleParts['border-left'] = $styleValues['borderLeft'];
         }
         if ($styleValues['borderTopLeftRadius'] !== '') {
-            $styleParts[] = 'border-top-left-radius:' . $styleValues['borderTopLeftRadius'];
+            $styleParts['border-top-left-radius'] = $styleValues['borderTopLeftRadius'];
         }
         if ($styleValues['borderTopRightRadius'] !== '') {
-            $styleParts[] = 'border-top-right-radius:' . $styleValues['borderTopRightRadius'];
+            $styleParts['border-top-right-radius'] = $styleValues['borderTopRightRadius'];
         }
         if ($styleValues['borderBottomRightRadius'] !== '') {
-            $styleParts[] = 'border-bottom-right-radius:' . $styleValues['borderBottomRightRadius'];
+            $styleParts['border-bottom-right-radius'] = $styleValues['borderBottomRightRadius'];
         }
         if ($styleValues['borderBottomLeftRadius'] !== '') {
-            $styleParts[] = 'border-bottom-left-radius:' . $styleValues['borderBottomLeftRadius'];
+            $styleParts['border-bottom-left-radius'] = $styleValues['borderBottomLeftRadius'];
         }
         if ($context->colSpan === 1 && $context->width !== null && $context->width !== '') {
-            $styleParts[] = 'width:' . $context->width;
-            $styleParts[] = 'min-width:' . $context->width;
+            $styleParts['width'] = $context->width;
+            $styleParts['min-width'] = $context->width;
         }
         if ($context->rowSpan === 1 && $context->height !== null && $context->height !== '') {
-            $styleParts[] = 'height:' . $context->height;
-            $styleParts[] = 'min-height:' . $context->height;
+            $styleParts['height'] = $context->height;
+            $styleParts['min-height'] = $context->height;
         }
 
         if ($isStickyHeaderCell) {
-            $styleParts[] = 'position:sticky';
-            $styleParts[] = 'top:0';
-            $styleParts[] = $isStickyFirstColCell ? 'z-index:3' : 'z-index:2';
+            $styleParts['position'] = 'sticky';
+            $styleParts['top'] = '0';
+            $styleParts['z-index'] = $isStickyFirstColCell ? '3' : '2';
 
             if ($styleValues['backgroundColor'] === '') {
-                $styleParts[] = 'background-color:#fff';
+                $styleParts['background-color'] = '#fff';
             }
         }
 
         if ($isStickyFirstColCell) {
             if (!$isStickyHeaderCell) {
-                $styleParts[] = 'position:sticky';
-                $styleParts[] = 'z-index:1';
+                $styleParts['position'] = 'sticky';
+                $styleParts['z-index'] = '1';
             }
-            $styleParts[] = 'left:0';
+            $styleParts['left'] = '0';
 
             if (
                 !$isStickyHeaderCell &&
                 $styleValues['backgroundColor'] === ''
             ) {
-                $styleParts[] = 'background-color:#fff';
+                $styleParts['background-color'] = '#fff';
             }
         }
 
@@ -316,7 +340,7 @@ class CellRenderer {
                 &#9650;&#9660;
             </span>" : '';
 
-        $stylesStr = implode(';', $styleParts);
+        $stylesStr = generate_css_string($styleParts);
 
         $attrsStr = ($tag === 'th' && $sortableType !== null) ?
                 "data-sortable='{$sortableType}'

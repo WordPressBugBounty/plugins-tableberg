@@ -117,9 +117,13 @@ class InnerBlocksAttrsAdapter {
             $row++;
         }
 
+        // When the whole object is absent Gutenberg supplies the block
+        // schema's complete default. Starting from an empty array here would
+        // create a partial object just to add row/column counts and would
+        // silently lose nested defaults such as search.placeholder.
         $table = isset($attrs['table']) && is_array($attrs['table'])
             ? $attrs['table']
-            : [];
+            : TableAttrs::get_table_defaults();
         $table['rows'] = $row;
         $table['cols'] = $colsCount;
 

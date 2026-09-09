@@ -70,6 +70,17 @@ class TableRenderer {
         $stickyHeader = !empty($stickySettings['stickyHeader']);
         $stickyFirstCol = !empty($stickySettings['stickyFirstCol']);
 
+        // Row-only/column-only is Pro-owned. Free's empty default preserves
+        // the attribute without enabling its editor or frontend behavior.
+        $innerBorderType = apply_filters(
+            'tableberg/inner_border_type',
+            '',
+            $attrs->attrs
+        );
+        if (!in_array($innerBorderType, ['row', 'col'], true)) {
+            $innerBorderType = '';
+        }
+
         $caption = $attrs->table->caption;
         $tableWidth = trim($attrs->table->tableWidth->asAttr());
         $tableAlignment = $attrs->table->tableAlignment->asAttr();
@@ -80,6 +91,22 @@ class TableRenderer {
         $tableBorderBottom = trim($attrs->table->tableBorder->bottom->asAttr());
         $tableBorderLeft = trim($attrs->table->tableBorder->left->asAttr());
         $fixedColumnWidths = $attrs->table->fixedColumnWidths->value();
+        $tableRadius = [
+            'topLeft' => $attrs->cellDefaults->styles->borderRadius->topLeft->asAttr(),
+            'topRight' => $attrs->cellDefaults->styles->borderRadius->topRight->asAttr(),
+            'bottomRight' => $attrs->cellDefaults->styles->borderRadius->bottomRight->asAttr(),
+            'bottomLeft' => $attrs->cellDefaults->styles->borderRadius->bottomLeft->asAttr(),
+        ];
+        $isZeroRadius = function ($value) {
+            $trimmed = trim((string) $value);
+            return $trimmed === '' || preg_match('/^0(?:\.0+)?[a-z%]*$/i', $trimmed) === 1;
+        };
+        $hasRoundedCorners = count(array_filter(
+            $tableRadius,
+            function ($value) use ($isZeroRadius) {
+                return !$isZeroRadius($value);
+            }
+        )) > 0;
 
         $isHorizontalSpacingZero = $cellSpacingHorizontal === '0';
         $isVerticalSpacingZero = $cellSpacingVertical === '0';
@@ -107,6 +134,9 @@ class TableRenderer {
 
         $tableStyles = [
             'border-collapse: ' . ($hasCellSpacing ? 'separate' : 'collapse'),
+            // Neutralize theme-level table borders. Tableberg owns its
+            // borders through the table/cell controls and rounded wrapper.
+            'border: 0',
         ];
 
         if ($hasCellSpacing) {
@@ -120,19 +150,19 @@ class TableRenderer {
             $tableStyles[] = 'width: 100%';
         }
 
-        if ($tableBorderTop !== '') {
+        if (!$hasRoundedCorners && $tableBorderTop !== '') {
             $tableStyles[] = "border-top: {$tableBorderTop}";
         }
 
-        if ($tableBorderRight !== '') {
+        if (!$hasRoundedCorners && $tableBorderRight !== '') {
             $tableStyles[] = "border-right: {$tableBorderRight}";
         }
 
-        if ($tableBorderBottom !== '') {
+        if (!$hasRoundedCorners && $tableBorderBottom !== '') {
             $tableStyles[] = "border-bottom: {$tableBorderBottom}";
         }
 
-        if ($tableBorderLeft !== '') {
+        if (!$hasRoundedCorners && $tableBorderLeft !== '') {
             $tableStyles[] = "border-left: {$tableBorderLeft}";
         }
 
@@ -245,11 +275,16 @@ class TableRenderer {
             ],
         ];
 
-        // The table border radius rounds the whole table's outer corners.
-        // border-radius on collapsed-border tables/cells is ignored by
-        // browsers, so it is rendered on the wrapper (with overflow:hidden)
-        // and removed from the individual cells here.
-        $tableRadius = $globalCellStyles['borderRadius'];
+        // A collapsed table cannot reliably round its own explicit border.
+        // The wrapper owns only the table border and clips the cell grid to
+        // it. Cell borders stay on cells; copying them to the wrapper would
+        // add an outline that the user did not configure as a table border.
+        $tableOuterBorder = [
+            'top' => $tableBorderTop,
+            'right' => $tableBorderRight,
+            'bottom' => $tableBorderBottom,
+            'left' => $tableBorderLeft,
+        ];
         $globalCellStyles['borderRadius'] = [
             'topLeft' => '',
             'topRight' => '',
@@ -369,7 +404,10 @@ class TableRenderer {
                         $stickyFirstCol,
                         $this->getCellClassName($cell),
                         $cell instanceof CellData ? $cell->attrs : [],
-                        $this->isCellEmpty($cell)
+                        $this->isCellEmpty($cell),
+                        $innerBorderType,
+                        $rows,
+                        $cols
                     )
                 );
             }
@@ -409,25 +447,27 @@ class TableRenderer {
             ];
         }
 
-        $columnsJson = json_encode($columnsData);
+        $columnsJson = wp_json_encode($columnsData);
         if (!is_string($columnsJson)) {
             $columnsJson = '{}';
         }
+        $columnsJson = esc_attr($columnsJson);
 
-        $paginationJson = json_encode($paginationConfig);
+        $paginationJson = wp_json_encode($paginationConfig);
         if (!is_string($paginationJson)) {
             $paginationJson = '{}';
         }
+        $paginationJson = esc_attr($paginationJson);
+
+        $searchPlaceholderAttr = esc_attr($searchPlaceholder);
+        $searchPositionAttr = esc_attr($searchPosition);
+        $searchHighlightColorAttr = esc_attr($searchHighlightColor);
 
         $wrapperClass = trim("tableberg-table-wrapper {$wrapperAlignmentClass}");
 
-        // Round the whole table's outer corners by clipping the wrapper.
+        // Round the whole table's outer corners on the wrapper.
         // Zero radii are skipped so a table without any actual rounding does
         // not carry pointless border-radius declarations.
-        $isZeroRadius = function ($value) {
-            $trimmed = trim((string) $value);
-            return $trimmed === '' || preg_match('/^0(?:\.0+)?[a-z%]*$/i', $trimmed) === 1;
-        };
         $wrapperStyles = [];
         if (!$isZeroRadius($tableRadius['topLeft'])) {
             $wrapperStyles[] = 'border-top-left-radius:' . $tableRadius['topLeft'];
@@ -440,6 +480,22 @@ class TableRenderer {
         }
         if (!$isZeroRadius($tableRadius['bottomLeft'])) {
             $wrapperStyles[] = 'border-bottom-left-radius:' . $tableRadius['bottomLeft'];
+        }
+
+        if (!empty($wrapperStyles)) {
+            if ($tableOuterBorder['top'] !== '') {
+                $wrapperStyles[] = 'border-top:' . $tableOuterBorder['top'];
+            }
+            if ($tableOuterBorder['right'] !== '') {
+                $wrapperStyles[] = 'border-right:' . $tableOuterBorder['right'];
+            }
+            if ($tableOuterBorder['bottom'] !== '') {
+                $wrapperStyles[] = 'border-bottom:' . $tableOuterBorder['bottom'];
+            }
+            if ($tableOuterBorder['left'] !== '') {
+                $wrapperStyles[] = 'border-left:' . $tableOuterBorder['left'];
+            }
+            $wrapperStyles[] = 'box-sizing:border-box';
         }
 
         // A table wider than its wrapper must scroll inside the wrapper
@@ -455,8 +511,6 @@ class TableRenderer {
         //
         // A rounded wrapper always needs the clip, so it opts in regardless.
         $pageStickyHeader = $stickyHeader && !$stickyFirstCol;
-        $hasRoundedCorners = !empty($wrapperStyles);
-
         if ($hasRoundedCorners || !$pageStickyHeader) {
             // `auto`, not `hidden`: both clip to the rounded corners, but
             // `hidden` would also swallow a table wider than the wrapper.
@@ -518,9 +572,9 @@ class TableRenderer {
                         data-tableberg-columns='$columnsJson'
                         data-tableberg-pagination='$paginationJson'
                         data-tableberg-search-enabled='$searchEnabledAsStr'
-                        data-tableberg-search-placeholder='$searchPlaceholder'
-                        data-tableberg-search-position='$searchPosition'
-                        data-tableberg-search-highlight-color='$searchHighlightColor'
+                        data-tableberg-search-placeholder='$searchPlaceholderAttr'
+                        data-tableberg-search-position='$searchPositionAttr'
+                        data-tableberg-search-highlight-color='$searchHighlightColorAttr'
                         data-tableberg-header='$headerBoolAsStr'
                         data-tableberg-footer='$footerBoolAsStr'
                         {$responsiveDataAttrs}

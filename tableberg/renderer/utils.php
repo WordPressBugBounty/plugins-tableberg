@@ -46,3 +46,41 @@ function getBoolOrNull(&$value) {
 function clamp($value, $min, $max) {
     return max($min, min($value, $max));
 }
+
+/**
+ * Check whether a value is undefined.
+ *
+ * @param mixed $value Value to check.
+ * @return bool
+ */
+function is_undefined($value) {
+    return null === $value || !isset($value);
+}
+
+/**
+ * Generate CSS string from styles array.
+ *
+ * @param array $styles Styles array.
+ * @return string
+ */
+function generate_css_string($styles) {
+    $css_string = '';
+
+    foreach ($styles as $key => $value) {
+        if (
+            !is_undefined($value) &&
+            false !== $value &&
+            (
+                !is_string($value) ||
+                (
+                    trim($value) !== '' &&
+                    trim($value) !== 'undefined undefined undefined'
+                )
+            )
+        ) {
+            $css_string .= $key . ': ' . $value . '; ';
+        }
+    }
+
+    return $css_string;
+}

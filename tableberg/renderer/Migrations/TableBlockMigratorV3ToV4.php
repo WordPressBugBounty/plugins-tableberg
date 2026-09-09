@@ -68,15 +68,13 @@ class TableBlockMigratorV3ToV4 {
                 $cellBlocks[] = $this->build_cell_block($cell);
             }
 
-            $rowAttrs = [];
             $rowConfig = isset($rowConfigs[$row]) && is_array($rowConfigs[$row])
                 ? $rowConfigs[$row]
                 : [];
-            if (isset($rowConfig['height']) && is_string($rowConfig['height']) && $rowConfig['height'] !== '') {
-                $rowAttrs['height'] = $rowConfig['height'];
-            }
 
-            $rowBlocks[] = $this->make_block('tableberg/row', $rowAttrs, $cellBlocks);
+            // Preserve every registered row attribute, including Pro-owned
+            // and future fields this migrator does not know by name.
+            $rowBlocks[] = $this->make_block('tableberg/row', $rowConfig, $cellBlocks);
         }
 
         // Slim v4 attrs: the cells map and per-row configs now live in the
