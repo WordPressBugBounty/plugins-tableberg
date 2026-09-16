@@ -1,0 +1,175 @@
+/**
+ * Dynamic Data Panel Styles
+ */
+
+// Indicator for dynamically bound content in editor
+.tableberg-dynamic-content {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        bottom: -2px;
+        left: -2px;
+        border: 1px dashed #007cba;
+        border-radius: 2px;
+        pointer-events: none;
+    }
+}
+
+.tableberg-dynamic-data-row {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 12px;
+    overflow: hidden;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        text-align: left;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #1e1e1e;
+        gap: 8px;
+        transition: background-color 0.1s;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+    }
+
+    &__label {
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    &__summary {
+        color: #757575;
+        font-size: 12px;
+        font-family: monospace;
+        text-align: right;
+        word-break: break-all;
+        min-width: 0;
+    }
+
+    &__config {
+        background-color: #f6f7f7;
+        padding: 12px;
+        border-top: 1px solid #ddd;
+
+        .components-base-control {
+            margin-bottom: 12px;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &__preview {
+        margin-top: 12px;
+        padding: 8px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 13px;
+
+        strong {
+            margin-right: 4px;
+        }
+
+        span {
+            word-break: break-all;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    &__field-autocomplete {
+        position: relative;
+        margin-bottom: 12px;
+    }
+
+    &__suggestions {
+        position: absolute;
+        z-index: 100;
+        left: 0;
+        right: 0;
+        max-height: 200px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #949494;
+        border-top: none;
+        border-radius: 0 0 4px 4px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    &__suggestions-group {
+        padding: 6px 10px 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #757575;
+        letter-spacing: 0.5px;
+    }
+
+    &__suggestion {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 6px 10px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        text-align: left;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #1e1e1e;
+
+        &:hover,
+        &.is-selected {
+            background-color: #007cba;
+            color: #fff;
+
+            .tableberg-dynamic-data-row__suggestion-key {
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+    }
+
+    &__suggestion-label {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__suggestion-key {
+        flex-shrink: 0;
+        margin-left: 8px;
+        font-size: 11px;
+        color: #757575;
+        font-family: monospace;
+    }
+}
+
+.tableberg-dynamic-data__add {
+    margin-top: 8px;
+}

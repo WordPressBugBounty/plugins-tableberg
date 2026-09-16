@@ -1,0 +1,198 @@
+.tableberg-upsell-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000000;
+
+    &-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(3px);
+    }
+
+    &-container {
+        position: relative;
+        width: min(500px, calc(100vw - 32px));
+    }
+
+    &-area {
+        position: relative;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 18px 40px rgba(16, 14, 101, 0.28);
+        overflow: hidden;
+
+        h2 {
+            margin: 0;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 16px;
+            color: #2f49b3;
+            background: #eef3ff;
+
+            svg {
+                width: 1em;
+                height: 1em;
+            }
+        }
+    }
+
+    &-content {
+        padding: 24px 32px 12px;
+
+        img {
+            display: block;
+            width: 100%;
+            min-height: 100px;
+            max-height: 70vh;
+            object-fit: contain;
+            border: 1px solid #ebebeb;
+            border-radius: 6px;
+        }
+
+        p {
+            text-align: center;
+        }
+    }
+
+    &-text:not(img + p) {
+        font-size: 1.1rem;
+    }
+
+    &-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        padding: 24px 32px 32px;
+        gap: 12px;
+
+        button,
+        a {
+            margin: 0;
+            padding: 6px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        a {
+            color: #fff;
+            background: #3858d6;
+            border-color: #3858d6;
+        }
+    }
+
+    &-prev,
+    &-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #fff;
+        font-size: 4rem;
+        cursor: pointer;
+        filter: drop-shadow(2px 4px 6px #100e65);
+    }
+
+    &-prev {
+        right: calc(100% + 24px);
+    }
+
+    &-next {
+        left: calc(100% + 24px);
+    }
+
+    @media (max-width: 782px) {
+        &-prev,
+        &-next {
+            display: none;
+        }
+
+        &-content {
+            padding-inline: 16px;
+        }
+
+        &-footer {
+            padding-inline: 16px;
+        }
+    }
+}
+
+.tableberg-locked-root {
+    position: relative;
+    // When this sits directly inside a CSS grid (e.g. WordPress's shared
+    // "Color" ToolsPanel, which lays items out two-per-row), this wrapper
+    // itself is the grid cell — the "full width" rule WordPress puts on
+    // its own ToolsPanelItem lands two levels deeper (inside
+    // .tableberg-locked-children), too late to span this cell. Outside a
+    // grid context (e.g. a plain PanelBody) this is a no-op.
+    grid-column: 1 / -1;
+
+    // The locked feature must be completely non-interactive: dimmed
+    // controls under a full-cover overlay that opens the upsell.
+    .tableberg-locked-children {
+        opacity: 0.5;
+        pointer-events: none;
+        user-select: none;
+        filter: grayscale(30%);
+
+        // WordPress gives the first item in a Color ToolsPanel some extra
+        // top margin. Its `:nth-child(1 of ...)` selector only looks at
+        // siblings within this wrapper, so every locked control's own
+        // (single, isolated) item matches "first" and gets that margin —
+        // stacking on top of the grid's own row gap between locked
+        // controls. Zeroed here since the grid gap already spaces them.
+        .block-editor-tools-panel-color-gradient-settings__item {
+            margin-top: 0 !important;
+        }
+    }
+
+    .tableberg-lock-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    }
+
+    .tableberg-lock-container {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 1px solid rgba(56, 88, 214, 0.18);
+        border-radius: 999px;
+        background: #fff;
+        color: #3858d6;
+        box-shadow: 0 6px 16px rgba(56, 88, 214, 0.16);
+    }
+}
+
+.tableberg-locked-root-toolbar {
+    display: inline-flex;
+}
+
+.tableberg-border-with-radius-control-handle {
+    position: relative;
+}

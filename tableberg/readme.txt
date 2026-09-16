@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,10 @@ Now let’s see some of the use cases of the Tableberg plugin:
 * **Restaurant Menu Tables**: List menu items along with descriptions and prices in an attractive, easy-to-read format.
 * **More**: The plugin's flexibility supports a wide range of other applications tailored to specific needs.
 
+= Source Code =
+
+The full, human-readable source code ships with the plugin next to the compiled files. To build it, run `npm install`, then `npm run build` for the block editor and `npm run build:admin` for the settings dashboard.
+
 If you have any suggestions or have faced any issues, contact us [here](https://tableberg.com/contact/). You can also follow Tableberg on [Twitter](https://twitter.com/Tableberg).
 
 
@@ -68,6 +72,10 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+
+= 1.1.5 =
+* FIX: Large images no longer stretch table columns out of shape in the editor
+* FIX: The Equal width columns option now appears for newly created tables
 
 = 1.1.4 =
 * NEW: Added a Block Spacing control for individual cells

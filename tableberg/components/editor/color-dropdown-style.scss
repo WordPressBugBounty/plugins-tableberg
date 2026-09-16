@@ -1,0 +1,19 @@
+.tableberg-color-dropdown {
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    margin-bottom: 12px;
+
+    &:has(+ .tableberg-color-dropdown) {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .block-editor-tools-panel-color-gradient-settings__dropdown {
+        flex: 1;
+    }
+
+    .block-editor-panel-color-gradient-settings__dropdown {
+        width: 100%;
+        padding: 8px;
+    }
+}

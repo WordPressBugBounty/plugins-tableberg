@@ -1,0 +1,10 @@
+.block-editor-block-toolbar:has(button[aria-label="Element options"]) {
+    .components-toolbar-group:has(button[aria-label="Options"]),
+    .components-toolbar-group:has(button[aria-label="More options"]) {
+        display: none;
+    }
+
+    .components-toolbar-group:nth-last-of-type(2) {
+        border-right: none;
+    }
+}

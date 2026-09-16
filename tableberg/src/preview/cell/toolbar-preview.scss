@@ -1,0 +1,135 @@
+.wp-block-tableberg {
+    td.tableberg-cell-preview-duplicate-source-row,
+    td.tableberg-cell-preview-duplicate-source-column,
+    th.tableberg-cell-preview-duplicate-source-row,
+    th.tableberg-cell-preview-duplicate-source-column {
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: rgba(26, 115, 232, 0.12);
+        }
+    }
+
+    td.tableberg-cell-preview-delete-row,
+    td.tableberg-cell-preview-delete-column,
+    th.tableberg-cell-preview-delete-row,
+    th.tableberg-cell-preview-delete-column {
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: rgba(220, 38, 38, 0.2);
+        }
+    }
+
+    td.tableberg-cell-preview-insert-row-boundary,
+    th.tableberg-cell-preview-insert-row-boundary,
+    td.tableberg-cell-preview-insert-row-end,
+    th.tableberg-cell-preview-insert-row-end {
+        &::before {
+            content: "";
+            position: absolute;
+            left: -1px;
+            right: -1px;
+            top: -2px;
+            height: 4px;
+            border-radius: 999px;
+            pointer-events: none;
+            background: var(--wp-admin-theme-color, #007cba);
+            opacity: 0;
+            transform: scaleX(0.35);
+            transform-origin: center;
+            will-change: transform, opacity;
+            animation: tableberg-insert-guide-enter-horizontal 140ms ease-out
+                forwards;
+            z-index: 3;
+        }
+    }
+
+    td.tableberg-cell-preview-insert-row-end,
+    th.tableberg-cell-preview-insert-row-end {
+        &::before {
+            top: auto;
+            bottom: -2px;
+        }
+    }
+
+    td.tableberg-cell-preview-insert-column-boundary,
+    th.tableberg-cell-preview-insert-column-boundary,
+    td.tableberg-cell-preview-insert-column-end,
+    th.tableberg-cell-preview-insert-column-end {
+        &::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            right: auto;
+            bottom: -1px;
+            left: -2px;
+            width: 4px;
+            border-radius: 999px;
+            pointer-events: none;
+            background: var(--wp-admin-theme-color, #007cba);
+            opacity: 0;
+            transform: scaleY(0.35);
+            transform-origin: center;
+            will-change: transform, opacity;
+            animation: tableberg-insert-guide-enter-vertical 140ms ease-out
+                forwards;
+            z-index: 3;
+        }
+    }
+
+    td.tableberg-cell-preview-insert-column-end,
+    th.tableberg-cell-preview-insert-column-end {
+        &::before {
+            left: auto;
+            right: -2px;
+        }
+    }
+}
+
+@keyframes tableberg-insert-guide-enter-horizontal {
+    0% {
+        opacity: 0;
+        transform: scaleX(0.35);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes tableberg-insert-guide-enter-vertical {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.35);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wp-block-tableberg {
+        td.tableberg-cell-preview-insert-row-boundary,
+        th.tableberg-cell-preview-insert-row-boundary,
+        td.tableberg-cell-preview-insert-row-end,
+        th.tableberg-cell-preview-insert-row-end,
+        td.tableberg-cell-preview-insert-column-boundary,
+        th.tableberg-cell-preview-insert-column-boundary,
+        td.tableberg-cell-preview-insert-column-end,
+        th.tableberg-cell-preview-insert-column-end {
+            &::before {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
+    }
+}

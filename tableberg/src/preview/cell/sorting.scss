@@ -1,0 +1,21 @@
+.wp-block-tableberg th[data-sortable] {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.wp-block-tableberg .tableberg-sort-indicator {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    font-size: 10px;
+    line-height: 1;
+    color: #757575;
+    pointer-events: none;
+    transition: color 0.15s ease-in-out;
+}
+
+.wp-block-tableberg .tableberg-sort-indicator.tableberg-sort-indicator--active {
+    color: #007cba;
+}

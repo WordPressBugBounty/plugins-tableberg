@@ -1,0 +1,15 @@
+.tableberg-table-wrapper.tableberg-scroll-x {
+    overflow-x: auto;
+    white-space: nowrap;
+
+    .wp-block-tableberg {
+        width: auto !important;
+        min-width: 100%;
+
+        tr,
+        td,
+        th {
+            min-width: max-content;
+        }
+    }
+}

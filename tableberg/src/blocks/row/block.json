@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "tableberg/row",
+    "title": "Row",
+    "category": "design",
+    "description": "A row of cells within a Tableberg table.",
+    "parent": [
+        "tableberg/table"
+    ],
+    "supports": {
+        "html": false,
+        "customClassName": false,
+        "reusable": false
+    },
+    "attributes": {
+        "height": {
+            "type": "string"
+        },
+        "backgroundColor": {
+            "type": "string"
+        },
+        "border": {
+            "type": "object"
+        }
+    },
+    "providesContext": {
+        "tableberg/rowBackgroundColor": "backgroundColor"
+    },
+    "textdomain": "tableberg"
+}

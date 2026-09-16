@@ -1,0 +1,8 @@
+{
+    "name": "@tableberg/shared",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "check:types": "tsc --noEmit"
+    }
+}

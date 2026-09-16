@@ -1,0 +1,78 @@
+.tableberg-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 0 12px 0;
+
+    &__input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        max-width: 300px;
+    }
+
+    &__icon {
+        position: absolute;
+        left: 10px;
+        color: #757575;
+        pointer-events: none;
+    }
+
+    &__input {
+        padding: 8px 36px 8px 36px;
+        border: 1px solid var(--wp--preset--color--contrast, #1e1e1e);
+        border-radius: 4px;
+        font-size: 0.875em;
+        font-family: inherit;
+        line-height: 1.4;
+        width: 100%;
+        background-color: transparent;
+        color: inherit;
+
+        &::placeholder {
+            color: #757575;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: var(--wp-admin-theme-color, #007cba);
+            box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #007cba);
+        }
+    }
+
+    &__clear {
+        position: absolute;
+        right: 6px;
+        background: transparent;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        color: #757575;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+
+        &:hover {
+            color: var(--wp--preset--color--contrast, #1e1e1e);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    &__results {
+        font-size: 0.875em;
+        color: #757575;
+        white-space: nowrap;
+    }
+}
+
+.wp-block-tableberg tbody tr.tableberg-search-row--hidden {
+    display: none;
+}
+
+.wp-block-tableberg mark.tableberg-search-highlight {
+    background-color: var(--tableberg-search-highlight-color, #fff3a3);
+    border-radius: 2px;
+    padding: 0;
+}

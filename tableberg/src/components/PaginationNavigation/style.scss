@@ -1,0 +1,54 @@
+.tableberg-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 0;
+
+    &__button {
+        background-color: transparent;
+        color: var(--wp--preset--color--contrast);
+        border: 1px solid var(--wp--preset--color--contrast);
+        padding: 0.4em 0.8em;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.875em;
+        font-family: inherit;
+        line-height: 1.4;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2em;
+
+        &:hover {
+            background-color: var(--wp--preset--color--contrast);
+            color: var(--wp--preset--color--base);
+        }
+
+        &--active {
+            background-color: var(--wp--preset--color--contrast);
+            color: var(--wp--preset--color--base);
+            border-color: var(--wp--preset--color--contrast);
+        }
+
+        &--arrow {
+            padding: 0.4em;
+            min-width: auto;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: transparent;
+                color: var(--wp--preset--color--contrast);
+            }
+        }
+    }
+
+    &__ellipsis {
+        padding: 0 4px;
+        color: var(--wp--preset--color--contrast);
+    }
+}

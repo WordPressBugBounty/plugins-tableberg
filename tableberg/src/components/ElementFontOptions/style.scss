@@ -1,0 +1,47 @@
+.tableberg-element-font-options {
+    margin-top: 8px;
+}
+
+.tableberg-element-font-option {
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    margin: 0;
+
+    &:not(:last-child) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &:not(:first-child) {
+        border-top: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .block-editor-tools-panel-color-gradient-settings__dropdown {
+        width: 100%;
+    }
+
+    .tableberg-element-font-option-toggle {
+        width: 100%;
+        justify-content: flex-start;
+        box-shadow: none;
+    }
+
+    .tableberg-element-font-option-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.tableberg-element-font-option-popover {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tableberg-element-font-option-popover--font-size {
+    min-width: 240px;
+}

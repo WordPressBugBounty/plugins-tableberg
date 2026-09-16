@@ -1,0 +1,15 @@
+.tableberg-table-caption {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    color: #555;
+    font-size: 13px;
+    text-align: left;
+}
+
+.tableberg-table-wrapper.justify-table-center + .tableberg-table-caption {
+    text-align: center;
+}
+
+.tableberg-table-wrapper.justify-table-right + .tableberg-table-caption {
+    text-align: right;
+}

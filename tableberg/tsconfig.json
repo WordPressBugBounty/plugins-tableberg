@@ -1,0 +1,39 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig.json",
+    "compilerOptions": {
+        "target": "ES2015",
+        "lib": ["es2019", "dom"],
+        "module": "ESNext",
+        "skipLibCheck": true,
+
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+
+        "strict": true,
+
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "paths": {
+            // Project-specific paths
+            "@tableberg/components": ["./components"],
+            "@tableberg/components/*": ["./components/*"],
+            "@tableberg/shared/*": ["./shared/*"],
+
+            // WordPress internal types (not exported from main index)
+            // These paths allow importing types from build-types directories
+            // Example: import { WPCompleter } from "@wordpress/components/build-types/autocomplete/types"
+            "@wordpress/components/build-types/*": [
+                "./node_modules/@wordpress/components/build-types/*"
+            ],
+            "@wordpress/block-editor/build-types/*": [
+                "./node_modules/@wordpress/block-editor/build-types/*"
+            ],
+            "@wordpress/components/build-types/autocomplete/types": [
+                "./typings/wordpress__components__autocomplete.d.ts"
+            ]
+        }
+    }
+}

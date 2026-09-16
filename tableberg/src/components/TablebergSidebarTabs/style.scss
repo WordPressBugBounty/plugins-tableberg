@@ -1,0 +1,17 @@
+.tableberg-sidebar-tabs {
+    margin-top: -16px;
+}
+
+.tableberg-sidebar-tabs .components-tab-panel__tabs {
+    border-bottom: 1px solid #dcdcde;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.tableberg-sidebar-tabs .components-tab-panel__tabs-item {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+}

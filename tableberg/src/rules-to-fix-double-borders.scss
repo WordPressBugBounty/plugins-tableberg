@@ -1,0 +1,83 @@
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero
+    > tbody
+    > tr
+    + tr
+    > td,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero
+    > tbody
+    > tr
+    + tr
+    > th {
+    border-top: none !important;
+}
+
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero
+    > tbody
+    > tr
+    > td
+    + td,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero
+    > tbody
+    > tr
+    > td
+    + th,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero
+    > tbody
+    > tr
+    > th
+    + td,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero
+    > tbody
+    > tr
+    > th
+    + th {
+    border-left: none !important;
+}
+
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero.tableberg-has-table-border-top
+    > tbody
+    > tr:first-child
+    > td,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero.tableberg-has-table-border-top
+    > tbody
+    > tr:first-child
+    > th {
+    border-top: none !important;
+}
+
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero.tableberg-has-table-border-bottom
+    > tbody
+    > tr:last-child
+    > td,
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-vertical-zero.tableberg-has-table-border-bottom
+    > tbody
+    > tr:last-child
+    > th {
+    border-bottom: none !important;
+}
+
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero.tableberg-has-table-border-left
+    > tbody
+    > tr
+    > :first-child {
+    border-left: none !important;
+}
+
+.tableberg-table-wrapper
+    > table.tableberg-has-cell-spacing.tableberg-cell-spacing-horizontal-zero.tableberg-has-table-border-right
+    > tbody
+    > tr
+    > :last-child {
+    border-right: none !important;
+}

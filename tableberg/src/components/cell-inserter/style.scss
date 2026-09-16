@@ -1,0 +1,187 @@
+$grid-unit: 8px;
+$grid-unit-05: 4px;
+$grid-unit-10: 8px;
+$grid-unit-15: 12px;
+$grid-unit-20: 16px;
+$radius-small: 2px;
+$default-font-size: 13px;
+$gray-900: #1e1e1e;
+$cell-inserter-width: 350px;
+
+.tableberg-cell-inserter {
+    position: absolute;
+    bottom: $grid-unit-05;
+    right: $grid-unit-05;
+    z-index: 10;
+}
+
+.tableberg-cell-inserter__toggle.components-button {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: $radius-small;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    color: $gray-900;
+
+    &:hover {
+        color: var(--wp-admin-theme-color);
+        box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 var(--wp-admin-border-width-focus)
+            var(--wp-admin-theme-color);
+        outline: none;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.tableberg-cell-inserter__popover .components-popover__content {
+    padding: 0;
+}
+
+.tableberg-cell-inserter__content {
+    width: $cell-inserter-width;
+}
+
+.tableberg-cell-inserter__search {
+    padding: $grid-unit-20 $grid-unit-20 0 $grid-unit-20;
+}
+
+.tableberg-cell-inserter__list {
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    padding: $grid-unit-20;
+}
+
+.tableberg-cell-inserter__list-item {
+    display: block;
+    width: 33.33%;
+    padding: 0;
+    margin: 0;
+}
+
+.tableberg-cell-inserter__item.components-button {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: $default-font-size;
+    color: $gray-900;
+    padding: $grid-unit-10;
+    align-items: stretch;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    word-break: break-word;
+    position: relative;
+    height: auto;
+    border-radius: 0;
+
+    @media not (prefers-reduced-motion) {
+        transition: all 0.05s ease-in-out;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+        opacity: 0.6;
+        cursor: default;
+    }
+
+    &:not(:disabled, [aria-disabled="true"]) {
+        &:hover {
+            .tableberg-cell-inserter__item-title {
+                color: var(--wp-admin-theme-color) !important;
+                filter: brightness(0.95);
+            }
+
+            svg {
+                color: var(--wp-admin-theme-color) !important;
+            }
+
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-radius: $radius-small;
+                opacity: 0.04;
+                background: var(--wp-admin-theme-color);
+                pointer-events: none;
+            }
+        }
+    }
+
+    &:not(:disabled) {
+        &:focus {
+            box-shadow: inset 0 0 0 var(--wp-admin-border-width-focus)
+                var(--wp-admin-theme-color);
+            outline: none;
+        }
+    }
+}
+
+.tableberg-cell-inserter__item-icon {
+    padding: 12px 20px;
+    color: $gray-900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media not (prefers-reduced-motion) {
+        transition: all 0.05s ease-in-out;
+    }
+
+    svg {
+        min-width: 20px;
+        min-height: 20px;
+        max-width: 24px;
+        max-height: 24px;
+
+        @media not (prefers-reduced-motion) {
+            transition: all 0.15s ease-out;
+        }
+    }
+}
+
+.tableberg-cell-inserter__item-title {
+    padding: 4px 2px 8px;
+    font-size: 12px;
+    text-align: center;
+    hyphens: auto;
+}
+
+.tableberg-cell-inserter__browse-all.components-button {
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    text-align: center;
+    background: $gray-900;
+    color: #fff;
+    border-radius: 0;
+
+    &:hover {
+        color: #fff;
+    }
+
+    &:active {
+        color: #a7aaad;
+    }
+
+    &.components-button:focus:not(:disabled) {
+        box-shadow: none;
+        background: var(--wp-admin-theme-color);
+        border-color: var(--wp-admin-theme-color);
+    }
+}

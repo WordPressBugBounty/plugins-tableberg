@@ -1,0 +1,10 @@
+.wp-block-button__link.wp-element-button {
+    background: var(--tableberg-button-background-color);
+    color: var(--tableberg-button-text-color);
+
+    &:hover,
+    &:focus {
+        background: var(--tableberg-button-hover-background-color);
+        color: var(--tableberg-button-text-hover-color);
+    }
+}

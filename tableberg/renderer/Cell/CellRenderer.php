@@ -488,11 +488,9 @@ class CellRenderer {
             $styleValues['elementGap'] = $cellStyleOverride['elementGap']->asAttr();
         }
 
-        if (isset($cellStyleOverride['verticalAlign'])
-            && $cellStyleOverride['verticalAlign'] instanceof StringAttr) {
-            $verticalAlign = $cellStyleOverride['verticalAlign']->asAttr();
-            $styleValues['verticalAlign'] = $verticalAlign;
-        }
+        // A cell's own vertical alignment is a pro feature, resolved through
+        // the `tableberg/cell_styles` filter below. Free only applies the
+        // table-wide default, so it can't be switched on without a licence.
 
         // Border is a pro attribute now (moved off this shared `styles`
         // object, same as backgroundColor before it), resolved instead

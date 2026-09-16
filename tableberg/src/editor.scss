@@ -1,0 +1,52 @@
+@import "./components/DynamicDataPanel/styles.scss";
+@import "./components/ElementFontOptions/style.scss";
+@import "./rules-to-fix-double-borders.scss";
+@import "./components/cell-inserter/style.scss";
+@import "./components/PaginationNavigation/style.scss";
+@import "./components/SearchInput/style.scss";
+@import "./components/TablebergSidebarTabs/style.scss";
+@import "./components/TableCaption/style.scss";
+@import "./components/TableEditToolbar/style.scss";
+@import "./components/UpsellModal/style.scss";
+@import "./hooks/block-editor-compat/hide-native-options-button.scss";
+
+// Native Gutenberg block editor.
+.tableberg-native-editor {
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td,
+    th {
+        border: 1px solid #d0d0d0;
+        min-width: 60px;
+        vertical-align: top;
+    }
+
+    th {
+        background-color: #f5f5f5;
+    }
+}
+
+.tableberg-native-editor.tableberg-native-sticky-header tr:first-child th,
+.tableberg-native-editor.tableberg-native-sticky-header tr:first-child td {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-clip: padding-box;
+}
+
+// Wide tables must stay reachable in the editor: without a scroll container
+// the overflowing columns are clipped and cannot be edited. This container is
+// also what `position: sticky` uses for the sticky first column.
+.tableberg-native-editor .tableberg-native-table-scroll {
+    overflow-x: auto;
+}
+
+// ToolsPanel uses a two-column grid. Border modes need the complete row so
+// their labels and descriptions remain readable in the narrow inspector.
+.tableberg-border-mode-controls {
+    grid-column: 1 / -1;
+    width: 100%;
+}

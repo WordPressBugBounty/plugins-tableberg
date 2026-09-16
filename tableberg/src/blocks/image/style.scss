@@ -1,0 +1,29 @@
+.tableberg-image-element {
+    margin: 0;
+    line-height: 1;
+
+    img {
+        max-width: 720px;
+        display: block;
+    }
+
+    .tableberg-image-caption {
+        margin-bottom: 1em;
+        margin-top: 0.5em;
+        text-align: center;
+        font-size: 0.875em;
+        color: #666;
+    }
+}
+
+.tableberg-image-placeholder {
+    min-height: 100px;
+
+    .components-placeholder__label {
+        margin-bottom: 0.5em;
+    }
+
+    .components-placeholder__instructions {
+        margin-bottom: 1em;
+    }
+}

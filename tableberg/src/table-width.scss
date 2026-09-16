@@ -1,0 +1,23 @@
+.tableberg-table-wrapper {
+    box-sizing: border-box;
+
+    &.justify-table-left > table {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    &.justify-table-center > table {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    &.justify-table-right > table {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+
+    &.alignwide,
+    &.alignfull {
+        clear: both;
+    }
+}

@@ -648,6 +648,13 @@ class TableRenderer {
         $tabletStackCount = max(1, (int) $tablet->stackCount->value());
         $mobileStackCount = max(1, (int) $mobile->stackCount->value());
 
+        // Repeating the first column in every stack row is a pro option. Only
+        // the licensed pro plugin turns this filter on, so the saved value is
+        // ignored without a valid licence.
+        $proActive = (bool) apply_filters('tableberg/is_pro_runtime_active', false);
+        $tabletRepeatFirstCol = $proActive ? $tablet->repeatFirstCol->asAttr() : '';
+        $mobileRepeatFirstCol = $proActive ? $mobile->repeatFirstCol->asAttr() : '';
+
         return "
             data-tableberg-responsive='true'
             data-tableberg-rows='{$rows}'
@@ -657,13 +664,13 @@ class TableRenderer {
             data-tableberg-tablet-mode='{$tablet->mode->asAttr()}'
             data-tableberg-tablet-transpose='{$tablet->transpose->asAttr()}'
             data-tableberg-tablet-count='{$tabletStackCount}'
-            data-tableberg-tablet-repeat-first-col='{$tablet->repeatFirstCol->asAttr()}'
+            data-tableberg-tablet-repeat-first-col='{$tabletRepeatFirstCol}'
             data-tableberg-mobile-enabled='{$mobile->enabled->asAttr()}'
             data-tableberg-mobile-width='{$mobileMaxWidth}'
             data-tableberg-mobile-mode='{$mobile->mode->asAttr()}'
             data-tableberg-mobile-transpose='{$mobile->transpose->asAttr()}'
             data-tableberg-mobile-count='{$mobileStackCount}'
-            data-tableberg-mobile-repeat-first-col='{$mobile->repeatFirstCol->asAttr()}'
+            data-tableberg-mobile-repeat-first-col='{$mobileRepeatFirstCol}'
         ";
     }
 
