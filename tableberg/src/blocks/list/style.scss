@@ -1,5 +1,7 @@
 .tableberg-list {
-    a {
+    // Only when a link colour was picked; otherwise the theme's own link
+    // colour applies.
+    &.tableberg-has-link-color a {
         color: var(--tableberg-list-link-color);
     }
 }

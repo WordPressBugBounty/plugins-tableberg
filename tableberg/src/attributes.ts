@@ -1,3 +1,5 @@
+import { TypographyValue } from "@tableberg/shared/utils/typography";
+
 import { ElementBindings } from "./dynamic-data/types";
 
 export interface TablebergBlockAttrs {
@@ -176,6 +178,13 @@ export type Border = {
     left: string;
 };
 
+export type Corners = {
+    topLeft: string;
+    topRight: string;
+    bottomRight: string;
+    bottomLeft: string;
+};
+
 export interface TableConfig {
     rows: number;
     cols: number;
@@ -192,6 +201,9 @@ export interface TableConfig {
     tableAlignment?: TableAlignment;
     cellSpacing?: CellSpacing;
     tableBorder?: Border;
+    // Table-wide typography, set on the table element so everything in the
+    // cells that does not carry its own value inherits it.
+    typography?: TypographyValue;
     margin?: Border;
     padding?: Border;
     fixedColumnWidths?: boolean;
@@ -216,6 +228,10 @@ export interface TableCellStylesType {
     footerBackgroundColor: string;
     evenRowBackgroundColor: string;
     oddRowBackgroundColor: string;
+    /**
+     * Defaults to `1px solid currentColor`, like the core Table block, so the
+     * border follows the text colour instead of forcing black.
+     */
     border: Border;
     borderRadius: {
         topLeft: string;
@@ -300,6 +316,16 @@ export const attrDefaults: TablebergBlockAttrs = {
             bottom: "",
             left: "",
         },
+        typography: {
+            fontFamily: "",
+            fontSize: "",
+            fontStyle: "",
+            fontWeight: "",
+            lineHeight: "",
+            letterSpacing: "",
+            textDecoration: "",
+            textTransform: "",
+        },
         margin: {
             top: "",
             right: "",
@@ -357,10 +383,10 @@ export const attrDefaults: TablebergBlockAttrs = {
                 left: "var(--wp--preset--spacing--20)",
             },
             border: {
-                top: "1px solid black",
-                right: "1px solid black",
-                bottom: "1px solid black",
-                left: "1px solid black",
+                top: "1px solid currentColor",
+                right: "1px solid currentColor",
+                bottom: "1px solid currentColor",
+                left: "1px solid currentColor",
             },
             borderRadius: {
                 topLeft: "0px",

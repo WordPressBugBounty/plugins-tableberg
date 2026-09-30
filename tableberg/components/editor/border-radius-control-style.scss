@@ -1,0 +1,25 @@
+/*
+ * The core radius control hard-codes its own "Radius" legend, which says
+ * nothing about what is being rounded. These controls carry a label of their
+ * own (Row Border Radius, Column Border Radius, ...), so the built-in legend
+ * is dropped and the link/unlink toggle beside it is lifted onto that label's
+ * line, where it would have sat anyway.
+ */
+.tableberg-border-radius-control {
+    position: relative;
+
+    .components-border-radius-control__header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        // The header is a full-width HStack; shrink it so `right` actually
+        // puts the toggle at the right edge instead of stretching across
+        // the label.
+        width: auto;
+        margin: 0;
+
+        .components-base-control__label {
+            display: none;
+        }
+    }
+}

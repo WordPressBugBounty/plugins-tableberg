@@ -2,11 +2,8 @@
  * WordPress Dependencies
  */
 import { __ } from "@wordpress/i18n";
-import {
-    useBlockEditContext,
-    store as BlockEditorStore,
-} from "@wordpress/block-editor";
-import { useSelect } from "@wordpress/data";
+import { useBlockEditContext } from "@wordpress/block-editor";
+import { useColorPalettes } from "./useColorPalettes";
 import {
     __experimentalToolsPanelItem as ToolsPanelItem,
     BorderBoxControl,
@@ -115,13 +112,9 @@ function BorderControl({
 }: BorderControlPropTypes) {
     const { clientId } = useBlockEditContext();
 
-    const { defaultColors } = useSelect(select => {
-        return {
-            defaultColors: (
-                select(BlockEditorStore) as BlockEditorStoreSelectors
-            ).getSettings()?.__experimentalFeatures?.color?.palette?.default,
-        };
-    }, []);
+    // Reading `color.palette.default` on its own left this picker with the
+    // core swatches and no theme palette at all.
+    const colors = useColorPalettes();
 
     if (!resetAllFilter) {
         resetAllFilter = onDeselect;
@@ -139,7 +132,7 @@ function BorderControl({
             <BorderBoxControl
                 enableAlpha
                 size={"__unstable-large"}
-                colors={defaultColors}
+                colors={colors}
                 label={label}
                 onChange={newBorders => {
                     return onChange(mutateOutgoingBorderValues(newBorders));

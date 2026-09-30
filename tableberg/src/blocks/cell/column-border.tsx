@@ -5,16 +5,29 @@ import {
 } from "@wordpress/block-editor";
 import { useDispatch, useRegistry, useSelect } from "@wordpress/data";
 import { __ } from "@wordpress/i18n";
-import { BorderControl } from "@tableberg/components";
+import { BorderControl, BorderRadiusControl } from "@tableberg/components";
 
 import LockedControl from "../../components/LockedControl";
-import { Border } from "../../attributes";
+import { Border, Corners } from "../../attributes";
 import { buildOccupancy, cellColumn, GridRow } from "../table/grid-model";
 
 const EMPTY_BORDER: Border = { top: "", right: "", bottom: "", left: "" };
 
+const EMPTY_CORNERS: Corners = {
+    topLeft: "",
+    topRight: "",
+    bottomRight: "",
+    bottomLeft: "",
+};
+
 const hasBorder = (border: Border) =>
     !!border.top || !!border.right || !!border.bottom || !!border.left;
+
+const hasCorners = (corners: Corners) =>
+    !!corners.topLeft ||
+    !!corners.topRight ||
+    !!corners.bottomRight ||
+    !!corners.bottomLeft;
 
 export interface ColumnBorderContext {
     columnBorderControlProps: {
@@ -22,6 +35,13 @@ export interface ColumnBorderContext {
         value: Border;
         hasValue: () => boolean;
         onChange: (newBorder: Border) => void;
+        onDeselect: () => void;
+    };
+    columnRadiusControlProps: {
+        label: string;
+        value: Corners;
+        hasValue: () => boolean;
+        onChange: (newRadius: Corners) => void;
         onDeselect: () => void;
     };
 }
@@ -137,7 +157,27 @@ export function CellColumnBorderControls({
                     : undefined;
             }
 
-            return { columnCellIds, columnBorder };
+            // Same idea for the corners: a column is rounded at its own
+            // four corners, so the top two come from the first cell and the
+            // bottom two from the last.
+            let columnRadius: Corners | undefined;
+            if (columnCellIds.length > 0) {
+                const radii = columnCellIds.map(
+                    id =>
+                        (be.getBlockAttributes(id)?.styles?.borderRadius ??
+                            EMPTY_CORNERS) as Corners
+                );
+                const first = radii[0];
+                const last = radii[radii.length - 1];
+                columnRadius = {
+                    topLeft: first.topLeft ?? "",
+                    topRight: first.topRight ?? "",
+                    bottomRight: last.bottomRight ?? "",
+                    bottomLeft: last.bottomLeft ?? "",
+                };
+            }
+
+            return { columnCellIds, columnBorder, columnRadius };
         },
         [
             clientId,
@@ -177,7 +217,35 @@ export function CellColumnBorderControls({
         });
     };
 
+    // Only the column's outermost cells are rounded; an interior cell has
+    // no corner of the column to round.
+    const applyRadiusToCells = (newRadius: Corners) => {
+        const be = registry.select(blockEditorStore);
+        const total = info.columnCellIds.length;
+
+        registry.batch(() => {
+            info.columnCellIds.forEach((id, index) => {
+                const styles = be.getBlockAttributes(id)?.styles ?? {};
+                const isFirst = index === 0;
+                const isLast = index === total - 1;
+
+                updateBlockAttributes(id, {
+                    styles: {
+                        ...styles,
+                        borderRadius: {
+                            topLeft: isFirst ? newRadius.topLeft : "",
+                            topRight: isFirst ? newRadius.topRight : "",
+                            bottomRight: isLast ? newRadius.bottomRight : "",
+                            bottomLeft: isLast ? newRadius.bottomLeft : "",
+                        },
+                    },
+                });
+            });
+        });
+    };
+
     const columnBorder = info.columnBorder ?? EMPTY_BORDER;
+    const columnRadius = info.columnRadius ?? EMPTY_CORNERS;
     const context: ColumnBorderContext = {
         columnBorderControlProps: {
             label: __("Column Border", "tableberg"),
@@ -186,6 +254,13 @@ export function CellColumnBorderControls({
             onChange: (newBorder: Border) => applyToCells(newBorder),
             onDeselect: () => applyToCells(EMPTY_BORDER),
         },
+        columnRadiusControlProps: {
+            label: __("Column Border Radius", "tableberg"),
+            value: columnRadius,
+            hasValue: () => hasCorners(columnRadius),
+            onChange: (newRadius: Corners) => applyRadiusToCells(newRadius),
+            onDeselect: () => applyRadiusToCells(EMPTY_CORNERS),
+        },
     };
 
     return (
@@ -193,9 +268,16 @@ export function CellColumnBorderControls({
             {ProColumnBorderContent ? (
                 ProColumnBorderContent(context)
             ) : (
-                <LockedControl isEnhanced selected="col-border">
-                    <BorderControl {...context.columnBorderControlProps} />
-                </LockedControl>
+                <>
+                    <LockedControl isEnhanced selected="col-border">
+                        <BorderControl {...context.columnBorderControlProps} />
+                    </LockedControl>
+                    <LockedControl isEnhanced selected="col-border-radius">
+                        <BorderRadiusControl
+                            {...context.columnRadiusControlProps}
+                        />
+                    </LockedControl>
+                </>
             )}
         </InspectorControls>
     );

@@ -20,10 +20,10 @@ class Defaults {
             'content' => '',
             'align' => 'left',
             'styles' => [
-                'textColor' => '#000000',
+                'textColor' => '',
                 'linkColor' => '',
                 'backgroundColor' => '',
-                'fontSize' => '1.38rem',
+                'fontSize' => '',
                 'padding' => [
                     'top' => '',
                     'right' => '',

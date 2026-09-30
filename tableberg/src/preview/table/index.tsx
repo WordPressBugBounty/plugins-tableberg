@@ -17,6 +17,7 @@ import {
 import { sortRowsByColumn } from "../../sorting";
 import { filterRowsBySearch } from "../../search";
 import { getElementTextContent } from "../../elements";
+import { getTypographyCss } from "@tableberg/shared/utils/typography";
 
 const tableConfigDefaults = attrDefaults.table;
 
@@ -315,6 +316,17 @@ export const PrimaryTable = () => {
         ? Math.max(1, activeResponsiveBreakpoint?.stackCount || 1)
         : 1;
 
+    // Stacked cells sit in their own rows, so the column gap (the horizontal
+    // half of border-spacing) stops showing. Borrow it for the vertical gap
+    // while previewing a stack, matching what the frontend does.
+    const isStackPreview =
+        hasResponsivePreview && activeResponsiveBreakpoint?.mode === "stack";
+    const previewVerticalCellSpacing =
+        isStackPreview &&
+        parseFloat(horizontalCellSpacing) > parseFloat(verticalCellSpacing)
+            ? horizontalCellSpacing
+            : verticalCellSpacing;
+
     const wrapperClassName = classNames(
         "tableberg-table-wrapper",
         wrapperAlignmentClass,
@@ -606,9 +618,10 @@ export const PrimaryTable = () => {
                     hasResponsivePreview ? previewDevice : undefined
                 }
                 style={{
+                    ...getTypographyCss(tableConfig.typography),
                     borderCollapse: hasCellSpacing ? "separate" : "collapse",
                     borderSpacing: hasCellSpacing
-                        ? `${horizontalCellSpacing} ${verticalCellSpacing}`
+                        ? `${horizontalCellSpacing} ${previewVerticalCellSpacing}`
                         : undefined,
                     width: tableWidth,
                     ...(customTableWidthAllowed

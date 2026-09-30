@@ -11,14 +11,12 @@ import {
 import { useDispatch, useSelect } from "@wordpress/data";
 import { __ } from "@wordpress/i18n";
 import { desktop, mobile, tablet } from "@wordpress/icons";
-import LockedControl from "../LockedControl";
 import {
     attrDefaults,
     ResponsiveBreakpoint,
     ResponsiveConfig,
     ResponsiveMode,
 } from "../../attributes";
-import { isProAvailable } from "../../pro-status";
 import { useTableStore } from "../../store";
 
 import "./style.scss";
@@ -122,7 +120,6 @@ function normalizeBreakpoint(
 }
 
 export function ResponsiveControl() {
-    const isPro = isProAvailable();
     const tableConfig = useTableStore(state => state.table);
     const updateTableConfig = useTableStore(state => state.updateTable);
 
@@ -307,41 +304,24 @@ export function ResponsiveControl() {
                                         disabled={controlsDisabled}
                                     />
 
-                                    {isPro ? (
-                                        <ToggleControl
-                                            label={__(
-                                                "Show First Column in Every Stack Row",
-                                                "tableberg"
-                                            )}
-                                            checked={
-                                                activeBreakpoint.repeatFirstCol
-                                            }
-                                            onChange={repeatFirstCol => {
-                                                applyBreakpointUpdates(
-                                                    activeDevice,
-                                                    {
-                                                        repeatFirstCol,
-                                                    }
-                                                );
-                                            }}
-                                            disabled={controlsDisabled}
-                                        />
-                                    ) : (
-                                        <LockedControl
-                                            isEnhanced
-                                            selected="sticky-first-col"
-                                        >
-                                            <ToggleControl
-                                                label={__(
-                                                    "Show First Column in Every Stack Row",
-                                                    "tableberg"
-                                                )}
-                                                checked={false}
-                                                onChange={() => null}
-                                                disabled={controlsDisabled}
-                                            />
-                                        </LockedControl>
-                                    )}
+                                    <ToggleControl
+                                        label={__(
+                                            "Show First Column in Every Stack Row",
+                                            "tableberg"
+                                        )}
+                                        checked={
+                                            activeBreakpoint.repeatFirstCol
+                                        }
+                                        onChange={repeatFirstCol => {
+                                            applyBreakpointUpdates(
+                                                activeDevice,
+                                                {
+                                                    repeatFirstCol,
+                                                }
+                                            );
+                                        }}
+                                        disabled={controlsDisabled}
+                                    />
 
                                     <NumberControl
                                         label={__(

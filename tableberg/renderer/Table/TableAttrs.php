@@ -108,22 +108,6 @@ class TableAttrs {
         return ['cells' => []];
     }
 
-    /** @return array<int, array{array{int, int}, array<int, mixed>}> */
-    public static function get_data_defaults() {
-        $defaults = Defaults::get_defaults();
-
-        if (
-            isset($defaults['data']) &&
-            is_array($defaults['data']) &&
-            isset($defaults['data']['cells']) &&
-            is_array($defaults['data']['cells'])
-        ) {
-            return $defaults['data']['cells'];
-        }
-
-        return [];
-    }
-
     /** @return array<int, RowConfig> */
     private static function parse_row_configs($data) {
         if (!is_array($data)) {
@@ -190,50 +174,6 @@ class TableAttrs {
         }
 
         return $bindings;
-    }
-}
-
-class Data {
-    /** @var array<int, array{array{int, int}, array<int, CellElement>}> */
-    public $cells;
-
-    /** @return self */
-    public static function from_array($data) {
-        $data = is_array($data) ? $data : [];
-        $default_cells = TableAttrs::get_data_defaults();
-
-        $instance = new self();
-        $instance->cells = self::parse_cells(getOrNull($data['cells']), $default_cells);
-
-        return $instance;
-    }
-
-    /** @return array<int, array{array{int, int}, array<int, CellElement>}> */
-    private static function parse_cells($data, $default) {
-        if (!is_array($data)) {
-            return $default;
-        }
-
-        $cells = [];
-
-        foreach ($data as $cell) {
-            if (!is_array($cell[0])) {
-                continue;
-            }
-
-            $coords = [(int) $cell[0][0], (int) $cell[0][1]];
-            $elements = [];
-
-            if (is_array($cell[1])) {
-                foreach ($cell[1] as $element) {
-                    $elements[] = CellElement::from_array($element);
-                }
-            }
-
-            $cells[] = [$coords, $elements];
-        }
-
-        return $cells;
     }
 }
 
@@ -488,6 +428,9 @@ class TableConfig {
     /** @var Sides */
     public $tableBorder;
 
+    /** @var TypographyConfig */
+    public $typography;
+
     /** @var Sides */
     public $margin;
 
@@ -529,6 +472,9 @@ class TableConfig {
             getOrNull($data['tableBorder']),
             $d['tableBorder']
         );
+        $instance->typography = TypographyConfig::from_array(
+            getOrNull($data['typography'])
+        );
         $emptySides = ['top' => '', 'right' => '', 'bottom' => '', 'left' => ''];
         $instance->margin = Sides::from_array(
             getOrNull($data['margin']),
@@ -546,6 +492,95 @@ class TableConfig {
         $instance->responsive = ResponsiveConfig::from_array(getOrNull($data['responsive']));
 
         return $instance;
+    }
+}
+
+/**
+ * Table-wide typography: the same options the core Table block offers, set on
+ * the table element so the cells inherit them.
+ */
+class TypographyConfig {
+    /** @var StringAttr */
+    public $fontFamily;
+
+    /** @var StringAttr */
+    public $fontSize;
+
+    /** @var StringAttr */
+    public $fontStyle;
+
+    /** @var StringAttr */
+    public $fontWeight;
+
+    /** @var StringAttr */
+    public $lineHeight;
+
+    /** @var StringAttr */
+    public $letterSpacing;
+
+    /** @var StringAttr */
+    public $textDecoration;
+
+    /** @var StringAttr */
+    public $textTransform;
+
+    /** @return self */
+    public static function from_array($data) {
+        $data = is_array($data) ? $data : [];
+        $tableDefaults = TableAttrs::get_table_defaults();
+        $d = isset($tableDefaults['typography']) && is_array($tableDefaults['typography'])
+            ? $tableDefaults['typography']
+            : [];
+
+        $instance = new self();
+        foreach (
+            [
+                'fontFamily',
+                'fontSize',
+                'fontStyle',
+                'fontWeight',
+                'lineHeight',
+                'letterSpacing',
+                'textDecoration',
+                'textTransform',
+            ] as $property
+        ) {
+            $instance->{$property} = new StringAttr(
+                getOrNull($data[$property]),
+                isset($d[$property]) ? $d[$property] : ''
+            );
+        }
+
+        return $instance;
+    }
+
+    /**
+     * The typography as `property: value` declarations, skipping everything
+     * the user has not set so the theme keeps deciding.
+     *
+     * @return array<int, string>
+     */
+    public function asStyles() {
+        $properties = [
+            'font-family' => $this->fontFamily,
+            'font-size' => $this->fontSize,
+            'font-style' => $this->fontStyle,
+            'font-weight' => $this->fontWeight,
+            'line-height' => $this->lineHeight,
+            'letter-spacing' => $this->letterSpacing,
+            'text-decoration' => $this->textDecoration,
+            'text-transform' => $this->textTransform,
+        ];
+
+        $styles = [];
+
+        foreach ($properties as $property => $attr) {
+            if ($attr->isNotEmpty()) {
+                $styles[] = $property . ': ' . $attr->asAttr();
+            }
+        }
+
+        return $styles;
     }
 }
 

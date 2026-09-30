@@ -19,19 +19,24 @@ class ButtonRenderer {
             ? $attrs->styles->textHoverColor->asAttr()
             : $textColor;
 
+        // Outline draws the button's colour as its text and border with
+        // nothing behind it, the way the core Buttons block does; hover then
+        // fills it in, which is where the text colour comes back.
+        $isOutline = $attrs->styles->variant->equals('outline');
+
         $wrapperStyles = [
             'display:flex',
             'justify-content:' . $this->alignment_to_justify_content($attrs->align->asText()),
-            '--tableberg-button-background-color:' . $backgroundColor,
-            '--tableberg-button-text-color:' . $textColor,
+            '--tableberg-button-background-color:' . ($isOutline ? 'transparent' : $backgroundColor),
+            '--tableberg-button-text-color:' . ($isOutline ? $backgroundColor : $textColor),
             '--tableberg-button-hover-background-color:' . $backgroundHoverColor,
             '--tableberg-button-text-hover-color:' . $textHoverColor,
         ];
 
         $buttonStyles = [
             'display:inline-block',
+            'border:' . ($isOutline ? '2px solid ' . $backgroundColor : 'none'),
             'text-align:' . $attrs->styles->textAlign->asAttr(),
-            'font-size:' . $attrs->styles->fontSize->asAttr(),
             'padding-top:' . $attrs->styles->padding->top->asAttr(),
             'padding-right:' . $attrs->styles->padding->right->asAttr(),
             'padding-bottom:' . $attrs->styles->padding->bottom->asAttr(),
@@ -41,6 +46,11 @@ class ButtonRenderer {
             'border-bottom-right-radius:' . $attrs->styles->borderRadius->bottomRight->asAttr(),
             'border-bottom-left-radius:' . $attrs->styles->borderRadius->bottomLeft->asAttr(),
         ];
+
+        // Without a size of its own the button takes the table's.
+        if ($attrs->styles->fontSize->isNotEmpty()) {
+            $buttonStyles[] = 'font-size:' . $attrs->styles->fontSize->asAttr();
+        }
 
         $customWidth = $this->get_custom_width($attrs->styles->width->asText());
 

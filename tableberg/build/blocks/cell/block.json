@@ -16,7 +16,8 @@
   "supports": {
     "html": false,
     "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "lock": false
   },
   "attributes": {
     "span": {

@@ -139,6 +139,13 @@ export const ENHANCED_FEATURES = [
             "<strong>Individual Row Background</strong> is not available in the free version. Please get the PRO add-on to unlock all exclusive features.",
     },
     {
+        name: "row-text",
+        title: "Row Text Color",
+        icon: blockIcon,
+        upsellText:
+            "<strong>Row Text Color</strong> is not available in the free version. Please get the PRO add-on to unlock all exclusive features.",
+    },
+    {
         name: "col-bg",
         title: "Individual Column Background",
         icon: blockIcon,

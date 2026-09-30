@@ -15,6 +15,8 @@ import { reset as resetIcon } from "@wordpress/icons";
 import { useRef } from "react";
 import classNames from "classnames";
 
+import { useColorPalettes } from "./useColorPalettes";
+
 import "./color-dropdown-style.scss";
 
 interface ColorDropdownProps {
@@ -60,6 +62,9 @@ function ColorDropdown({
     enableAlpha = true,
 }: ColorDropdownProps) {
     const colorGradientSettings = useMultipleOriginColorsAndGradients();
+    // Same grouped origins the border picker shows; the WordPress hook drops
+    // the Default palette when a theme opts out of it.
+    const colorPalettes = useColorPalettes();
     const colorButtonRef = useRef<HTMLButtonElement>(null);
 
     const lastColor = useRef(colorValue);
@@ -122,6 +127,7 @@ function ColorDropdown({
                         <div className="block-editor-panel-color-gradient-settings__dropdown-content">
                             <ColorGradientControl
                                 {...colorGradientSettings}
+                                colors={colorPalettes}
                                 enableAlpha={enableAlpha}
                                 label={label}
                                 colorValue={colorValue}

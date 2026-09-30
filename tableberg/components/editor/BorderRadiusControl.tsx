@@ -6,7 +6,12 @@ import {
     useBlockEditContext,
     __experimentalBorderRadiusControl as RadiusControl,
 } from "@wordpress/block-editor";
-import { __experimentalToolsPanelItem as ToolsPanelItem } from "@wordpress/components";
+import {
+    BaseControl,
+    __experimentalToolsPanelItem as ToolsPanelItem,
+} from "@wordpress/components";
+
+import "./border-radius-control-style.scss";
 
 interface BorderRadiusControlPropTypes {
     label: string;
@@ -55,7 +60,12 @@ function BorderRadiusControl({
             label={label}
             onDeselect={onDeselect}
         >
-            <RadiusControl onChange={handleChange} values={value} />
+            <div className="tableberg-border-radius-control">
+                <BaseControl.VisualLabel as="legend">
+                    {label}
+                </BaseControl.VisualLabel>
+                <RadiusControl onChange={handleChange} values={value} />
+            </div>
         </ToolsPanelItem>
     );
 }

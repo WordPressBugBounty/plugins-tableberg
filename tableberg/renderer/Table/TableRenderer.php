@@ -132,12 +132,17 @@ class TableRenderer {
             $tableAlignment
         );
 
-        $tableStyles = [
-            'border-collapse: ' . ($hasCellSpacing ? 'separate' : 'collapse'),
-            // Neutralize theme-level table borders. Tableberg owns its
-            // borders through the table/cell controls and rounded wrapper.
-            'border: 0',
-        ];
+        $tableStyles = array_merge(
+            // Table-wide typography, inherited by everything in the cells that
+            // does not set its own.
+            $attrs->table->typography->asStyles(),
+            [
+                'border-collapse: ' . ($hasCellSpacing ? 'separate' : 'collapse'),
+                // Neutralize theme-level table borders. Tableberg owns its
+                // borders through the table/cell controls and rounded wrapper.
+                'border: 0',
+            ]
+        );
 
         if ($hasCellSpacing) {
             $tableStyles[] = "border-spacing: {$cellSpacingHorizontal} {$cellSpacingVertical}";
@@ -417,6 +422,15 @@ class TableRenderer {
                 $rowStyleParts[] = 'background-color:' . esc_attr($rowBackgroundColor);
             }
 
+            // Inherited by everything in the row's cells that has no colour
+            // of its own.
+            $rowTextColor = isset($rowStyles['textColor']) && is_string($rowStyles['textColor'])
+                ? $rowStyles['textColor']
+                : '';
+            if ($rowTextColor !== '') {
+                $rowStyleParts[] = 'color:' . esc_attr($rowTextColor);
+            }
+
             $rowBorder = isset($rowStyles['border']) && is_array($rowStyles['border'])
                 ? $rowStyles['border']
                 : [];
@@ -648,12 +662,8 @@ class TableRenderer {
         $tabletStackCount = max(1, (int) $tablet->stackCount->value());
         $mobileStackCount = max(1, (int) $mobile->stackCount->value());
 
-        // Repeating the first column in every stack row is a pro option. Only
-        // the licensed pro plugin turns this filter on, so the saved value is
-        // ignored without a valid licence.
-        $proActive = (bool) apply_filters('tableberg/is_pro_runtime_active', false);
-        $tabletRepeatFirstCol = $proActive ? $tablet->repeatFirstCol->asAttr() : '';
-        $mobileRepeatFirstCol = $proActive ? $mobile->repeatFirstCol->asAttr() : '';
+        $tabletRepeatFirstCol = $tablet->repeatFirstCol->asAttr();
+        $mobileRepeatFirstCol = $mobile->repeatFirstCol->asAttr();
 
         return "
             data-tableberg-responsive='true'

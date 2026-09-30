@@ -11,13 +11,17 @@
   "supports": {
     "html": false,
     "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "lock": false
   },
   "attributes": {
     "height": {
       "type": "string"
     },
     "backgroundColor": {
+      "type": "string"
+    },
+    "textColor": {
       "type": "string"
     },
     "border": {

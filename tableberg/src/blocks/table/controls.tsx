@@ -3,9 +3,12 @@
  */
 import { __, sprintf } from "@wordpress/i18n";
 import {
+    alignNone,
     positionLeft,
     positionCenter,
     positionRight,
+    stretchFullWidth,
+    stretchWide,
     cog,
     styles as stylesIcon,
     caption as captionIcon,
@@ -21,8 +24,6 @@ import {
 import {
     InspectorControls,
     BlockControls,
-    FontSizePicker,
-    ColorPalette,
     useBlockEditContext,
     store as blockEditorStore,
 } from "@wordpress/block-editor";
@@ -37,8 +38,6 @@ import {
     ToolbarButton,
     ToolbarGroup,
     SelectControl,
-    Button,
-    Dropdown,
     TabPanel,
 } from "@wordpress/components";
 import { ReactNode, useState } from "react";
@@ -54,7 +53,12 @@ import {
     SizeControl,
     BorderControl,
     BorderRadiusControl,
+    TypographyControls,
 } from "@tableberg/components";
+import {
+    defaultTypography,
+    getTypography,
+} from "@tableberg/shared/utils/typography";
 import LockedControl from "../../components/LockedControl";
 import { useTableStore } from "../../store";
 import TablebergIcon from "@tableberg/shared/icons/tableberg";
@@ -81,6 +85,7 @@ import {
 import { isProAvailable } from "../../pro-status";
 import { UpsellEnhancedModal } from "../../components/UpsellModal";
 import { AdvancedCustomClassControl } from "../../components/AdvancedCustomClassControl";
+import { textAttributeDefaults } from "../text/element";
 
 const cellDefaultsStyles = attrDefaults.cellDefaults.styles;
 
@@ -231,130 +236,6 @@ function fromCellSpacingPaddingValue(
         horizontal: horizontal || defaultCellSpacing.horizontal,
         vertical: vertical || defaultCellSpacing.vertical,
     };
-}
-
-interface ElementFontOptionControlProps {
-    label: string;
-    onSelect: (value: string) => void;
-    onReset: () => void;
-}
-
-function ElementFontColorOptionControl({
-    label,
-    onSelect,
-    onReset,
-}: ElementFontOptionControlProps) {
-    return (
-        <div className="tableberg-element-font-option">
-            <Dropdown
-                className="block-editor-tools-panel-color-gradient-settings__dropdown"
-                popoverProps={{ placement: "bottom-start" }}
-                renderToggle={({ isOpen, onToggle }) => (
-                    <Button
-                        __next40pxDefaultSize
-                        onClick={onToggle}
-                        aria-expanded={isOpen}
-                        className={`block-editor-panel-color-gradient-settings__dropdown tableberg-element-font-option-toggle${
-                            isOpen ? " is-open" : ""
-                        }`}
-                    >
-                        <span className="tableberg-element-font-option-label">
-                            {label}
-                        </span>
-                    </Button>
-                )}
-                renderContent={({ onClose }) => (
-                    <div className="tableberg-element-font-option-popover">
-                        <ColorPalette
-                            value={undefined}
-                            clearable={false}
-                            onChange={newValue => {
-                                if (!newValue) {
-                                    return;
-                                }
-
-                                onSelect(newValue);
-                                onClose();
-                            }}
-                        />
-                        <Button
-                            __next40pxDefaultSize
-                            className="components-circular-option-picker__clear"
-                            variant="tertiary"
-                            onClick={() => {
-                                onReset();
-                                onClose();
-                            }}
-                        >
-                            {__("Reset", "tableberg")}
-                        </Button>
-                    </div>
-                )}
-            />
-        </div>
-    );
-}
-
-function ElementFontSizeOptionControl({
-    label,
-    onSelect,
-    onReset,
-}: ElementFontOptionControlProps) {
-    return (
-        <div className="tableberg-element-font-option">
-            <Dropdown
-                className="block-editor-tools-panel-color-gradient-settings__dropdown"
-                popoverProps={{ placement: "bottom-start" }}
-                renderToggle={({ isOpen, onToggle }) => (
-                    <Button
-                        __next40pxDefaultSize
-                        onClick={onToggle}
-                        aria-expanded={isOpen}
-                        className={`block-editor-panel-color-gradient-settings__dropdown tableberg-element-font-option-toggle${
-                            isOpen ? " is-open" : ""
-                        }`}
-                    >
-                        <span className="tableberg-element-font-option-label">
-                            {label}
-                        </span>
-                    </Button>
-                )}
-                renderContent={({ onClose }) => (
-                    <div
-                        className="tableberg-element-font-option-popover tableberg-element-font-option-popover--font-size"
-                        onKeyDown={event => {
-                            if (event.key === "Enter") {
-                                onClose();
-                            }
-                        }}
-                    >
-                        <FontSizePicker
-                            value={undefined}
-                            withReset={false}
-                            onChange={fontSize => {
-                                if (!fontSize) {
-                                    return;
-                                }
-
-                                onSelect(String(fontSize));
-                            }}
-                        />
-                        <Button
-                            __next40pxDefaultSize
-                            className="components-circular-option-picker__clear"
-                            variant="tertiary"
-                            onClick={() => {
-                                onReset();
-                                onClose();
-                            }}
-                        >
-                            {__("Reset to default", "tableberg")}
-                        </Button>
-                    </div>
-                )}
-            />
-        </div>
-    );
 }
 
 /** Everything pro's column-sorting UI needs, gathered from the store. */
@@ -636,6 +517,7 @@ function TablebergControls({
         ? tableWidth || DEFAULT_FIXED_TABLE_WIDTH
         : DEFAULT_FIXED_TABLE_WIDTH;
     const defaultCellSpacing = getDefaultCellSpacing();
+    const typography = getTypography(tableConfig.typography);
     const cellSpacing = tableConfig.cellSpacing || defaultCellSpacing;
     const horizontalCellSpacing =
         cellSpacing.horizontal || defaultCellSpacing.horizontal;
@@ -802,6 +684,46 @@ function TablebergControls({
         return uniform;
     })();
 
+    // The colour every text/list element shares, or undefined when they
+    // differ, so the bulk colour rows below show what is applied. Selected
+    // rather than read straight from the registry, so the rows follow the
+    // elements as they change.
+    const uniformElementColors = useSelect(
+        select => {
+            const be = select(blockEditorStore) as any;
+            const rowBlocks = be.getBlock(clientId)?.innerBlocks ?? [];
+            const seen = {
+                textColor: new Set<string>(),
+                linkColor: new Set<string>(),
+            };
+
+            for (const rowBlock of rowBlocks) {
+                for (const cellBlock of rowBlock.innerBlocks ?? []) {
+                    for (const elBlock of cellBlock.innerBlocks ?? []) {
+                        if (
+                            elBlock.name !== "tableberg/text" &&
+                            elBlock.name !== "tableberg/list"
+                        ) {
+                            continue;
+                        }
+                        const styles = elBlock.attributes?.styles ?? {};
+                        seen.textColor.add(styles.textColor ?? "");
+                        seen.linkColor.add(styles.linkColor ?? "");
+                    }
+                }
+            }
+
+            const shared = (values: Set<string>) =>
+                values.size === 1 ? Array.from(values)[0] || undefined : undefined;
+
+            return {
+                textColor: shared(seen.textColor),
+                linkColor: shared(seen.linkColor),
+            };
+        },
+        [clientId]
+    );
+
     const elementsAlignmentControlProps = {
         label: __("Common Elements Alignment", "tableberg"),
         value: elementsAlignmentValue,
@@ -813,7 +735,6 @@ function TablebergControls({
             });
         },
     };
-
 
     // Bulk-updates every text/list ELEMENT BLOCK in the table's tree (the
     // legacy store path below only worked when cell content lived in attrs).
@@ -962,18 +883,59 @@ function TablebergControls({
     return (
         <>
             <BlockControls>
+                {/*
+                 * Width and alignment in one control, the way the core blocks
+                 * put them: None is the table's normal width, wide and full
+                 * stretch it, and the three alignments only mean something
+                 * once the table has a width of its own.
+                 */}
                 <ToolbarWithDropdown
                     title={__("Align table", "tableberg")}
-                    value={tableAlignment}
-                    controls={TABLE_ALIGNMENT_TOOLBAR_CONTROLS}
-                    disabled={!isFixedWidthMode}
-                    onChange={(newAlignment?: string) => {
-                        if (!isFixedWidthMode || !newAlignment) {
+                    value={
+                        tableWidthMode === "wide" || tableWidthMode === "full"
+                            ? tableWidthMode
+                            : isFixedWidthMode
+                              ? tableAlignment
+                              : undefined
+                    }
+                    controls={[
+                        {
+                            icon: alignNone,
+                            title: __("None", "tableberg"),
+                            value: undefined,
+                        },
+                        ...TABLE_ALIGNMENT_TOOLBAR_CONTROLS.map(control => ({
+                            ...control,
+                            isDisabled: !isFixedWidthMode,
+                        })),
+                        {
+                            icon: stretchWide,
+                            title: __("Wide width", "tableberg"),
+                            value: "wide",
+                        },
+                        {
+                            icon: stretchFullWidth,
+                            title: __("Full width", "tableberg"),
+                            value: "full",
+                        },
+                    ]}
+                    onChange={(newValue?: string) => {
+                        if (newValue === "wide" || newValue === "full") {
+                            updateConfig({ tableWidth: newValue });
+                            return;
+                        }
+
+                        if (!newValue) {
+                            updateConfig({ tableWidth: "auto" });
+                            return;
+                        }
+
+                        if (!isFixedWidthMode) {
                             return;
                         }
 
                         updateConfig({
-                            tableAlignment: newAlignment as TableAlignment,
+                            tableAlignment: newValue as TableAlignment,
                         });
                     }}
                 />
@@ -1279,63 +1241,6 @@ function TablebergControls({
 
                     <InspectorControls>
                         <PanelBody
-                            title={__("Element Font Options", "tableberg")}
-                        >
-                            <div className="tableberg-element-font-options">
-                                <ElementFontColorOptionControl
-                                    label={__(
-                                        "Set all elements' text color",
-                                        "tableberg"
-                                    )}
-                                    onSelect={textColor => {
-                                        updateElementFontOptions({
-                                            textColor,
-                                        });
-                                    }}
-                                    onReset={() => {
-                                        updateElementFontOptions({
-                                            textColor: "#000000",
-                                        });
-                                    }}
-                                />
-                                <ElementFontColorOptionControl
-                                    label={__(
-                                        "Set all elements' link color",
-                                        "tableberg"
-                                    )}
-                                    onSelect={linkColor => {
-                                        updateElementFontOptions({
-                                            linkColor,
-                                        });
-                                    }}
-                                    onReset={() => {
-                                        updateElementFontOptions({
-                                            linkColor: "",
-                                        });
-                                    }}
-                                />
-                                <ElementFontSizeOptionControl
-                                    label={__(
-                                        "Set all elements' font size",
-                                        "tableberg"
-                                    )}
-                                    onSelect={fontSize => {
-                                        updateElementFontOptions({
-                                            fontSize,
-                                        });
-                                    }}
-                                    onReset={() => {
-                                        updateElementFontOptions({
-                                            fontSize: "1.38rem",
-                                        });
-                                    }}
-                                />
-                            </div>
-                        </PanelBody>
-                    </InspectorControls>
-
-                    <InspectorControls>
-                        <PanelBody
                             title={__("Header & Footer Settings", "tableberg")}
                         >
                             <ToggleControl
@@ -1438,6 +1343,87 @@ function TablebergControls({
                                     {...footerBackgroundColorControl}
                                 />
                             )}
+                            {/*
+                             * These two write the colour into every text and
+                             * list element rather than storing it on the
+                             * table, so they show the shared value when the
+                             * elements agree on one.
+                             */}
+                            <ColorControl
+                                label={__(
+                                    "All Elements' Text Color",
+                                    "tableberg"
+                                )}
+                                value={uniformElementColors.textColor}
+                                onChange={textColor => {
+                                    updateElementFontOptions({
+                                        textColor: textColor || "",
+                                    });
+                                }}
+                                onDeselect={() => {
+                                    updateElementFontOptions({
+                                        textColor: textAttributeDefaults.styles
+                                            .textColor,
+                                    });
+                                }}
+                            />
+                            <ColorControl
+                                label={__(
+                                    "All Elements' Link Color",
+                                    "tableberg"
+                                )}
+                                value={uniformElementColors.linkColor}
+                                onChange={linkColor => {
+                                    updateElementFontOptions({
+                                        linkColor: linkColor || "",
+                                    });
+                                }}
+                                onDeselect={() => {
+                                    updateElementFontOptions({
+                                        linkColor: "",
+                                    });
+                                }}
+                            />
+                        </ToolsPanel>
+                    </InspectorControls>
+
+                    <InspectorControls>
+                        <ToolsPanel
+                            label={__("Typography", "tableberg")}
+                            panelId={clientId}
+                            resetAll={() => {
+                                updateConfig({
+                                    typography: {
+                                        ...defaultTypography,
+                                    },
+                                });
+                                updateElementFontOptions({
+                                    fontSize: "",
+                                });
+                            }}
+                        >
+                            <TypographyControls
+                                panelId={clientId}
+                                value={typography}
+                                onChange={updates => {
+                                    updateConfig({
+                                        typography: {
+                                            ...typography,
+                                            ...updates,
+                                        },
+                                    });
+                                    // Tables saved before the table owned
+                                    // its typography have a font size on
+                                    // every text and list element, which
+                                    // would win over the table's. Clearing
+                                    // it lets the table's size through.
+                                    if (updates.fontSize !== undefined) {
+                                        updateElementFontOptions({
+                                            fontSize: "",
+                                        });
+                                    }
+                                }}
+                            />
                         </ToolsPanel>
                     </InspectorControls>
 
@@ -1541,10 +1527,7 @@ function TablebergControls({
                                     resetAll={() => null}
                                 >
                                     <ToolsPanelItem
-                                        label={__(
-                                            "Enable Search",
-                                            "tableberg"
-                                        )}
+                                        label={__("Enable Search", "tableberg")}
                                         hasValue={() => false}
                                         onDeselect={() => null}
                                         isShownByDefault

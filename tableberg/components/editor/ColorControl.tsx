@@ -15,6 +15,8 @@ import {
 } from "@wordpress/components/build-types/palette-edit/types";
 import { useRef } from "react";
 
+import { useColorPalettes, PaletteOrigin } from "./useColorPalettes";
+
 interface ColorSettingsProps {
     label: string;
     value: string | undefined | null;
@@ -57,7 +59,10 @@ function ColorSetting({
             };
         }, []);
 
-    const colorPalette = palette === "theme" ? themeColors : defaultColors;
+    // Colours are offered as origin groups (Theme, Default, Custom) so this
+    // picker matches the border one. `palette` now only picks the gradient
+    // set, which still has no grouped UI.
+    const colorPalette = useColorPalettes();
     const gradientPalette =
         palette === "theme" ? themeGradients : defaultGradients;
 
@@ -69,7 +74,8 @@ function ColorSetting({
         clearable?: boolean;
         colorValue?: string | null;
         gradientValue?: string | null;
-        colors?: Color[];
+        // Either a flat palette or origin groups (Theme, Default, Custom).
+        colors?: Color[] | PaletteOrigin[];
         gradients?: Gradient[];
         label: string;
         onColorChange: (newValue: string) => any;

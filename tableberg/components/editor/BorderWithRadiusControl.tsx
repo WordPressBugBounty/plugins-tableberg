@@ -1,10 +1,9 @@
 import { __ } from "@wordpress/i18n";
 import {
     useBlockEditContext,
-    store as BlockEditorStore,
     __experimentalBorderRadiusControl as RadiusControl,
 } from "@wordpress/block-editor";
-import { useSelect } from "@wordpress/data";
+import { useColorPalettes } from "./useColorPalettes";
 import {
     __experimentalToolsPanelItem as ToolsPanelItem,
     __experimentalBorderBoxControl as BorderBoxControl,
@@ -52,13 +51,8 @@ function BorderControl({
 }: BorderWithRadiusControlPropTypes) {
     const { clientId } = useBlockEditContext();
 
-    const { defaultColors } = useSelect(select => {
-        return {
-            defaultColors: (
-                select(BlockEditorStore) as BlockEditorStoreSelectors
-            ).getSettings()?.__experimentalFeatures?.color?.palette?.default,
-        };
-    }, []);
+    // Theme, Default and Custom origins.
+    const colors = useColorPalettes();
 
     if (!resetAllFilter) {
         resetAllFilter = onDeselect;
@@ -82,7 +76,7 @@ function BorderControl({
                 <BorderBoxControl
                     enableAlpha
                     size={"__unstable-large"}
-                    colors={defaultColors}
+                    colors={colors}
                     label={label}
                     onChange={onChange}
                     value={value}

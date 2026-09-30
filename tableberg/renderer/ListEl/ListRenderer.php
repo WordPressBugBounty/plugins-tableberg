@@ -20,6 +20,13 @@ class ListRenderer {
 
         $listTree = $this->build_list_tree($attrs->items);
 
+        // Only paint the links when a colour was picked; otherwise the
+        // theme's own link colour applies.
+        $wrapperClass = 'tableberg-list';
+        if ($attrs->styles->linkColor->isNotEmpty()) {
+            $wrapperClass .= ' tableberg-has-link-color';
+        }
+
         if ($listType === 'styled') {
             $listStyles = [
                 'list-style-type:none',
@@ -28,7 +35,7 @@ class ListRenderer {
             ];
 
             return
-                "<div class='tableberg-list'>
+                "<div class='{$wrapperClass}'>
                     <$listTag style='{$this->style_attr($listStyles)}'>
                         {$this->render_styled_list_items($listTree, $attrs, $listTag)}
                     </$listTag>
@@ -41,7 +48,7 @@ class ListRenderer {
         ];
 
         return
-            "<div class='tableberg-list'>
+            "<div class='{$wrapperClass}'>
                 <$listTag style='{$this->style_attr($listStyles)}'>
                     {$this->render_basic_list_items($listTree, $attrs, $listTag)}
                 </$listTag>
@@ -313,7 +320,7 @@ class ListRenderer {
      */
     private function icon_offset_style($styles) {
         $iconSize = $styles->iconSize->isNotEmpty() ? $styles->iconSize->asAttr() : '15px';
-        $itemFontSize = $styles->fontSize->isNotEmpty() ? $styles->fontSize->asAttr() : '1.38rem';
+        $itemFontSize = $styles->fontSize->isNotEmpty() ? $styles->fontSize->asAttr() : '1em';
         $manualOffset = $styles->iconTopSpacing->isNotEmpty() ? $styles->iconTopSpacing->asAttr() : '0px';
 
         return 'margin-top:calc(max(0px, (1.5 * ' . $itemFontSize . ' - ' . $iconSize . ') / 2) + ' . $manualOffset . ')';

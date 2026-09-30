@@ -39,8 +39,15 @@ class TextRenderer {
 
         $styleAttr = implode(';', $styleValues);
 
+        // Only paint the links when a colour was picked; otherwise the
+        // theme's own link colour applies.
+        $className = 'tableberg-text-element';
+        if ($attrs->styles->linkColor->isNotEmpty()) {
+            $className .= ' tableberg-has-link-color';
+        }
+
         return
-            "<p class='tableberg-text-element' style='{$styleAttr}'>
+            "<p class='{$className}' style='{$styleAttr}'>
                 {$attrs->content->asHtml()}
             </p>";
     }

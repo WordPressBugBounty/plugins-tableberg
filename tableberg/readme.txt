@@ -5,7 +5,7 @@ Donate link: https://www.paypal.me/imtiazrayhan/
 Requires at least: 6.1
 Tested up to: 7.1
 Requires PHP: 7.0
-Stable tag: 1.1.5
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,24 @@ If you have any suggestions or have faced any issues, contact us [here](https://
 
 == Changelog ==
 
+= 1.2.0 =
+* NEW: The table's typography moved to the Styles tab as a full Typography panel: font, size, appearance, line height, letter case, letter spacing and decoration
+* NEW: Fill and Outline styles for the Button element, like the core Buttons block
+* NEW: Copy Styles and Paste Styles for the Button element
+* NEW: Wide and full table width, straight from the toolbar alongside the alignments
+* NEW: Show First Column in Every Stack Row is now in the free version
+* PRO: NEW: Row Text Color, which everything in the row inherits
+* PRO: NEW: Ribbon text and background colours, in the Styles tab with the other colours
+* PRO: NEW: Row and column border radius, next to their border controls
+* PRO: NEW: Move a column left or right from the Edit Table menu; rows move with the editor's own movers
+* FIX: Links in a table keep the site's own link colour until one is picked for them
+* FIX: Stacked cells keep the gap between columns in responsive stack mode
+* FIX: The search box icon no longer overlaps the text beside it
+* PRO: FIX: The Icon element's alignment now applies in the editor
+* PRO: FIX: A new Styled List starts with its check icon in the editor, the way it already rendered on the site
+* PRO: FIX: The star rating's review text alignment works now, with the text under the stars as on the site
+* IMPROVE: Every colour and border picker offers the theme, default and custom palettes
+* IMPROVE: A new table takes its font size from the theme and its cell border colour from the text colour, matching the core Table block
 
 = 1.1.5 =
 * FIX: Large images no longer stretch table columns out of shape in the editor

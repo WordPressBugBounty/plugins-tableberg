@@ -4,55 +4,72 @@
     gap: 12px;
     padding: 0 0 12px 0;
 
+    // The field's frame lives on the wrapper, not the input, and the icon is
+    // a flex sibling rather than an overlay. Themes style bare inputs
+    // (`input[type="text"]`) which outranks a single class, so an overlaid
+    // icon ended up sitting on top of the placeholder whenever a theme
+    // replaced our padding. Laid out in flow, they cannot collide.
     &__input-wrapper {
-        position: relative;
         display: flex;
         align-items: center;
+        gap: 8px;
         flex: 0 0 auto;
         max-width: 300px;
+        padding: 8px 10px;
+        border: 1px solid var(--wp--preset--color--contrast, #1e1e1e);
+        border-radius: 4px;
+
+        &:focus-within {
+            border-color: var(--wp-admin-theme-color, #007cba);
+            box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #007cba);
+        }
     }
 
     &__icon {
-        position: absolute;
-        left: 10px;
+        display: flex;
+        flex: 0 0 auto;
         color: #757575;
         pointer-events: none;
     }
 
-    &__input {
-        padding: 8px 36px 8px 36px;
-        border: 1px solid var(--wp--preset--color--contrast, #1e1e1e);
-        border-radius: 4px;
+    // Scoped one level deeper so a theme's `input[type="text"]` rules do not
+    // win over the reset.
+    .tableberg-search__input {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background-color: transparent;
+        color: inherit;
         font-size: 0.875em;
         font-family: inherit;
         line-height: 1.4;
-        width: 100%;
-        background-color: transparent;
-        color: inherit;
 
         &::placeholder {
             color: #757575;
         }
 
         &:focus {
+            border: 0;
             outline: none;
-            border-color: var(--wp-admin-theme-color, #007cba);
-            box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #007cba);
+            box-shadow: none;
         }
     }
 
-    &__clear {
-        position: absolute;
-        right: 6px;
-        background: transparent;
-        border: none;
-        padding: 4px;
-        cursor: pointer;
-        color: #757575;
+    .tableberg-search__clear {
+        flex: 0 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border: none;
         border-radius: 2px;
+        cursor: pointer;
+        color: #757575;
 
         &:hover {
             color: var(--wp--preset--color--contrast, #1e1e1e);

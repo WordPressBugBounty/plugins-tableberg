@@ -156,7 +156,47 @@ function getResponsiveBreakpoint(
     };
 }
 
+/**
+ * Stacked tables lose their column gap: the space between columns comes from
+ * the horizontal half of `border-spacing`, but once the cells sit in their own
+ * rows only the vertical half is visible. Borrow the horizontal value for the
+ * vertical gap while stacked, and put the original back on the way out.
+ */
+function applyStackSpacing(table: HTMLTableElement) {
+    if (typeof table.dataset.tablebergSpacing === "string") {
+        return;
+    }
+
+    const [horizontal, vertical] = window
+        .getComputedStyle(table)
+        .borderSpacing.split(" ");
+
+    if (!horizontal) {
+        return;
+    }
+
+    const gap = parseFloat(horizontal);
+    if (!(gap > 0) || gap <= parseFloat(vertical ?? horizontal)) {
+        return;
+    }
+
+    table.dataset.tablebergSpacing = table.style.borderSpacing;
+    table.style.borderSpacing = `${horizontal} ${horizontal}`;
+}
+
+function restoreStackSpacing(table: HTMLTableElement) {
+    const original = table.dataset.tablebergSpacing;
+    if (typeof original !== "string") {
+        return;
+    }
+
+    table.style.borderSpacing = original;
+    delete table.dataset.tablebergSpacing;
+}
+
 function reviveTable(table: HTMLTableElement) {
+    restoreStackSpacing(table);
+
     const oldMode = table.dataset.tablebergLast;
     if (!oldMode) {
         return;
@@ -542,6 +582,8 @@ function resizeTable(table: HTMLTableElement) {
             renderTag
         );
     }
+
+    applyStackSpacing(table);
 
     table.dispatchEvent(new CustomEvent(TABLEBERG_RESPONSIVE_CHANGED_EVENT));
 }

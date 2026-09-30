@@ -299,6 +299,25 @@ export function ButtonElementControls({
             <InspectorControls>
                 <PanelBody title={__("Button Settings", "tableberg")}>
                     <ToggleGroupControl
+                        label={__("Style", "tableberg")}
+                        value={styles.variant ?? "fill"}
+                        onChange={value => {
+                            updateStyles({
+                                variant: value === "outline" ? "outline" : "fill",
+                            });
+                        }}
+                        isBlock
+                    >
+                        <ToggleGroupControlOption
+                            value="fill"
+                            label={__("Fill", "tableberg")}
+                        />
+                        <ToggleGroupControlOption
+                            value="outline"
+                            label={__("Outline", "tableberg")}
+                        />
+                    </ToggleGroupControl>
+                    <ToggleGroupControl
                         label={__("Button Alignment", "tableberg")}
                         value={align}
                         onChange={value => {

@@ -11,9 +11,11 @@ import {
 import { dispatch as dataDispatch, select as dataSelect } from "@wordpress/data";
 import { create } from "zustand";
 
-import { CellKey } from "../attributes";
+import { CellElement, CellKey } from "../attributes";
 import { TableStoreContext } from "../store";
 import { ElementBindings } from "../dynamic-data/types";
+import { getElementAlignment } from "../alignment";
+import { alignmentWrapperStyle } from "./element-edit-common";
 
 /**
  * Runs an existing (store-coupled) element component as a real block's edit.
@@ -207,8 +209,21 @@ export function createBridgedElementEdit(
             (bridgeStore as any).setState({ cells: syntheticCells(refs) });
         }, [attributes, bridgeStore]);
 
-        const blockProps = useBlockProps();
         const { bindings, ...elementAttributes } = attributes;
+
+        // Free's element blocks align themselves through their own block
+        // wrapper; bridged (pro) blocks had no wrapper style at all, so
+        // their alignment attribute never reached the canvas. This mirrors
+        // the frontend, where CellRenderer wraps every element in an
+        // aligned `.tableberg-cell-element`.
+        const blockProps = useBlockProps({
+            style: alignmentWrapperStyle(
+                getElementAlignment({
+                    name: elementName,
+                    attributes: elementAttributes,
+                } as unknown as CellElement)
+            ),
+        });
 
         // Anything the pro plugin injected through `editor.BlockEdit` is
         // passed on to the element component. The block's own props are

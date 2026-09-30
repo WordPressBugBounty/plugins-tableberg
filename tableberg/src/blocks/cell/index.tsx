@@ -17,6 +17,7 @@ import {
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import {
+    arrowRight,
     table as tableIcon,
     tableColumnAfter,
     tableColumnBefore,
@@ -48,6 +49,7 @@ import {
     splitCell,
 } from "../table/table-ops";
 import { cellColumn, GridRow } from "../table/grid-model";
+import { withMoveLock } from "../move-lock";
 import { CellDimensionsControls } from "./dimensions";
 import {
     CellColumnBackgroundControls,
@@ -170,11 +172,22 @@ function useRowBackgroundStyleKey(
 }
 
 /** Shape of the entries the pro plugin adds to this menu. */
+export interface CellGridPosition {
+    rowIndex: number;
+    column: number;
+    rowCount: number;
+    columnCount: number;
+    /** A merged cell ties positions together, so moves are off the table. */
+    hasMergedCells: boolean;
+}
+
 export interface CellToolbarControl {
     icon: unknown;
     title: string;
+    /** Left out when it returns false, e.g. "move up" on the first row. */
+    isAvailable?: (position: CellGridPosition) => boolean;
     onClick: (context: {
-        registry: unknown;
+        registry: any;
         tableClientId: string;
         rowIndex: number;
         column: number;
@@ -194,6 +207,7 @@ function CellTableToolbar({
     const registry = useRegistry() as any;
     const isPro = isProAvailable();
     const [showDuplicateUpsell, setShowDuplicateUpsell] = useState(false);
+    const [showMoveUpsell, setShowMoveUpsell] = useState(false);
 
     // Cells for a merge: the modifier-click marquee (works across rows) or
     // the native sibling multi-select (same-row shift selection).
@@ -210,6 +224,53 @@ function CellTableToolbar({
     }, []);
     const selectedCellIds =
         marqueeCellIds.length > 1 ? marqueeCellIds : nativeMultiSelectIds;
+
+    // Where this cell sits, so entries that only make sense somewhere else
+    // in the grid (moving the first row up, say) can be left out.
+    const gridPosition = useSelect(
+        select => {
+            const be = select(blockEditorStore) as any;
+            const rowClientId = be.getBlockRootClientId(clientId);
+            const tableClientId = rowClientId
+                ? be.getBlockRootClientId(rowClientId)
+                : null;
+
+            if (!rowClientId || !tableClientId) {
+                return null;
+            }
+
+            const rows: { rowSpan: number; colSpan: number; id: string }[][] = (
+                be.getBlock(tableClientId)?.innerBlocks ?? []
+            )
+                .filter((b: any) => b.name === "tableberg/row")
+                .map((rowBlock: any) =>
+                    rowBlock.innerBlocks
+                        .filter((b: any) => b.name === "tableberg/cell")
+                        .map((cellBlock: any) => ({
+                            id: cellBlock.clientId,
+                            rowSpan: cellBlock.attributes?.span?.rowSpan ?? 1,
+                            colSpan: cellBlock.attributes?.span?.colSpan ?? 1,
+                        }))
+                );
+
+            const column = cellColumn(rows, clientId);
+
+            if (column === null) {
+                return null;
+            }
+
+            return {
+                rowIndex: be.getBlockIndex(rowClientId),
+                column,
+                rowCount: rows.length,
+                columnCount: rows[0]?.length ?? 0,
+                hasMergedCells: rows
+                    .flat()
+                    .some(cell => cell.rowSpan > 1 || cell.colSpan > 1),
+            } as CellGridPosition;
+        },
+        [clientId]
+    );
 
     const withContext = (
         fn: (
@@ -275,18 +336,24 @@ function CellTableToolbar({
         // Duplicate row/column and the ribbon are pro features: pro supplies
         // these entries and free only resolves the grid position for them.
         // Without pro they are replaced by upsell entries below.
-        ...proToolbarControls.map(control => ({
-            icon: control.icon as any,
-            title: control.title,
-            onClick: withContext(ctx =>
-                control.onClick({
-                    registry,
-                    tableClientId: ctx.tableClientId,
-                    rowIndex: ctx.rowIndex,
-                    column: ctx.column!,
-                })
-            ),
-        })),
+        ...proToolbarControls
+            .filter(control =>
+                control.isAvailable && gridPosition
+                    ? control.isAvailable(gridPosition)
+                    : !control.isAvailable
+            )
+            .map(control => ({
+                icon: control.icon as any,
+                title: control.title,
+                onClick: withContext(ctx =>
+                    control.onClick({
+                        registry,
+                        tableClientId: ctx.tableClientId,
+                        rowIndex: ctx.rowIndex,
+                        column: ctx.column!,
+                    })
+                ),
+            })),
         ...(proToolbarControls.length === 0 && !isPro
             ? [
                   {
@@ -298,6 +365,11 @@ function CellTableToolbar({
                       icon: tableColumnAfter,
                       title: __("Duplicate column (Pro)", "tableberg"),
                       onClick: () => setShowDuplicateUpsell(true),
+                  },
+                  {
+                      icon: arrowRight,
+                      title: __("Move column (Pro)", "tableberg"),
+                      onClick: () => setShowMoveUpsell(true),
                   },
               ]
             : []),
@@ -347,6 +419,12 @@ function CellTableToolbar({
                     selected="duplicate-row-col"
                 />
             )}
+            {showMoveUpsell && (
+                <UpsellEnhancedModal
+                    onClose={() => setShowMoveUpsell(false)}
+                    selected="move-row-col"
+                />
+            )}
         </>
     );
 }
@@ -360,12 +438,14 @@ function CellInspectorControls({
     // Controls injected by the pro plugin; null when pro is not installed.
     CellBackgroundControl = null,
     CellRibbonPanel = null,
+    CellRibbonColorControls = null,
     CellBorderControl = null,
     CellEmptyControl = null,
 }: Pick<BlockEditProps<CellBlockAttrs>, "attributes" | "setAttributes"> & {
     defaultElementGap?: string;
     CellBackgroundControl?: ReactNode;
     CellRibbonPanel?: ReactNode;
+    CellRibbonColorControls?: ReactNode;
     CellBorderControl?: ReactNode;
     CellEmptyControl?: ReactNode;
 }) {
@@ -410,6 +490,8 @@ function CellInspectorControls({
                         />
                     </LockedControl>
                 )}
+                {/* The ribbon's colours, while this cell has a ribbon. */}
+                {CellRibbonColorControls}
             </InspectorControls>
 
             {/*
@@ -512,6 +594,7 @@ function CellEdit(
         // Injected by the pro plugin's editor.BlockEdit wrapper.
         CellBackgroundControl?: ReactNode;
         CellRibbonPanel?: ReactNode;
+        CellRibbonColorControls?: ReactNode;
         CellRibbonOverlay?: ReactNode;
         CellBorderControl?: ReactNode;
         CellEmptyControl?: ReactNode;
@@ -526,6 +609,7 @@ function CellEdit(
 ) {
     const { attributes, clientId, context, isSelected } = props;
     const proExtensionActive = props.cellStyles !== undefined;
+
     const tableConfig = context?.["tableberg/tableConfig"] as
         | TableConfig
         | undefined;
@@ -701,6 +785,7 @@ function CellEdit(
                     defaultElementGap={defaults?.elementGap}
                     CellBackgroundControl={props.CellBackgroundControl}
                     CellRibbonPanel={props.CellRibbonPanel}
+                    CellRibbonColorControls={props.CellRibbonColorControls}
                     CellBorderControl={props.CellBorderControl}
                     CellEmptyControl={props.CellEmptyControl}
                 />
@@ -743,6 +828,7 @@ function CellEdit(
 export function registerNativeCellBlock() {
     registerBlockType(metadata.name, {
         ...(metadata as any),
+        attributes: withMoveLock(metadata.attributes as any),
         icon: blockIcon,
         edit: CellEdit,
         save: () => <InnerBlocks.Content />,

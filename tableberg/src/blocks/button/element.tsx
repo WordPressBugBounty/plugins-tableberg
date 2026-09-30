@@ -19,6 +19,8 @@ import {
 } from "../../alignment";
 import { isProAvailable } from "../../pro-status";
 
+export type ButtonVariant = "fill" | "outline";
+
 export interface ButtonElementAttributes {
     content: string;
     id: string;
@@ -28,6 +30,8 @@ export interface ButtonElementAttributes {
         target: "_blank" | "_self";
     };
     styles: {
+        /** Filled like the core Buttons block, or just an outline of it. */
+        variant: ButtonVariant;
         backgroundColor: string;
         textColor: string;
         backgroundHoverColor: string;
@@ -63,6 +67,7 @@ export const buttonAttrDefaults: ButtonElementAttributes = {
         target: "_self",
     },
     styles: {
+        variant: "fill",
         backgroundColor: "#000000",
         textColor: "#ffffff",
         backgroundHoverColor: "",
@@ -81,7 +86,8 @@ export const buttonAttrDefaults: ButtonElementAttributes = {
             bottomRight: "4px",
             bottomLeft: "4px",
         },
-        fontSize: "1.38rem",
+        // Inherited from the table unless the user sets one.
+        fontSize: "",
     },
 };
 
@@ -89,6 +95,45 @@ export interface ButtonElementType {
     name: "button";
     attributes: ButtonElementAttributes;
     bindings?: ElementBindings;
+}
+
+/**
+ * What a button paints with, in either variant.
+ *
+ * Filled is the plain case: the background colour behind the text colour.
+ * Outline swaps that around, the way the core Buttons block does: nothing
+ * behind the text, and the button's colour moves to the text and a border
+ * around it. Hover then fills it in, so the text colour is readable again.
+ */
+export function getButtonVariantStyles(
+    styles: Pick<
+        ButtonElementAttributes["styles"],
+        | "variant"
+        | "backgroundColor"
+        | "textColor"
+        | "backgroundHoverColor"
+        | "textHoverColor"
+    >
+) {
+    const isOutline = styles.variant === "outline";
+
+    return {
+        vars: {
+            "--tableberg-button-background-color": isOutline
+                ? "transparent"
+                : styles.backgroundColor,
+            "--tableberg-button-text-color": isOutline
+                ? styles.backgroundColor
+                : styles.textColor,
+            "--tableberg-button-hover-background-color":
+                styles.backgroundHoverColor || styles.backgroundColor,
+            "--tableberg-button-text-hover-color":
+                styles.textHoverColor || styles.textColor,
+        },
+        border: isOutline
+            ? `2px solid ${styles.backgroundColor}`
+            : undefined,
+    };
 }
 
 function getLegacyCustomWidthStyle(
@@ -151,16 +196,13 @@ export function ButtonElement({
     const { content, align, styles } = buttonAttributes;
     const customWidth = getLegacyCustomWidthStyle(styles.width);
 
+    const variantStyles = getButtonVariantStyles(styles);
+
     const wrapperStyleCss: Record<string, string | undefined> = {
         "display": "flex",
         "justifyContent": elementAlignmentToJustifyContent(align),
         "width": customWidth ? "100%" : undefined,
-        "--tableberg-button-background-color": styles.backgroundColor,
-        "--tableberg-button-text-color": styles.textColor,
-        "--tableberg-button-hover-background-color":
-            styles.backgroundHoverColor || styles.backgroundColor,
-        "--tableberg-button-text-hover-color":
-            styles.textHoverColor || styles.textColor,
+        ...variantStyles.vars,
     };
 
     const customWidthWrapperStyleCss: Record<string, string | undefined> = {
@@ -172,6 +214,7 @@ export function ButtonElement({
 
     const buttonStyleCss: Record<string, string | undefined> = {
         display: "inline-block",
+        border: variantStyles.border,
         textAlign: styles.textAlign,
         fontSize: styles.fontSize,
         paddingTop: styles.padding.top,

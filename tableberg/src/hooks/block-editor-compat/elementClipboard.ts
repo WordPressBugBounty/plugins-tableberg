@@ -131,6 +131,30 @@ function createElementStyleClipboardPayload(
     };
 }
 
+/**
+ * The last styles copied in this editor session. Kept in memory because
+ * reading the system clipboard needs the browser's clipboard permission,
+ * which would leave "paste styles" doing nothing until the reader allows it.
+ */
+let copiedStylePayload: ElementStyleClipboardPayload | null = null;
+
+/** Remembers the element's styles for a later paste in this session. */
+export function rememberElementStylePayload(element: CellElement): void {
+    copiedStylePayload = createElementStyleClipboardPayload(element);
+}
+
+/**
+ * The styles to paste: what was copied here, or failing that whatever the
+ * system clipboard holds (styles copied in another tab).
+ */
+export async function readElementStylePayload(): Promise<ElementStyleClipboardPayload | null> {
+    if (copiedStylePayload) {
+        return cloneValue(copiedStylePayload);
+    }
+
+    return parseElementStyleClipboardPayload(await readClipboardText());
+}
+
 export function serializeElementStyleClipboardPayload(
     element: CellElement
 ): string {

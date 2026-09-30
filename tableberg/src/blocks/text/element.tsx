@@ -54,10 +54,14 @@ export const textAttributeDefaults: TextElementAttributes = {
     content: "",
     align: "left",
     styles: {
-        textColor: "#000000",
+        // No colour of its own: the text takes the row's (and through it the
+        // theme's), the way the core Table block does.
+        textColor: "",
         linkColor: "",
         backgroundColor: "",
-        fontSize: "1.38rem",
+        // No size of its own: the text takes the table's (and through it
+        // the theme's) font size, the way the core Table block does.
+        fontSize: "",
         padding: { ...emptySides },
         margin: { ...emptySides },
     },
@@ -293,8 +297,8 @@ function TextElementContent({
     };
 
     const elementClassName = `tableberg-text-element${
-        dynamicBindingEnabled ? " tableberg-dynamic-content" : ""
-    }`;
+        linkColor ? " tableberg-has-link-color" : ""
+    }${dynamicBindingEnabled ? " tableberg-dynamic-content" : ""}`;
 
     if (isDynamicLoading) {
         return (

@@ -77,6 +77,9 @@ class LinkAttrs {
 
 class ButtonStyles {
     /** @var StringAttr */
+    public $variant;
+
+    /** @var StringAttr */
     public $backgroundColor;
 
     /** @var StringAttr */
@@ -113,6 +116,11 @@ class ButtonStyles {
         $d = $defaults['styles'];
 
         $instance = new self();
+        $instance->variant = new StringAttr(
+            getOrNull($data['variant']),
+            $d['variant'],
+            ['fill', 'outline']
+        );
         $instance->backgroundColor = new StringAttr(
             getOrNull($data['backgroundColor']),
             $d['backgroundColor']

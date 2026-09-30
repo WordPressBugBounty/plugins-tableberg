@@ -5,12 +5,17 @@ import { __ } from "@wordpress/i18n";
 import { mergeAttrsWithDefaultsAndApplyBindings } from "@tableberg/shared/utils/merge-attrs-with-defaults-and-apply-bindings";
 import buttonIcon from "@tableberg/shared/icons/button";
 
-import { ButtonElementAttributes, buttonAttrDefaults } from "./element";
+import {
+    ButtonElementAttributes,
+    buttonAttrDefaults,
+    getButtonVariantStyles,
+} from "./element";
 import metadata from "./block.json";
 import { ButtonElementControls } from "./controls";
 import { ElementBindings } from "../../dynamic-data/types";
 import {
     ElementAlignmentToolbar,
+    ElementStyleOptions,
     NO_COORDS,
     alignmentWrapperStyle,
 } from "../element-edit-common";
@@ -33,9 +38,14 @@ function ButtonEdit({
         style: alignmentWrapperStyle(align),
     });
 
+    const variantStyles = getButtonVariantStyles(styles);
+
     const buttonStyle: CSSProperties = {
-        backgroundColor: styles.backgroundColor || undefined,
-        color: styles.textColor || undefined,
+        backgroundColor:
+            variantStyles.vars["--tableberg-button-background-color"] ||
+            undefined,
+        color:
+            variantStyles.vars["--tableberg-button-text-color"] || undefined,
         fontSize: (styles as { fontSize?: string }).fontSize || undefined,
         textAlign: styles.textAlign as CSSProperties["textAlign"],
         width: styles.width === "auto" ? undefined : styles.width,
@@ -47,7 +57,7 @@ function ButtonEdit({
         borderTopRightRadius: styles.borderRadius?.topRight,
         borderBottomRightRadius: styles.borderRadius?.bottomRight,
         borderBottomLeftRadius: styles.borderRadius?.bottomLeft,
-        border: "none",
+        border: variantStyles.border ?? "none",
         cursor: "text",
     };
 
@@ -57,6 +67,17 @@ function ButtonEdit({
                 <ElementAlignmentToolbar
                     align={align}
                     onChange={newAlign => setAttributes({ align: newAlign })}
+                />
+            )}
+            {isSelected && (
+                <ElementStyleOptions
+                    elementName="button"
+                    attributes={merged as unknown as Record<string, unknown>}
+                    setAttributes={
+                        setAttributes as (
+                            attrs: Record<string, unknown>
+                        ) => void
+                    }
                 />
             )}
             {isSelected && (

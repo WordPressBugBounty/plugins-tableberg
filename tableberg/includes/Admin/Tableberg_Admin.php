@@ -2,6 +2,8 @@
 
 namespace Tableberg\Admin;
 
+// Needed so the qualified name `Tableberg\Assets` below resolves to the root
+// namespace instead of `Tableberg\Admin\Tableberg\Assets`.
 use Tableberg;
 
 class Tableberg_Admin {

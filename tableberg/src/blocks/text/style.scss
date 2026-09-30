@@ -1,5 +1,11 @@
 .tableberg-text-element {
-    a {
+    /*
+     * Only when a link colour was picked. Without the class the theme's own
+     * link colour applies; painting `var(--tableberg-text-link-color)`
+     * unconditionally made the declaration invalid and links fell back to
+     * the surrounding text colour instead.
+     */
+    &.tableberg-has-link-color a {
         color: var(--tableberg-text-link-color);
     }
 }

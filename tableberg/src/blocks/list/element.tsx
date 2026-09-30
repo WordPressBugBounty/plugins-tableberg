@@ -89,12 +89,14 @@ export const listAttrDefaults: ListElementAttributes = {
     listStyle: "disc",
     styles: {
         itemSpacing: "0",
-        iconColor: "#000000",
+        iconColor: "",
         iconSize: "15px",
         iconSpacing: "var(--wp--preset--spacing--20)",
         iconTopSpacing: "0px",
-        fontSize: "1.38rem",
-        textColor: "#000000",
+        // Inherited from the table unless the user sets one.
+        fontSize: "",
+        // Inherited from the row unless the user sets one.
+        textColor: "",
         linkColor: "",
         backgroundColor: "",
     },
@@ -354,8 +356,9 @@ export function ListElement({
     };
 
     const iconSize = effectiveListAttributes.styles.iconSize || "15px";
-    const itemFontSize = effectiveListAttributes.styles.fontSize || "1.38rem";
-    const iconTopSpacing = effectiveListAttributes.styles.iconTopSpacing || "0px";
+    const itemFontSize = effectiveListAttributes.styles.fontSize || "1em";
+    const iconTopSpacing =
+        effectiveListAttributes.styles.iconTopSpacing || "0px";
     // Auto-centers the icon against the first line of (possibly wrapped)
     // item text; iconTopSpacing is a manual nudge added on top for cases
     // the auto value doesn't quite cover (custom fonts/line-heights).
@@ -470,9 +473,11 @@ export function ListElement({
                     {effectiveListAttributes.listStyle !== "decimal" &&
                         ProListItemIcon && (
                             <span style={iconStyle}>{ProListItemIcon}</span>
-                    )}
+                        )}
                     {effectiveListAttributes.listStyle === "decimal" && (
-                        <span style={decimalMarkerStyle}>{node.index + 1}.</span>
+                        <span style={decimalMarkerStyle}>
+                            {node.index + 1}.
+                        </span>
                     )}
                     {renderListItemContent(node.item.content, node.index, {
                         flex: 1,
@@ -553,7 +558,11 @@ export function ListElement({
             )}
             <div
                 ref={wrapperRef}
-                className="tableberg-list"
+                className={`tableberg-list${
+                    effectiveListAttributes.styles.linkColor
+                        ? " tableberg-has-link-color"
+                        : ""
+                }`}
                 style={wrapperStyle}
                 onClick={e => {
                     e.stopPropagation();

@@ -126,6 +126,94 @@ declare module "@wordpress/block-editor" {
 
     const __experimentalSpacingSizesControl: ComponentType<__experimentalSpacingSizesControl.Props>;
 
+    namespace __experimentalFontFamilyControl {
+        interface Props {
+            children?: never | undefined;
+            value?: string;
+            onChange: (newValue?: string) => void;
+            fontFamilies?: {
+                fontFamily: string;
+                name?: string;
+                fontFace?: Record<string, any>[];
+            }[];
+            className?: string;
+            size?: string;
+            __next40pxDefaultSize?: boolean;
+            __nextHasNoMarginBottom?: boolean;
+        }
+    }
+
+    const __experimentalFontFamilyControl: ComponentType<__experimentalFontFamilyControl.Props>;
+
+    namespace __experimentalFontAppearanceControl {
+        interface Props {
+            children?: never | undefined;
+            value: {
+                fontStyle?: string;
+                fontWeight?: string;
+            };
+            onChange: (newValue?: {
+                fontStyle?: string;
+                fontWeight?: string;
+            }) => void;
+            hasFontStyles?: boolean;
+            hasFontWeights?: boolean;
+            fontFamilyFaces?: Record<string, any>[];
+            size?: string;
+            __next40pxDefaultSize?: boolean;
+        }
+    }
+
+    const __experimentalFontAppearanceControl: ComponentType<__experimentalFontAppearanceControl.Props>;
+
+    namespace __experimentalLetterSpacingControl {
+        interface Props {
+            children?: never | undefined;
+            value?: string;
+            onChange: (newValue?: string) => void;
+            __unstableInputWidth?: string | number;
+            size?: string;
+            __next40pxDefaultSize?: boolean;
+        }
+    }
+
+    const __experimentalLetterSpacingControl: ComponentType<__experimentalLetterSpacingControl.Props>;
+
+    namespace __experimentalTextDecorationControl {
+        interface Props {
+            children?: never | undefined;
+            value?: string;
+            onChange: (newValue?: string) => void;
+            className?: string;
+        }
+    }
+
+    const __experimentalTextDecorationControl: ComponentType<__experimentalTextDecorationControl.Props>;
+
+    namespace __experimentalTextTransformControl {
+        interface Props {
+            children?: never | undefined;
+            value?: string;
+            onChange: (newValue?: string) => void;
+            className?: string;
+        }
+    }
+
+    const __experimentalTextTransformControl: ComponentType<__experimentalTextTransformControl.Props>;
+
+    namespace LineHeightControl {
+        interface Props {
+            children?: never | undefined;
+            value?: string;
+            onChange: (newValue?: string) => void;
+            __unstableInputWidth?: string | number;
+            size?: string;
+            __next40pxDefaultSize?: boolean;
+        }
+    }
+
+    const LineHeightControl: ComponentType<LineHeightControl.Props>;
+
     namespace __experimentalColorGradientSettingsDropdown {
         interface Props {
             children?: never | undefined;

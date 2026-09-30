@@ -1007,8 +1007,7 @@ function createTableStore(initialValues?: TablebergBlockAttrs) {
             setNativeSelectedCells: clientIds =>
                 set(state => {
                     if (
-                        state.nativeSelectedCells.length ===
-                            clientIds.length &&
+                        state.nativeSelectedCells.length === clientIds.length &&
                         state.nativeSelectedCells.every(
                             (id, index) => id === clientIds[index]
                         )
@@ -1908,7 +1907,10 @@ export function TableStoreProvider({
 
         return {
             ...rest,
-            table: withLiveCounts(withTableDefaults(attrs.table), current.table),
+            table: withLiveCounts(
+                withTableDefaults(attrs.table),
+                current.table
+            ),
             columns: normalizeColumns(attrs.columns),
             bindings: attrs.bindings ?? EMPTY_BINDINGS,
         };

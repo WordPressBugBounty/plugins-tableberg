@@ -26,6 +26,7 @@ import metadata from "./block.json";
 import exampleImage from "../../example.png";
 import transforms from "../../transforms";
 import TablebergControls from "./controls";
+import { getTypographyCss } from "@tableberg/shared/utils/typography";
 import { TableCaption } from "../../components/TableCaption";
 import { SearchInput } from "../../components/SearchInput";
 import { PaginationNavigation } from "../../components/PaginationNavigation";
@@ -492,6 +493,7 @@ function NativeTableEdit(
     };
 
     const tableStyle: CSSProperties = {
+        ...getTypographyCss(tableConfig?.typography),
         borderCollapse: hasCellSpacing ? "separate" : "collapse",
         borderSpacing: hasCellSpacing
             ? `${horizontalCellSpacing} ${verticalCellSpacing}`

@@ -180,7 +180,9 @@ function TextEdit({
             )}
             <RichText
                 tagName="p"
-                className="tableberg-text-element"
+                className={`tableberg-text-element${
+                    styles.linkColor ? " tableberg-has-link-color" : ""
+                }`}
                 identifier="content"
                 allowedFormats={[
                     "core/bold",

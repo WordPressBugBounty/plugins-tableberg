@@ -27,6 +27,7 @@ class Defaults {
             'styles' => [
                 'backgroundColor' => '#000000',
                 'textColor' => '#ffffff',
+                'variant' => 'fill',
                 'backgroundHoverColor' => '',
                 'textHoverColor' => '',
                 'textAlign' => 'center',
@@ -43,7 +44,7 @@ class Defaults {
                     'bottomRight' => '4px',
                     'bottomLeft' => '4px',
                 ],
-                'fontSize' => '1.38rem',
+                'fontSize' => '',
             ],
         ];
     }
